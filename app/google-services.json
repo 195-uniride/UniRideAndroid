@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "166289019537",
-    "firebase_url": "https://uniride-ef5cc.firebaseio.com",
-    "project_id": "uniride-ef5cc",
-    "storage_bucket": "uniride-ef5cc.appspot.com"
+    "project_number": "863702749663",
+    "firebase_url": "https://uniride-c45e0.firebaseio.com",
+    "project_id": "uniride-c45e0",
+    "storage_bucket": "uniride-c45e0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:166289019537:android:2fedd49d850671cb",
+        "mobilesdk_app_id": "1:863702749663:android:2fedd49d850671cb",
         "android_client_info": {
           "package_name": "com.sjsu.se195.uniride"
         }
       },
       "oauth_client": [
         {
-          "client_id": "166289019537-femv3jlr20hahvgaopkop5a8nqpbhhqg.apps.googleusercontent.com",
+          "client_id": "863702749663-pdug6ieac9tnif2hpcg5o4g1ese0gh5a.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCpxW_rgu_OiDgiRdLzKkyvUweFPKRel18"
+          "current_key": "AIzaSyCsKV6C0p2oee9nQrmu2U2mLRpzUTDpnKs"
         }
       ],
       "services": {
