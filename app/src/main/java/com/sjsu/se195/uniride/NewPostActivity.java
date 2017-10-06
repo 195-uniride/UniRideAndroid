@@ -32,7 +32,7 @@ public class NewPostActivity extends BaseActivity {
     private EditText mTitleField;
     private EditText mBodyField;
     private FloatingActionButton mSubmitButton;
-    private boolean postType; //true = driveOffer; false = rideRequest
+    private boolean postType = false; //true = driveOffer; false = rideRequest
 
     private EditText mpassengerCount;
 
@@ -76,18 +76,32 @@ public class NewPostActivity extends BaseActivity {
     private void submitPost() {
         final String title = mTitleField.getText().toString();
         final String body = mBodyField.getText().toString();
-        final int passengerCount = Integer.parseInt(mpassengerCount.getText().toString());
-        final String pickupPoint = mpickupPoint.getText().toString();
+
+        String pickupPoint_temp = "nil";
+        int passengerCount_temp = 0;
+        if(postType && !mpassengerCount.getText().toString().equals("")){
+            passengerCount_temp = Integer.parseInt(mpassengerCount.getText().toString());
+        }
+        else if(postType && mpassengerCount.getText().toString().equals("")){
+            mpassengerCount.setError(REQUIRED);
+            return;
+        }
+        else{
+            pickupPoint_temp = mpickupPoint.getText().toString();
+        }
+
+        final int passengerCount = passengerCount_temp;
+        final String pickupPoint = pickupPoint_temp;
 
         //if drive offer post and passenger count empty
-        if(postType && passengerCount==0){
-            mTitleField.setError(REQUIRED);
+        if(postType && passengerCount_temp==0) {
+            mpassengerCount.setError("Must be greater than 0.");
             return;
         }
 
         //if ride request post and pickup point empty
-        if (!postType && TextUtils.isEmpty(pickupPoint)) {
-            mTitleField.setError(REQUIRED);
+        if (!postType && TextUtils.isEmpty(pickupPoint_temp)) {
+            mpickupPoint.setError(REQUIRED);
             return;
         }
 
@@ -163,12 +177,12 @@ public class NewPostActivity extends BaseActivity {
     // [START write_fan_out]
 
     //creating a drive offer
-    private void writeNewDriveOfferPost(String userId, String username, String title, String body, int passengerCount) {
+    private void writeNewDriveOfferPost(String userId, String username, String title, String body, int count) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("driveOffers").push().getKey();
 
-        DriverOfferPost driverPost = new DriverOfferPost(userId, username, title, body, passengerCount);
+        DriverOfferPost driverPost = new DriverOfferPost(userId, username, title, body, count);
         Map<String, Object> postValues = driverPost.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
