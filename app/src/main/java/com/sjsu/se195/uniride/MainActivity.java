@@ -75,10 +75,21 @@ public class  MainActivity extends BaseActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         // Button launches NewPostActivity
-        findViewById(R.id.fab_new_post).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fab_new_drive_offer_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewPostActivity.class));
+                Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
+                intent.putExtra("driveOffer", true);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.fab_new_ride_request_post).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
+                intent.putExtra("driveOffer", false);
+                startActivity(intent);
             }
         });
     }

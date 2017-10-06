@@ -7,14 +7,18 @@ import java.util.Map;
  * Created by maninder on 10/4/17.
  */
 
-public class DriverPosts extends Post {
+public class DriverOfferPost extends Post {
 
     private int passengerCount;
 
+    public DriverOfferPost(){
+
+    }
+
     //Constructer
-    public DriverPosts(String uid, String author, String title, String body){
-        super(uid, author, title, body, true);
-        this.passengerCount = 0;
+    public DriverOfferPost(String uid, String author, String title, String body, int pasCount){
+        super(uid, author, title, body);
+        this.passengerCount = pasCount;
     }
 
     public  Map<String, Object> toMap(){

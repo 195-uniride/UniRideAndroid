@@ -15,15 +15,13 @@ public class Post {
     public String title;
     public String body;
     public int starCount = 0;
-    public boolean driverPost = false;
     public Map<String, Boolean> stars = new HashMap<>();
 
     public Post() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Post(String uid, String author, String title, String body, boolean driver) {
-        this.driverPost = driver;
+    public Post(String uid, String author, String title, String body) {
         this.uid = uid;
         this.author = author;
         this.title = title;
