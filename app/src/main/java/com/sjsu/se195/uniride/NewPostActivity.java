@@ -13,7 +13,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.sjsu.se195.uniride.models.DriverPosts;
+import com.sjsu.se195.uniride.models.DriverOfferPost;
+import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 
 import java.util.HashMap;
@@ -31,11 +32,23 @@ public class NewPostActivity extends BaseActivity {
     private EditText mTitleField;
     private EditText mBodyField;
     private FloatingActionButton mSubmitButton;
+    private boolean postType; //true = driveOffer; false = rideRequest
+
+    private EditText mpassengerCount;
+
+    private EditText mpickupPoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_post);
+        postType = getIntent().getExtras().getBoolean("driveOffer");
+
+        if(postType){
+            setContentView(R.layout.activity_drive_offer_post);
+        }
+        else{
+            setContentView(R.layout.activity_ride_request_post);
+        }
 
         // [START initialize_database_ref]
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -44,6 +57,13 @@ public class NewPostActivity extends BaseActivity {
         mTitleField = (EditText) findViewById(R.id.field_title);
         mBodyField = (EditText) findViewById(R.id.field_body);
         mSubmitButton = (FloatingActionButton) findViewById(R.id.fab_submit_post);
+
+        if(postType){
+            mpassengerCount = (EditText) findViewById(R.id.passengerCount);
+        }
+        else{
+            mpickupPoint = (EditText) findViewById(R.id.pickupPoint);
+        }
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +76,20 @@ public class NewPostActivity extends BaseActivity {
     private void submitPost() {
         final String title = mTitleField.getText().toString();
         final String body = mBodyField.getText().toString();
+        final int passengerCount = Integer.parseInt(mpassengerCount.getText().toString());
+        final String pickupPoint = mpickupPoint.getText().toString();
+
+        //if drive offer post and passenger count empty
+        if(postType && passengerCount==0){
+            mTitleField.setError(REQUIRED);
+            return;
+        }
+
+        //if ride request post and pickup point empty
+        if (!postType && TextUtils.isEmpty(pickupPoint)) {
+            mTitleField.setError(REQUIRED);
+            return;
+        }
 
         // Title is required
         if (TextUtils.isEmpty(title)) {
@@ -91,7 +125,12 @@ public class NewPostActivity extends BaseActivity {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.username, title, body);
+                            if(postType) {
+                                writeNewDriveOfferPost(userId, user.username, title, body, passengerCount);
+                            }
+                            else{
+                                writeNewRideRequestPost(userId, user.username, title, body, pickupPoint);
+                            }
                         }
 
                         // Finish this Activity, back to the stream
@@ -122,17 +161,35 @@ public class NewPostActivity extends BaseActivity {
     }
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String username, String title, String body, boolean driver) {
+
+    //creating a drive offer
+    private void writeNewDriveOfferPost(String userId, String username, String title, String body, int passengerCount) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
-        String key = mDatabase.child("posts").push().getKey();
-        //Ther should be an if statement here **********
-        DriverPosts post = new DriverPosts(userId, username, title, body);
-        Map<String, Object> postValues = post.toMap();
+        String key = mDatabase.child("posts").child("driveOffers").push().getKey();
+
+        DriverOfferPost driverPost = new DriverOfferPost(userId, username, title, body, passengerCount);
+        Map<String, Object> postValues = driverPost.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/posts/" + key, postValues);
-        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+        childUpdates.put("/posts/driveOffers/" + key, postValues);
+        childUpdates.put("/user-posts/" + userId + "/driveOffers/" + key, postValues);
+
+        mDatabase.updateChildren(childUpdates);
+    }
+
+    //creating a ride request
+    private void writeNewRideRequestPost(String userId, String username, String title, String body, String pickupPoint){
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        String key = mDatabase.child("posts").child("rideRequests").push().getKey();
+
+        RideRequestPost rideRequest = new RideRequestPost(userId, username, title, body, pickupPoint);
+        Map<String, Object> postValues = rideRequest.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/posts/rideRequests/" + key, postValues);
+        childUpdates.put("/user-posts/" + userId + "/rideRequests/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
     }
