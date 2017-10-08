@@ -29,6 +29,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.sjsu.se195.uniride.fragment.MyPostsFragment;
 import com.sjsu.se195.uniride.fragment.MyTopPostsFragment;
+import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
 import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 
 public class  MainActivity extends BaseActivity {
@@ -45,15 +46,17 @@ public class  MainActivity extends BaseActivity {
 
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-            private final Fragment[] mFragments = new Fragment[] {
-                    new RecentPostsFragment(),
-                    new MyPostsFragment(),
-                    new MyTopPostsFragment(),
+            private final Fragment[] mFragments = new Fragment[] { // TODO: change to Organization list
+                    new RecentOrganizationsFragment()
+//                    new RecentPostsFragment(),
+//                    new MyPostsFragment(),
+//                    new MyTopPostsFragment(),
             };
             private final String[] mFragmentNames = new String[] {
-                    getString(R.string.heading_recent),
-                    getString(R.string.heading_my_posts),
-                    getString(R.string.heading_my_top_posts)
+                    getString(R.string.heading_recent_organizations)
+//                    getString(R.string.heading_recent),
+//                    getString(R.string.heading_my_posts),
+//                    getString(R.string.heading_my_top_posts)
             };
             @Override
             public Fragment getItem(int position) {
