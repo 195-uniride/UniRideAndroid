@@ -18,8 +18,6 @@ package com.sjsu.se195.uniride;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -27,9 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.sjsu.se195.uniride.fragment.MyPostsFragment;
-import com.sjsu.se195.uniride.fragment.MyTopPostsFragment;
-import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 
 public class  MainActivity extends BaseActivity {
 
@@ -44,7 +39,7 @@ public class  MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         // Create the adapter that will return a fragment for each section
-        mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+        /*mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] {
                     new RecentPostsFragment(),
                     new MyPostsFragment(),
@@ -73,22 +68,31 @@ public class  MainActivity extends BaseActivity {
         mViewPager.setAdapter(mPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
+        */
         // Button launches NewPostActivity
-        findViewById(R.id.fab_new_drive_offer_post).setOnClickListener(new View.OnClickListener() {
+        /*findViewById(R.id.fab_new_drive_offer_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
                 intent.putExtra("driveOffer", true);
                 startActivity(intent);
             }
+        });*/
+
+        findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
+                intent.putExtra("driverMode", true);
+                startActivity(intent);
+            }
         });
 
-        findViewById(R.id.fab_new_ride_request_post).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.rider_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NewPostActivity.class);
-                intent.putExtra("driveOffer", false);
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
+                intent.putExtra("driverMode", false);
                 startActivity(intent);
             }
         });

@@ -10,27 +10,27 @@ import com.sjsu.se195.uniride.models.Post;
 
 public class PostViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView titleView;
+    public TextView sourceView;
     public TextView authorView;
     public ImageView starView;
     public TextView numStarsView;
-    public TextView bodyView;
+    public TextView destinationView;
 
     public PostViewHolder(View itemView) {
         super(itemView);
 
-        titleView = (TextView) itemView.findViewById(R.id.post_title);
+        sourceView = (TextView) itemView.findViewById(R.id.post_source);
         authorView = (TextView) itemView.findViewById(R.id.post_author);
         starView = (ImageView) itemView.findViewById(R.id.star);
         numStarsView = (TextView) itemView.findViewById(R.id.post_num_stars);
-        bodyView = (TextView) itemView.findViewById(R.id.post_body);
+        destinationView = (TextView) itemView.findViewById(R.id.post_destination);
     }
 
     public void bindToPost(Post post, View.OnClickListener starClickListener) {
-        titleView.setText(post.title);
+        sourceView.setText(post.source);
         authorView.setText(post.author);
         numStarsView.setText(String.valueOf(post.starCount));
-        bodyView.setText(post.body);
+        destinationView.setText(post.destination);
 
         starView.setOnClickListener(starClickListener);
     }

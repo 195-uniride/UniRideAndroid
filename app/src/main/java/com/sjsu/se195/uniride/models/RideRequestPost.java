@@ -15,8 +15,8 @@ public class RideRequestPost extends Post {
     }
 
     //Constructer
-    public RideRequestPost(String uid, String author, String title, String body, String point){
-        super(uid, author, title, body);
+    public RideRequestPost(String uid, String author, String source, String destination, String point){
+        super(uid, author, source, destination);
         this.pickuppoint = point;
     }
 
@@ -24,8 +24,8 @@ public class RideRequestPost extends Post {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
         result.put("author", author);
-        result.put("title", title);
-        result.put("body", body);
+        result.put("source", source);
+        result.put("destination", destination);
         result.put("starCount", starCount);
         result.put("stars", stars);
         result.put("pickupPoint", pickuppoint);
