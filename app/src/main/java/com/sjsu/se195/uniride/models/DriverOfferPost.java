@@ -16,8 +16,8 @@ public class DriverOfferPost extends Post {
     }
 
     //Constructer
-    public DriverOfferPost(String uid, String author, String title, String body, int pasCount){
-        super(uid, author, title, body);
+    public DriverOfferPost(String uid, String author, String source, String destination, int pasCount){
+        super(uid, author, source, destination);
         this.passengerCount = pasCount;
     }
 
@@ -25,8 +25,8 @@ public class DriverOfferPost extends Post {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
         result.put("author", author);
-        result.put("title", title);
-        result.put("body", body);
+        result.put("source", source);
+        result.put("destination", destination);
         result.put("starCount", starCount);
         result.put("stars", stars);
         result.put("passengerCount", passengerCount);

@@ -64,8 +64,8 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
 
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
-        mTitleView = (TextView) findViewById(R.id.post_title);
-        mBodyView = (TextView) findViewById(R.id.post_body);
+        mTitleView = (TextView) findViewById(R.id.post_source);
+        mBodyView = (TextView) findViewById(R.id.post_destination);
         mCommentField = (EditText) findViewById(R.id.field_comment_text);
         mCommentButton = (Button) findViewById(R.id.button_post_comment);
         mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
@@ -88,8 +88,8 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
                 Post post = dataSnapshot.getValue(Post.class);
                 // [START_EXCLUDE]
                 mAuthorView.setText(post.author);
-                mTitleView.setText(post.title);
-                mBodyView.setText(post.body);
+                mTitleView.setText(post.source);
+                mBodyView.setText(post.destination);
                 // [END_EXCLUDE]
             }
 

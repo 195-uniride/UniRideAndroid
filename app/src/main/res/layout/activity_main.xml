@@ -5,33 +5,54 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/tabs" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:weightSum="1">
 
-    <android.support.design.widget.FloatingActionButton
+        <ImageButton
+            android:id="@+id/driver_mode_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/main_activity_button"
+            android:elevation="10dp"
+            android:src="@drawable/ic_directions_car_white_48dp" />
+
+        <ImageButton
+            android:id="@+id/rider_mode_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/main_activity_button"
+            android:elevation="10dp"
+            android:src="@drawable/ic_search_white_48dp" />
+
+    </LinearLayout>
+
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_new_drive_offer_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/ic_image_edit"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_image_edit" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_new_ride_request_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:src="@drawable/ic_image_edit"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_image_edit" />-->
 
 </RelativeLayout>

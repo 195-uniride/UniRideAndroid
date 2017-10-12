@@ -29,8 +29,8 @@ public class NewPostActivity extends BaseActivity {
     private DatabaseReference mDatabase;
     // [END declare_database_ref]
 
-    private EditText mTitleField;
-    private EditText mBodyField;
+    private EditText mSourceField;
+    private EditText mDestinationField;
     private FloatingActionButton mSubmitButton;
     private boolean postType = false; //true = driveOffer; false = rideRequest
 
@@ -54,8 +54,8 @@ public class NewPostActivity extends BaseActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END initialize_database_ref]
 
-        mTitleField = (EditText) findViewById(R.id.field_title);
-        mBodyField = (EditText) findViewById(R.id.field_body);
+        mSourceField = (EditText) findViewById(R.id.field_source);
+        mDestinationField = (EditText) findViewById(R.id.field_destination);
         mSubmitButton = (FloatingActionButton) findViewById(R.id.fab_submit_post);
 
         if(postType){
@@ -74,8 +74,8 @@ public class NewPostActivity extends BaseActivity {
     }
 
     private void submitPost() {
-        final String title = mTitleField.getText().toString();
-        final String body = mBodyField.getText().toString();
+        final String source = mSourceField.getText().toString();
+        final String destination = mDestinationField.getText().toString();
 
         String pickupPoint_temp = "nil";
         int passengerCount_temp = 0;
@@ -106,14 +106,14 @@ public class NewPostActivity extends BaseActivity {
         }
 
         // Title is required
-        if (TextUtils.isEmpty(title)) {
-            mTitleField.setError(REQUIRED);
+        if (TextUtils.isEmpty(source)) {
+            mSourceField.setError(REQUIRED);
             return;
         }
 
         // Body is required
-        if (TextUtils.isEmpty(body)) {
-            mBodyField.setError(REQUIRED);
+        if (TextUtils.isEmpty(destination)) {
+            mDestinationField.setError(REQUIRED);
             return;
         }
 
@@ -140,10 +140,10 @@ public class NewPostActivity extends BaseActivity {
                         } else {
                             // Write new post
                             if(postType) {
-                                writeNewDriveOfferPost(userId, user.username, title, body, passengerCount);
+                                writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount);
                             }
                             else{
-                                writeNewRideRequestPost(userId, user.username, title, body, pickupPoint);
+                                writeNewRideRequestPost(userId, user.username, source, destination, pickupPoint);
                             }
                         }
 
@@ -165,8 +165,8 @@ public class NewPostActivity extends BaseActivity {
     }
 
     private void setEditingEnabled(boolean enabled) {
-        mTitleField.setEnabled(enabled);
-        mBodyField.setEnabled(enabled);
+        mSourceField.setEnabled(enabled);
+        mDestinationField.setEnabled(enabled);
         if (enabled) {
             mSubmitButton.setVisibility(View.VISIBLE);
         } else {
@@ -177,12 +177,12 @@ public class NewPostActivity extends BaseActivity {
     // [START write_fan_out]
 
     //creating a drive offer
-    private void writeNewDriveOfferPost(String userId, String username, String title, String body, int count) {
+    private void writeNewDriveOfferPost(String userId, String username, String source, String destination, int count) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("driveOffers").push().getKey();
 
-        DriverOfferPost driverPost = new DriverOfferPost(userId, username, title, body, count);
+        DriverOfferPost driverPost = new DriverOfferPost(userId, username, source, destination, count);
         Map<String, Object> postValues = driverPost.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
@@ -193,12 +193,12 @@ public class NewPostActivity extends BaseActivity {
     }
 
     //creating a ride request
-    private void writeNewRideRequestPost(String userId, String username, String title, String body, String pickupPoint){
+    private void writeNewRideRequestPost(String userId, String username, String source, String destination, String pickupPoint){
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
 
-        RideRequestPost rideRequest = new RideRequestPost(userId, username, title, body, pickupPoint);
+        RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination, pickupPoint);
         Map<String, Object> postValues = rideRequest.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
