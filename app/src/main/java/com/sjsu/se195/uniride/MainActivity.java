@@ -48,7 +48,7 @@ public class  MainActivity extends BaseActivity {
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] { // TODO: change to Organization list
                     new RecentOrganizationsFragment()
-//                    new RecentPostsFragment(),
+//                    new RecentPostsFragment(), //TODO: change back.
 //                    new MyPostsFragment(),
 //                    new MyTopPostsFragment(),
             };
@@ -78,10 +78,10 @@ public class  MainActivity extends BaseActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         // Button launches NewPostActivity
-        findViewById(R.id.fab_new_post).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fab_new_organization).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewPostActivity.class));
+                startActivity(new Intent(MainActivity.this, NewOrganizationActivity.class)); //TODO: change to NewOrgActivity...
             }
         });
     }

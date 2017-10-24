@@ -22,7 +22,7 @@ public class OrganizationViewHolder extends RecyclerView.ViewHolder {
     public OrganizationViewHolder(View itemView) {
         super(itemView);
 
-        nameView = (TextView) itemView.findViewById(R.id.post_title); // TODO
+        nameView = (TextView) itemView.findViewById(R.id.organization_name); // TODO
 //        authorView = (TextView) itemView.findViewById(R.id.post_author);// TODO
 //        starView = (ImageView) itemView.findViewById(R.id.star);// TODO
 //        numStarsView = (TextView) itemView.findViewById(R.id.post_num_stars);// TODO

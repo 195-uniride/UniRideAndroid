@@ -50,7 +50,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_detail); // TODO
+        setContentView(R.layout.activity_organization_detail); // TODO
 
         // Get post key from intent // TODO
         mOrganizationKey = getIntent().getStringExtra(EXTRA_ORGANIZATION_KEY);
