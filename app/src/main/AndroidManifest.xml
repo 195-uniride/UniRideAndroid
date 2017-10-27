@@ -24,6 +24,7 @@ android:theme="@style/AppTheme" />
 </intent-filter>
 </activity>
 <activity android:name=".PostDetailActivity"></activity>
+<activity android:name=".OrganizationDetailActivity"></activity>
     </application>
 
     </manifest>

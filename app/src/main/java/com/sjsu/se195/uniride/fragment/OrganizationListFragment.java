@@ -44,13 +44,13 @@ public abstract class OrganizationListFragment extends Fragment {
     public View onCreateView (LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.fragment_all_organizations, container, false); // TODO
+        View rootView = inflater.inflate(R.layout.fragment_all_organizations, container, false);
 
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
 
-        mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list); // TODO: don't need??
+        mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
         mRecycler.setHasFixedSize(true);
 
         return rootView;
@@ -68,20 +68,20 @@ public abstract class OrganizationListFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query organizationsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Organization, OrganizationViewHolder>(Organization.class, R.layout.item_post,  // TODO
+        mAdapter = new FirebaseRecyclerAdapter<Organization, OrganizationViewHolder>(Organization.class, R.layout.item_organization,
                 OrganizationViewHolder.class, organizationsQuery) {
             @Override
-            protected void populateViewHolder(final OrganizationViewHolder viewHolder, final Organization model, final int position) {  // TODO
-                final DatabaseReference organizationRef = getRef(position); // TODO
+            protected void populateViewHolder(final OrganizationViewHolder viewHolder, final Organization model, final int position) {
+                final DatabaseReference organizationRef = getRef(position);
 
                 // Set click listener for the whole organization view
-                final String organizationKey = organizationRef.getKey(); // TODO
+                final String organizationKey = organizationRef.getKey();
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Launch OrganizationDetailActivity // TODO
-                        Intent intent = new Intent(getActivity(), OrganizationDetailActivity.class); // TODO
-                        intent.putExtra(OrganizationDetailActivity.EXTRA_ORGANIZATION_KEY, organizationKey); // TODO
+                        // Launch OrganizationDetailActivity
+                        Intent intent = new Intent(getActivity(), OrganizationDetailActivity.class);
+                        intent.putExtra(OrganizationDetailActivity.EXTRA_ORGANIZATION_KEY, organizationKey);
                         startActivity(intent);
                     }
                 });
@@ -93,14 +93,13 @@ public abstract class OrganizationListFragment extends Fragment {
 //                    viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
 //                }
 
-                // Bind Post to ViewHolder, setting OnClickListener for the star button
+                // Bind Organization to ViewHolder
                 viewHolder.bindToPost(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View starView) {
                         // Need to write to both places the post is stored
-                        DatabaseReference globalPostRef = mDatabase.child("organizations").child(organizationRef.getKey()); // TODO
-                        //TODO:?
-//                        DatabaseReference userPostRef = mDatabase.child("user-posts").child(model.uid).child(organizationKey.getKey()); // TODO
+                        DatabaseReference globalPostRef = mDatabase.child("organizations").child(organizationRef.getKey());
+//                        DatabaseReference userPostRef = mDatabase.child("user-posts").child(model.uid).child(organizationKey.getKey());
 
                         // Run two transactions
 //                        onStarClicked(globalPostRef); // TODO
@@ -113,7 +112,7 @@ public abstract class OrganizationListFragment extends Fragment {
     }
 
     // [START post_stars_transaction]
-    private void onStarClicked(DatabaseReference organizationRef) { // TODO
+    /*private void onStarClicked(DatabaseReference organizationRef) { // TODO
         organizationRef.runTransaction(new Transaction.Handler() { // TODO
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -146,6 +145,7 @@ public abstract class OrganizationListFragment extends Fragment {
         });
     }
     // [END post_stars_transaction]
+    */
 
     @Override
     public void onDestroy() {
@@ -155,9 +155,9 @@ public abstract class OrganizationListFragment extends Fragment {
         }
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
+//    public String getUid() {
+//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+//    }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
 

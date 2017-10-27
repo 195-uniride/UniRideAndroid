@@ -19,6 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
-        tools:text="SOME-ORG-ZOO" />
+        tools:text="SOME ORGANIZATION" />
 
 </LinearLayout>
