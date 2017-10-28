@@ -9,29 +9,41 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.sjsu.se195.uniride.OrganizationDetailActivity">
 
-<include
-    android:id="@+id/oraganization_name_layout"
-    layout="@layout/include_organization_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true" />
+    <include
+        android:id="@+id/oraganization_name_layout"
+        layout="@layout/include_organization_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"/>
 
-<!--<include-->
-    <!--android:id="@+id/post_text_layout"-->
-    <!--layout="@layout/include_post_text"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_below="@+id/post_author_layout"-->
-    <!--android:layout_marginLeft="5dp"-->
-    <!--android:layout_marginTop="10dp" />-->
+    <LinearLayout
+        android:id="@+id/join_organization_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/organization_name_layout"
+        android:layout_marginTop="40dp"
+        android:weightSum="1.0">
 
+        <EditText
+            android:id="@+id/field_enter_email_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:hint="Enter organization email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"/>
 
-<!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/recycler_comments"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_below="@+id/comment_form"-->
-    <!--tools:listitem="@layout/item_comment" />-->
+        <Button
+            android:id="@+id/button_join_organization"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_weight="0.2"
+            android:layout_height="wrap_content"
+            android:text="Join"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>
