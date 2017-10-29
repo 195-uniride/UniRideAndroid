@@ -35,6 +35,7 @@ public abstract class PostListFragment extends Fragment {
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
+    private boolean postType;
 
     public PostListFragment() {}
 
@@ -42,15 +43,15 @@ public abstract class PostListFragment extends Fragment {
     public View onCreateView (LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
-
+        postType = getArguments().getBoolean("postType");
+        View rootView;
+        rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
 
-        mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
+        mRecycler = rootView.findViewById(R.id.messages_list);
         mRecycler.setHasFixedSize(true);
-
         return rootView;
     }
 
@@ -96,8 +97,17 @@ public abstract class PostListFragment extends Fragment {
                     @Override
                     public void onClick(View starView) {
                         // Need to write to both places the post is stored
-                        DatabaseReference globalPostRef = mDatabase.child("posts").child(postRef.getKey());
-                        DatabaseReference userPostRef = mDatabase.child("user-posts").child(model.uid).child(postRef.getKey());
+                        DatabaseReference globalPostRef;
+                        DatabaseReference userPostRef;
+
+                        if(postType){
+                            globalPostRef = mDatabase.child("posts").child("driveOffers").child(postRef.getKey());
+                            userPostRef = mDatabase.child("user-posts").child(model.uid).child("driveOffers").child(postRef.getKey());
+                        }
+                        else{
+                            globalPostRef = mDatabase.child("posts").child("rideRequests").child(postRef.getKey());
+                            userPostRef = mDatabase.child("user-posts").child(model.uid).child("rideRequests").child(postRef.getKey());
+                        }
 
                         // Run two transactions
                         onStarClicked(globalPostRef);

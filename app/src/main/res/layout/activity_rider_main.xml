@@ -15,15 +15,23 @@
             android:weightSum="2">
 
             <Button
+                android:id="@+id/new_ride_request_post"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@drawable/subcategory_new_post_button"
-                android:letterSpacing="0.4"
+                android:letterSpacing="0.1"
                 android:text="@string/rider_post_button_title"
                 android:textAllCaps="false"
                 android:textColor="@color/primaryWhite"
-                android:textSize="18dp" />
+                android:textSize="18dp"/>
+            <include
+                layout="@layout/fragment_all_posts"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_below="@id/new_ride_request_post"/>
+
         </LinearLayout>
     </ScrollView>
 

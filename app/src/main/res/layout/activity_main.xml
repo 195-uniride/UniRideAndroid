@@ -41,18 +41,4 @@
 
     </LinearLayout>
 
-    <!--<android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_new_drive_offer_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_image_edit" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_new_ride_request_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_image_edit" />-->
-
 </RelativeLayout>
