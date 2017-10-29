@@ -59,7 +59,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_detail); // TODO
 
-        // Get post key from intent // TODO
+        // Get organization key from intent // TODO
         mOrganizationKey = getIntent().getStringExtra(EXTRA_ORGANIZATION_KEY);
         if (mOrganizationKey == null) { // TODO
             throw new IllegalArgumentException("Must pass EXTRA_ORGANIZATION_KEY");
@@ -137,7 +137,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         Map<String, Object> childUpdates = new HashMap<>();
 //        childUpdates.put("/organizations/" + key, organizationValues);
-        childUpdates.put("/user-organizations/" + getUid() + "/" + key, userOrganizationValues);
+        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey + "/" + key, userOrganizationValues); //TODO: need to add organization key in here.
 
         mDatabase.updateChildren(childUpdates);
     }
