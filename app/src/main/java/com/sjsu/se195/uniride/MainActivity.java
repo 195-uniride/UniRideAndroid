@@ -30,8 +30,6 @@ public class  MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
 
-    private FragmentPagerAdapter mPagerAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
