@@ -13,7 +13,6 @@ public class RecentPostsFragment extends PostListFragment {
         // [START recent_posts_query]
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
-        type = getArguments().getBoolean("postType");
         Query recentPostsQuery;
         if(type){
             recentPostsQuery = databaseReference.child("posts").child("driverOffers").limitToFirst(100);

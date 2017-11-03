@@ -42,8 +42,8 @@ public abstract class PostListFragment extends Fragment {
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {
+        System.out.println("ON CREATE VIEW");
         super.onCreateView(inflater, container, savedInstanceState);
-        postType = getArguments().getBoolean("postType");
         View rootView;
         rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
         // [START create_database_reference]
@@ -57,6 +57,8 @@ public abstract class PostListFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
+        System.out.println("ON ACTIVITY CREATED");
         super.onActivityCreated(savedInstanceState);
 
         // Set up Layout Manager, reverse layout
@@ -71,6 +73,7 @@ public abstract class PostListFragment extends Fragment {
                 PostViewHolder.class, postsQuery) {
             @Override
             protected void populateViewHolder(final PostViewHolder viewHolder, final Post model, final int position) {
+                System.out.println("firebase populate view holder");
                 final DatabaseReference postRef = getRef(position);
 
                 // Set click listener for the whole post view
@@ -99,7 +102,6 @@ public abstract class PostListFragment extends Fragment {
                         // Need to write to both places the post is stored
                         DatabaseReference globalPostRef;
                         DatabaseReference userPostRef;
-
                         if(postType){
                             globalPostRef = mDatabase.child("posts").child("driveOffers").child(postRef.getKey());
                             userPostRef = mDatabase.child("user-posts").child(model.uid).child("driveOffers").child(postRef.getKey());

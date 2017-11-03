@@ -1,10 +1,18 @@
 package com.sjsu.se195.uniride;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.sjsu.se195.uniride.fragment.MyPostsFragment;
+import com.sjsu.se195.uniride.fragment.MyTopPostsFragment;
+import com.sjsu.se195.uniride.fragment.PostListFragment;
 import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 
 
@@ -15,6 +23,7 @@ import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 public class MainSubcategoryActivity extends MainActivity {
     private boolean postType;
     private ViewPager mViewPager;
+    private FragmentPagerAdapter mPagerAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,18 +52,19 @@ public class MainSubcategoryActivity extends MainActivity {
             });
         }
 
-        // Create the adapter that will return a fragment for each section
+        System.out.println("mainsub");
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("postType", this.postType);
+        Fragment posts = new RecentPostsFragment();
+        posts.setArguments(bundle);
+        // TODO add/replace?
+        getSupportFragmentManager().beginTransaction().add(R.id.post_fragment_placeholder, posts).commit();
+
         /*mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] {
-                    new RecentPostsFragment(),
-                    new MyPostsFragment(),
-                    new MyTopPostsFragment(),
+                    new RecentPostsFragment()
             };
-            private final String[] mFragmentNames = new String[] {
-                    getString(R.string.heading_recent),
-                    getString(R.string.heading_my_posts),
-                    getString(R.string.heading_my_top_posts)
-            };
+
             @Override
             public Fragment getItem(int position) {
                 return mFragments[position];
@@ -63,21 +73,10 @@ public class MainSubcategoryActivity extends MainActivity {
             public int getCount() {
                 return mFragments.length;
             }
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return mFragmentNames[position];
-            }
-        };*/
+        };
         // Set up the ViewPager with the sections adapter.
-        /*mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);*/
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("postType", this.postType);
-        RecentPostsFragment RecentPostFragment = new RecentPostsFragment();
-        RecentPostFragment.setArguments(bundle);
-        // Button launches NewPostActivity
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mPagerAdapter);*/
 
     }
 
