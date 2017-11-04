@@ -5,7 +5,7 @@ import com.google.firebase.database.Query;
 
 public class RecentPostsFragment extends PostListFragment {
 
-    private boolean type;
+    //private boolean type;
     public RecentPostsFragment() {}
 
     @Override
@@ -14,7 +14,7 @@ public class RecentPostsFragment extends PostListFragment {
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
         Query recentPostsQuery;
-        if(type){
+        if(postType){
             recentPostsQuery = databaseReference.child("posts").child("driverOffers").limitToFirst(100);
         }else{
             recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(100);
