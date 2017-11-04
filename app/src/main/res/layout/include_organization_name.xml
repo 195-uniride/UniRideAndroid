@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:gravity="center_vertical"
               android:orientation="horizontal">
@@ -10,19 +10,15 @@
         android:id="@+id/organization_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:cropToPadding="false"
-        android:src="@drawable/ic_action_account_circle_40"/>
+        android:src="@drawable/ic_action_account_circle_40" />
 
     <TextView
         android:id="@+id/organization_name"
-        style="@style/Base.TextAppearance.AppCompat.Medium"
-        android:layout_width="match_parent"
+        style="@style/Base.TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:layout_marginLeft="10dp"
         android:gravity="center_vertical"
-        android:textAlignment="viewStart"
-        android:textSize="18sp"
-        android:visibility="visible"
-        tools:text="ORGANIZATION NAME"/>
+        tools:text="SOME ORGANIZATION" />
 
 </LinearLayout>

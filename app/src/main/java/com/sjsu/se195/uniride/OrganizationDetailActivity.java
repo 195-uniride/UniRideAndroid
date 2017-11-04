@@ -4,17 +4,22 @@ package com.sjsu.se195.uniride;
  * Created by timhdavis on 10/8/17.
  */
 
-
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,8 +27,13 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.models.Organization;
+import com.sjsu.se195.uniride.models.User;
+//import com.sjsu.se195.uniride.models.Comment;
+//import com.sjsu.se195.uniride.models.Post;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OrganizationDetailActivity extends BaseActivity implements View.OnClickListener {
@@ -34,8 +44,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     public static final String EXTRA_ORGANIZATION_KEY = "organization_key";
 
     private DatabaseReference mDatabase;
-    private DatabaseReference mOrganizationReference;
+//    private ValueEventListener mOrganizationListener;
     private String mOrganizationKey;
+//    private CommentAdapter mAdapter;
 
     // TODO: change all...vvv
     private TextView mOrganizationNameView;
@@ -48,9 +59,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_detail); // TODO
 
-        // Get organization key from intent
+        // Get organization key from intent // TODO
         mOrganizationKey = getIntent().getStringExtra(EXTRA_ORGANIZATION_KEY);
-        if (mOrganizationKey == null) {
+        if (mOrganizationKey == null) { // TODO
             throw new IllegalArgumentException("Must pass EXTRA_ORGANIZATION_KEY");
         }
 
@@ -58,47 +69,22 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         // [START initialize_database_ref]
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mOrganizationReference = FirebaseDatabase.getInstance().getReference()
-                .child("organizations").child(mOrganizationKey);
         // [END initialize_database_ref]
 
 
         // Initialize Views // TODO: all...vvv
         mOrganizationNameView = (TextView) findViewById(R.id.organization_name);
-
-
+//        mTitleView = (TextView) findViewById(R.id.post_title);
+//        mBodyView = (TextView) findViewById(R.id.post_body);
         mOrganizationEmailField = (EditText) findViewById(R.id.field_enter_email_text);
         mJoinButton = (Button) findViewById(R.id.button_join_organization);
+//        mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
 
         mJoinButton.setOnClickListener(this);
+//        mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        mOrganizationReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Organization object and use the values to update the UI
-                Organization organization = dataSnapshot.getValue(Organization.class);
-                // [START_EXCLUDE]
-                mOrganizationNameView.setText(organization.name);
-                // [END_EXCLUDE]
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Organization failed, log a message
-                Log.w(TAG, "loadOrganization:onCancelled", databaseError.toException());
-                // [START_EXCLUDE]
-                Toast.makeText(OrganizationDetailActivity.this, "Failed to load organization.",
-                        Toast.LENGTH_SHORT).show();
-                // [END_EXCLUDE]
-            }
-        });
-    }
 
     @Override
     public void onClick(View v) {
@@ -111,8 +97,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
     private void joinOrganization() {
         final String organizationEmail = mOrganizationEmailField.getText().toString();
+        //final String body = mBodyField.getText().toString();
 
-        // User's organization email is required
+        // Title is required
         if (TextUtils.isEmpty(organizationEmail)) {
             mOrganizationEmailField.setError(REQUIRED);
             return;
@@ -124,7 +111,6 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         // add new organization to database:
         addUserToOrganization(organizationEmail);
-        Toast.makeText(this, "Joined " + mOrganizationNameView.getText(), Toast.LENGTH_SHORT).show();
 
         // Finish this Activity, back to the stream
         setEditingEnabled(true);
@@ -133,7 +119,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
     private void setEditingEnabled(boolean enabled) {
         mOrganizationEmailField.setEnabled(enabled);
-
+//        mBodyField.setEnabled(enabled);
         if (enabled) {
             mJoinButton.setVisibility(View.VISIBLE);
         } else {
@@ -143,13 +129,15 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
     // [START write_fan_out]
     private void addUserToOrganization(String userOrganizationEmail) {
-        // Link user with the organization, and include the user's organization email:
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
         String key = mDatabase.child("user-organizations").push().getKey();
-
+//        Organization organization = new Organization(name);
         Map<String, Object> userOrganizationValues = getMap("userOrganizationEmail",userOrganizationEmail);
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey + "/" + key, userOrganizationValues);//TODO: is 'key' unnecessary here?
+//        childUpdates.put("/organizations/" + key, organizationValues);
+        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey + "/" + key, userOrganizationValues); //TODO: need to add organization key in here.
 
         mDatabase.updateChildren(childUpdates);
     }
