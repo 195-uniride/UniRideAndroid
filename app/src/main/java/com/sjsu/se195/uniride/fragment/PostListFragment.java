@@ -35,7 +35,7 @@ public abstract class PostListFragment extends Fragment {
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
-    private boolean postType;
+    protected boolean postType;
 
     public PostListFragment() {}
 
@@ -60,6 +60,9 @@ public abstract class PostListFragment extends Fragment {
 
         System.out.println("ON ACTIVITY CREATED");
         super.onActivityCreated(savedInstanceState);
+
+        //postType = savedInstanceState.getBundle("postType");
+        postType = getArguments().getBoolean("postType");
 
         // Set up Layout Manager, reverse layout
         mManager = new LinearLayoutManager(getActivity());

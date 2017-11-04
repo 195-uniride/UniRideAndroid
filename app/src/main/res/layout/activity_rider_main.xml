@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ScrollView
@@ -25,12 +26,14 @@
                 android:textAllCaps="false"
                 android:textColor="@color/primaryWhite"
                 android:textSize="18dp"/>
-            <include
-                layout="@layout/fragment_all_posts"
+
+            <FrameLayout
+                android:id="@+id/post_fragment_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_below="@id/new_ride_request_post"/>
+                android:layout_below="@id/new_ride_request_post"
+                tools:layout="@layout/fragment_all_posts" />
 
         </LinearLayout>
     </ScrollView>
