@@ -11,9 +11,7 @@ public class DriverOfferPost extends Post {
 
     private int passengerCount;
 
-    public DriverOfferPost(){
-
-    }
+    public DriverOfferPost(){}
 
     //Constructer
     public DriverOfferPost(String uid, String author, String source, String destination, int pasCount){

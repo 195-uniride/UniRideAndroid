@@ -10,9 +10,7 @@ import java.util.Map;
 public class RideRequestPost extends Post {
     private String pickuppoint;
 
-    public RideRequestPost(){
-        //default constructor
-    }
+    public RideRequestPost(){}
 
     //Constructer
     public RideRequestPost(String uid, String author, String source, String destination, String point){
