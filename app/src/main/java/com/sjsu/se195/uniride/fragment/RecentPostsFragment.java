@@ -14,8 +14,8 @@ public class RecentPostsFragment extends PostListFragment {
         // due to sorting by push() keys
         Query recentPostsQuery;
 
-        if(postType){
-            recentPostsQuery = databaseReference.child("posts").child("driverOffers").limitToFirst(100);
+        if(!postType){
+            recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(100);
         }
         else{
             recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(100);

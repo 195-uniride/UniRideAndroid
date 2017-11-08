@@ -52,12 +52,10 @@ public class MainSubcategoryActivity extends MainActivity {
             });
         }
 
-        System.out.println("mainsub");
         Bundle bundle = new Bundle();
         bundle.putBoolean("postType", this.postType);
         Fragment posts = new RecentPostsFragment();
         posts.setArguments(bundle);
-        // TODO add/replace?
         getSupportFragmentManager().beginTransaction().add(R.id.post_fragment_placeholder, posts).commit();
 
         /*mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
