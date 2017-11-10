@@ -44,10 +44,10 @@ public class NewPostActivity extends BaseActivity {
         postType = getIntent().getExtras().getBoolean("driveOffer");
 
         if(postType){
-            setContentView(R.layout.activity_drive_offer_post);
+            setContentView(R.layout.activity_2_drive_offer_post);
         }
         else{
-            setContentView(R.layout.activity_ride_request_post);
+            setContentView(R.layout.activity_2_ride_request_post);
         }
 
         // [START initialize_database_ref]

@@ -18,8 +18,6 @@ package com.sjsu.se195.uniride;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +31,7 @@ public class  MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_0_main);
 
         findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override

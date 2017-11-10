@@ -5,18 +5,18 @@
     android:layout_height="match_parent"
     tools:context="com.sjsu.se195.uniride.NewPostActivity">
 
-    <include layout="@layout/activity_new_post"
+    <include layout="@layout/include_new_post"
         android:id="@+id/activity_new_post"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
     <EditText
-        android:id="@+id/pickupPoint"
+        android:id="@+id/passengerCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/activity_new_post"
-        android:hint="Pickup Point"
-        android:inputType="text"
+        android:hint="Maximum Number of Passengers"
+        android:inputType="number"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
