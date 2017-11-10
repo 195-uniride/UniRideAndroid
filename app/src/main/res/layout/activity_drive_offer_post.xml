@@ -5,12 +5,26 @@
     android:layout_height="match_parent"
     tools:context="com.sjsu.se195.uniride.NewPostActivity">
 
-    <include layout="@layout/activity_new_post"
+    <com.synnapps.carouselview.CarouselView
+        android:id="@+id/carouselView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:fillColor="#FFFFFFFF"
+        app:pageColor="#00000000"
+        app:radius="6dp"
+        app:slideInterval="3000"
+        app:strokeColor="#FF777777"
+        app:strokeWidth="1dp"/>
+
+        android:visibility="gone"
+    <include
+        layout="@layout/activity_new_post"
         android:id="@+id/activity_new_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <EditText
+        android:visibility="gone"
         android:id="@+id/passengerCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,6 +37,7 @@
         android:layout_marginTop="5dp" />
 
     <android.support.design.widget.FloatingActionButton
+        android:visibility="gone"
         android:id="@+id/fab_submit_post"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

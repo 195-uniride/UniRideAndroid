@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
+import com.synnapps.carouselview.CarouselView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class NewPostActivity extends BaseActivity {
     private EditText mpassengerCount;
 
     private EditText mpickupPoint;
+    CarouselView formCarousel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
