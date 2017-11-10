@@ -23,7 +23,6 @@ import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
-import com.sjsu.se195.uniride.models.Post;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_detail);
+        setContentView(R.layout.activity_3_post_detail);
         postType = getIntent().getExtras().getBoolean("postType");
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
