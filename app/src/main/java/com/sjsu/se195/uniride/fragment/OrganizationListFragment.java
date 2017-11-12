@@ -34,7 +34,7 @@ public abstract class OrganizationListFragment extends Fragment {
     private DatabaseReference mDatabase;
     // [END define_database_reference]
 
-    private FirebaseRecyclerAdapter<Organization, OrganizationViewHolder> mAdapter; // TODO
+    private FirebaseRecyclerAdapter<Organization, OrganizationViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
 
@@ -96,10 +96,10 @@ public abstract class OrganizationListFragment extends Fragment {
                 // Bind Organization to ViewHolder
                 viewHolder.bindToPost(model, new View.OnClickListener() {
                     @Override
-                    public void onClick(View starView) {
+                    public void onClick(View starView) { //TODO: this is not used (only for stars).
                         // Need to write to both places the post is stored
                         DatabaseReference globalPostRef = mDatabase.child("organizations").child(organizationRef.getKey());
-//                        DatabaseReference userPostRef = mDatabase.child("user-posts").child(model.uid).child(organizationKey.getKey());
+                        DatabaseReference userPostRef = mDatabase.child("user-organizations").child(model.uid).child(organizationRef.getKey());
 
                         // Run two transactions
 //                        onStarClicked(globalPostRef); // TODO
@@ -155,9 +155,9 @@ public abstract class OrganizationListFragment extends Fragment {
         }
     }
 
-//    public String getUid() {
-//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-//    }
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
 

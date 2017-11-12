@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.sjsu.se195.uniride.fragment.MyOrganizationsFragment;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
 
 public class  ShowOrganizationsActivity extends BaseActivity {
@@ -34,10 +35,12 @@ public class  ShowOrganizationsActivity extends BaseActivity {
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] {
-                    new RecentOrganizationsFragment()
+                    new RecentOrganizationsFragment(),
+                    new MyOrganizationsFragment()
             };
             private final String[] mFragmentNames = new String[] {
-                    getString(R.string.heading_recent_organizations)
+                    getString(R.string.heading_recent_organizations),
+                    getString(R.string.heading_my_organizations)
             };
             @Override
             public Fragment getItem(int position) {

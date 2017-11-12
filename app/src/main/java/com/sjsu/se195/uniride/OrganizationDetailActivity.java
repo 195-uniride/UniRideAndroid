@@ -37,7 +37,6 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private DatabaseReference mOrganizationReference;
     private String mOrganizationKey;
 
-    // TODO: change all...vvv
     private TextView mOrganizationNameView;
     private EditText mOrganizationEmailField;
     private Button mJoinButton;
@@ -46,7 +45,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_organization_detail); // TODO
+        setContentView(R.layout.activity_organization_detail);
 
         // Get organization key from intent
         mOrganizationKey = getIntent().getStringExtra(EXTRA_ORGANIZATION_KEY);
@@ -149,7 +148,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         Map<String, Object> userOrganizationValues = getMap("userOrganizationEmail",userOrganizationEmail);
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey + "/" + key, userOrganizationValues);//TODO: is 'key' unnecessary here?
+//        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey + "/" + key, userOrganizationValues);//TODO: is 'key' unnecessary here?
+        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey, userOrganizationValues);//TODO: is 'key' unnecessary here?
+
 
         mDatabase.updateChildren(childUpdates);
     }
