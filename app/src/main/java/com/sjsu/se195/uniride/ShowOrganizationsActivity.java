@@ -14,13 +14,14 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
 
 public class  ShowOrganizationsActivity extends BaseActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "ShowOrganizationsActivity";
 
     private FragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
@@ -28,7 +29,7 @@ public class  ShowOrganizationsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_show_organizations);
 
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -68,7 +69,7 @@ public class  ShowOrganizationsActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_organizations, menu);
         return true;
     }
 
@@ -78,6 +79,10 @@ public class  ShowOrganizationsActivity extends BaseActivity {
         if (i == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, SignInActivity.class));
+            finish();
+            return true;
+        } else if (i == R.id.action_show_posts) {
+            startActivity(new Intent(this, MainActivity.class));
             finish();
             return true;
         } else {

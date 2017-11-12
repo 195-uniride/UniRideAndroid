@@ -46,17 +46,17 @@ public class  MainActivity extends BaseActivity {
 
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-            private final Fragment[] mFragments = new Fragment[] { // TODO: change to Organization list
-                    new RecentOrganizationsFragment()
-//                    new RecentPostsFragment(), //TODO: change back.
-//                    new MyPostsFragment(),
-//                    new MyTopPostsFragment(),
+            private final Fragment[] mFragments = new Fragment[] {
+//                    new RecentOrganizationsFragment()
+                    new RecentPostsFragment(),
+                    new MyPostsFragment(),
+                    new MyTopPostsFragment(),
             };
             private final String[] mFragmentNames = new String[] {
-                    getString(R.string.heading_recent_organizations)
-//                    getString(R.string.heading_recent),
-//                    getString(R.string.heading_my_posts),
-//                    getString(R.string.heading_my_top_posts)
+//                    getString(R.string.heading_recent_organizations)
+                    getString(R.string.heading_recent),
+                    getString(R.string.heading_my_posts),
+                    getString(R.string.heading_my_top_posts)
             };
             @Override
             public Fragment getItem(int position) {
@@ -81,7 +81,7 @@ public class  MainActivity extends BaseActivity {
         findViewById(R.id.fab_new_organization).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewOrganizationActivity.class)); //TODO: change to NewOrgActivity...
+                startActivity(new Intent(MainActivity.this, NewPostActivity.class));
             }
         });
     }
@@ -98,6 +98,10 @@ public class  MainActivity extends BaseActivity {
         if (i == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, SignInActivity.class));
+            finish();
+            return true;
+        } else if (i == R.id.action_show_organizations) {
+            startActivity(new Intent(this, ShowOrganizationsActivity.class));
             finish();
             return true;
         } else {
