@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.sjsu.se195.uniride.NewPostActivity">
 
-<<<<<<< HEAD:app/src/main/res/layout/activity_drive_offer_post.xml
     <com.synnapps.carouselview.CarouselView
         android:id="@+id/carouselView"
         android:layout_width="match_parent"

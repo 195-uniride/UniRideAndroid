@@ -25,7 +25,7 @@
             android:layout_height="100dp"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="40dp"
-            android:background="@drawable/button_main_userType"
+            android:background="@drawable/button_main_usertype"
             android:elevation="10dp"
             android:src="@drawable/ic_directions_car_white_48dp" />
 
@@ -35,7 +35,7 @@
             android:layout_height="100dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="40dp"
-            android:background="@drawable/button_main_userType"
+            android:background="@drawable/button_main_usertype"
             android:elevation="10dp"
             android:src="@drawable/ic_search_white_48dp" />
 
