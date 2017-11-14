@@ -5,4 +5,32 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="post_title">
+        <item name = "android:layout_marginTop"> 10dp </item>
+        <item name = "android:layout_marginBottom"> 30dp </item>
+        <item name = "android:alpha"> 0.7 </item>
+        <item name = "android:textColor"> @color/primaryWhite </item>
+        <item name = "android:textAlignment"> center </item>
+        <item name = "android:textSize"> 30sp </item>
+    </style>
+
+    <style name="post_label">
+        <item name = "android:layout_marginBottom"> 10dp </item>
+        <item name = "android:alpha"> 0.9 </item>
+        <item name = "android:textColor"> @color/primaryWhite </item>
+        <item name = "android:textAlignment"> center </item>
+        <item name = "android:textSize"> 25sp </item>
+    </style>
+
+    <style name= "post_text_field">
+        <item name="android:layout_marginLeft"> 20dp </item>
+        <item name="android:layout_marginRight"> 20dp </item>
+        <item name = "android:alpha"> 0.9 </item>
+        <item name="android:backgroundTint"> @color/primaryWhite </item>
+        <item name="android:textColorHint"> #88150E1E </item>
+        <item name="android:textColor"> @color/primaryWhite </item>
+        <item name="android:windowSoftInputMode"> stateUnchanged </item>
+    </style>
+
 </resources>

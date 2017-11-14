@@ -21,6 +21,7 @@
         app:indicatorMarginHorizontal="5dp"
         app:indicatorMarginVertical="20dp"
         app:indicatorOrientation = "vertical"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_submit_post"
         android:layout_width="wrap_content"
@@ -30,25 +31,5 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_navigation_check_24"
         android:visibility="gone"/>
-
-    <!--<include layout="@layout/include_new_post"
-        android:id="@+id/activity_new_post"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <EditText
-        android:visibility="gone"
-        android:id="@+id/passengerCount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_new_post"
-        android:hint="Maximum Number of Passengers"
-        android:inputType="number"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="5dp" />-->
-
 
 </RelativeLayout>

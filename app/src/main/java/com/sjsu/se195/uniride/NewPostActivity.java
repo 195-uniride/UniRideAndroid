@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +23,8 @@ import com.sjsu.se195.uniride.models.User;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ViewListener;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +48,9 @@ public class NewPostActivity extends BaseActivity  {
     private EditText mpassengerCount;
 
     private EditText mpickupPoint;
+
+    private static final String DRIVER_TITLE = "Offer a Ride";
+    private static final String RIDER_TITLE = "Request a Ride";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +94,9 @@ public class NewPostActivity extends BaseActivity  {
                 if(position == 0) {
                     mSourceField = (EditText) findViewById(R.id.field_source);
                 }
-                if(position == 1) mDestinationField = (EditText) findViewById(R.id.field_destination);
-
+                if(position == 1) {
+                    mDestinationField = (EditText) findViewById(R.id.field_destination);
+                }
                 if(position==2){
                     if(postType)mpassengerCount = (EditText) findViewById(R.id.passengerCount);
                     else mpickupPoint = (EditText) findViewById(R.id.pickupPoint);
@@ -113,11 +120,19 @@ public class NewPostActivity extends BaseActivity  {
             View post_from
                     = (i == 0) ? getLayoutInflater().inflate(R.layout.post_source_carousel, null)
                     : (i == 1) ? getLayoutInflater().inflate(R.layout.post_destination_carousel, null)
-                    : (i == 2) ? getLayoutInflater().inflate(R.layout.post_passengercount_carousel, null)
+                    : (i == 2) && NewPostActivity.this.postType ? getLayoutInflater().inflate(R.layout.post_passengercount_carousel, null)
+                    : (i == 2) && !NewPostActivity.this.postType ? getLayoutInflater().inflate(R.layout.post_pickuppoint_carousel, null)
                     : null;
+            NewPostActivity.this.setTitle((TextView) post_from.findViewById(R.id.carousel_title));
             return post_from;
         }
     };
+
+    /****Helper functions*****/
+    private void setTitle(TextView tv){
+        if(postType)tv.setText(DRIVER_TITLE);
+        else tv.setText(RIDER_TITLE);
+    }
 
     private void submitPost() {
         final String source = mSourceField.getText().toString();
