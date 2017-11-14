@@ -10,14 +10,28 @@
         android:id="@+id/carouselView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:fillColor="#FFFFFFFF"
+        app:fillColor="@color/primaryWhite"
         app:pageColor="#00000000"
-        app:radius="6dp"
+        app:radius="5dp"
         app:slideInterval="3000"
-        app:strokeColor="#FF777777"
-        app:strokeWidth="1dp"/>
+        app:strokeColor="@color/primaryWhite"
+        app:strokeWidth="2dp"
+        app:autoPlay= "false"
+        app:indicatorGravity="top|right"
+        app:indicatorMarginHorizontal="5dp"
+        app:indicatorMarginVertical="20dp"
+        app:indicatorOrientation = "vertical"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_submit_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_navigation_check_24"
+        android:visibility="gone"/>
 
-    <include layout="@layout/include_new_post"
+    <!--<include layout="@layout/include_new_post"
         android:id="@+id/activity_new_post"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,16 +48,7 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp" />-->
 
-    <android.support.design.widget.FloatingActionButton
-        android:visibility="gone"
-        android:id="@+id/fab_submit_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_navigation_check_24"/>
 
 </RelativeLayout>

@@ -7,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#13A572">
+        android:background="#258EA6"
+        android:paddingTop="10dp">
         <TextView
             android:id="@+id/carousel_title"
             android:layout_height="50dp"
@@ -33,7 +34,7 @@
             android:layout_below="@id/carousel_title"/>
 
         <EditText
-            android:id="@+id/post_carousel_from"
+            android:id="@+id/field_source"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@id/post_carousel_label"
@@ -42,6 +43,7 @@
             android:backgroundTint="@color/primaryWhite"
             android:hint="Source Location Address"
             android:textColorHint="@color/primaryWhite"
+            android:textColor="@color/primaryWhite"
             android:inputType="textPostalAddress" />
     </RelativeLayout>
 
