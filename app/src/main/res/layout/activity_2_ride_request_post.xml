@@ -3,24 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.sjsu.se195.uniride.NewPostActivity">
 
-    <include layout="@layout/include_new_post"
-        android:id="@+id/activity_new_post"
+    <com.synnapps.carouselview.CarouselView
+        android:id="@+id/carouselView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/pickupPoint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_new_post"
-        android:hint="Pickup Point"
-        android:inputType="text"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="5dp" />
+        android:layout_height="match_parent"
+        app:fillColor="@color/primaryWhite"
+        app:pageColor="#00000000"
+        app:radius="5dp"
+        app:slideInterval="3000"
+        app:strokeColor="@color/primaryWhite"
+        app:strokeWidth="2dp"
+        app:autoPlay= "false"
+        app:indicatorGravity="top|right"
+        app:indicatorMarginHorizontal="5dp"
+        app:indicatorMarginVertical="20dp"
+        app:indicatorOrientation = "vertical"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_submit_post"
@@ -29,6 +29,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_navigation_check_24"/>
+        android:src="@drawable/ic_navigation_check_24"
+        android:visibility="gone"/>
 
 </RelativeLayout>

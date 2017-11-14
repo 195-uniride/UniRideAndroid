@@ -18,4 +18,8 @@
     <string name="heading_my_top_posts">My Top Posts</string>
     <string name="driver_post_button_title">Offer New Carpool</string>
     <string name="rider_post_button_title">Request New Carpool</string>
+    <string name="post_label_from">From</string>
+    <string name="post_label_to">To</string>
+    <string name="post_label_passengerCount">Maximum Passengers</string>
+    <string name="post_label_pickupPoint">Pickup Point</string>
 </resources>
