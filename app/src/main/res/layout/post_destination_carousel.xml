@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="2">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#48639C">
+        <TextView
+            android:id="@+id/carousel_title"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:text="Offer a Ride"
+            android:alpha="0.7"
+            android:textColor="@color/primaryWhite"
+            android:textAlignment="center"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/post_carousel_label"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:text="To"
+            android:alpha="0.9"
+            android:textColor="@color/primaryWhite"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:layout_below="@id/carousel_title"/>
+
+        <EditText
+            android:id="@+id/post_carousel_from"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/post_carousel_label"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="@color/primaryWhite"
+            android:hint="Destination Location Address"
+            android:textColorHint="@color/primaryWhite"
+            android:inputType="textPostalAddress" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/primaryWhite" />
+</LinearLayout>

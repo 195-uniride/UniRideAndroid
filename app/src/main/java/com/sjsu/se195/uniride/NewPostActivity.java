@@ -17,6 +17,7 @@ import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ViewListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class NewPostActivity extends BaseActivity {
 
     private static final String TAG = "NewPostActivity";
     private static final String REQUIRED = "Required";
-
+    int NUMBER_OF_PAGES = 2;
     // [START declare_database_ref]
     private DatabaseReference mDatabase;
     // [END declare_database_ref]
@@ -56,6 +57,10 @@ public class NewPostActivity extends BaseActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END initialize_database_ref]
 
+        formCarousel = (CarouselView) findViewById(R.id.carouselView);
+        formCarousel.setPageCount(NUMBER_OF_PAGES);
+        formCarousel.setViewListener(viewListener);
+
         mSourceField = (EditText) findViewById(R.id.field_source);
         mDestinationField = (EditText) findViewById(R.id.field_destination);
         mSubmitButton = (FloatingActionButton) findViewById(R.id.fab_submit_post);
@@ -74,6 +79,17 @@ public class NewPostActivity extends BaseActivity {
             }
         });
     }
+
+    ViewListener viewListener = new ViewListener() {
+        @Override
+        public View setViewForPosition(int i) {
+            View post_from
+                    = (i == 0) ? getLayoutInflater().inflate(R.layout.post_source_carousel, null)
+                    : (i == 1) ? getLayoutInflater().inflate(R.layout.post_destination_carousel, null)
+                    : null;
+            return post_from;
+        }
+    };
 
     private void submitPost() {
         final String source = mSourceField.getText().toString();
