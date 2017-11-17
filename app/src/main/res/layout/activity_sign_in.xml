@@ -71,5 +71,14 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/signup2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_buttons"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"
+        android:text="Sign Up" />
+
 
 </RelativeLayout>

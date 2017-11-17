@@ -30,6 +30,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     private EditText mPasswordField;
     private Button mSignInButton;
     private Button mSignUpButton;
+    private Button createAccountButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +45,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         mPasswordField = (EditText) findViewById(R.id.field_password);
         mSignInButton = (Button) findViewById(R.id.button_sign_in);
         mSignUpButton = (Button) findViewById(R.id.button_sign_up);
+        createAccountButton = (Button)findViewById(R.id.signup2);
 
         // Click listeners
         mSignInButton.setOnClickListener(this);
         mSignUpButton.setOnClickListener(this);
+        createAccountButton.setOnClickListener(this);
     }
 
     @Override
@@ -167,6 +170,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
             signIn();
         } else if (i == R.id.button_sign_up) {
             signUp();
+        } else if (i == R.id.signup2){
+                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
         }
     }
 }
