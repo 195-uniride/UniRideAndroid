@@ -68,11 +68,16 @@ public abstract class OrganizationListFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query organizationsQuery = getQuery(mDatabase);
+        Log.d(TAG, "organization query: " + organizationsQuery);
+
         mAdapter = new FirebaseRecyclerAdapter<Organization, OrganizationViewHolder>(Organization.class, R.layout.item_organization,
                 OrganizationViewHolder.class, organizationsQuery) {
+
             @Override
             protected void populateViewHolder(final OrganizationViewHolder viewHolder, final Organization model, final int position) {
-                final DatabaseReference organizationRef = getRef(position);
+                Log.d(TAG, "<1> organization model: " + model.name);//TODO: investigate why My Organization organizations are null here...
+
+                final DatabaseReference organizationRef = getRef(position); //TODO: investigate: this is fine (viewing the item works).
 
                 // Set click listener for the whole organization view
                 final String organizationKey = organizationRef.getKey();
@@ -86,26 +91,9 @@ public abstract class OrganizationListFragment extends Fragment {
                     }
                 });
 
-//                // Determine if the current user has liked this post and set UI accordingly
-//                if (model.stars.containsKey(getUid())) {
-//                    viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
-//                } else {
-//                    viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
-//                }
-
                 // Bind Organization to ViewHolder
-                viewHolder.bindToPost(model, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View starView) { //TODO: this is not used (only for stars).
-                        // Need to write to both places the post is stored
-                        DatabaseReference globalPostRef = mDatabase.child("organizations").child(organizationRef.getKey());
-                        DatabaseReference userPostRef = mDatabase.child("user-organizations").child(model.uid).child(organizationRef.getKey());
-
-                        // Run two transactions
-//                        onStarClicked(globalPostRef); // TODO
-//                        onStarClicked(userPostRef); // TODO
-                    }
-                });
+                Log.d(TAG, "<2> organization model: " + model.name);//TODO: investigate why My Organization organizations are null here...
+                viewHolder.bindToOrganization(model);
             }
         };
         mRecycler.setAdapter(mAdapter);

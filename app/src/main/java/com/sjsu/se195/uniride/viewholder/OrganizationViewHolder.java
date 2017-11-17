@@ -6,6 +6,7 @@ package com.sjsu.se195.uniride.viewholder;
 
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.sjsu.se195.uniride.models.Organization;
 
 public class OrganizationViewHolder extends RecyclerView.ViewHolder {
 
+    private static final String TAG = "OrganizationViewHolder";
     public TextView nameView; // TODO
     // TODO: add more
 
@@ -29,8 +31,10 @@ public class OrganizationViewHolder extends RecyclerView.ViewHolder {
 //        bodyView = (TextView) itemView.findViewById(R.id.post_body);// TODO
     }
 
-    public void bindToPost(Organization organization, View.OnClickListener starClickListener) {
+    public void bindToOrganization(Organization organization) {
         nameView.setText(organization.name);// TODO
+//        nameView.setText("DEBUG"); //DEBUG ONLY
+        Log.d(TAG, "setting organization name to: " + organization.name); //TODO: investigate why My Organization organizations are null here...
 //        authorView.setText(organization.author);// TODO
 //        numStarsView.setText(String.valueOf(organization.starCount));// TODO: don't need.
 //        bodyView.setText(organization.body);// TODO

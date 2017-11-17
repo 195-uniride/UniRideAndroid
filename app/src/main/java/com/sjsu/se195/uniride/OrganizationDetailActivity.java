@@ -47,6 +47,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_detail);
 
+        // Set Joined button to visible only if not joined this organization before:
+        //TODO
+
         // Get organization key from intent
         mOrganizationKey = getIntent().getStringExtra(EXTRA_ORGANIZATION_KEY);
         if (mOrganizationKey == null) {
