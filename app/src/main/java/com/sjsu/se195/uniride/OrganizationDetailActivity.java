@@ -47,9 +47,6 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_detail);
 
-        // Set Joined button to visible only if not joined this organization before:
-        //TODO
-
         // Get organization key from intent
         mOrganizationKey = getIntent().getStringExtra(EXTRA_ORGANIZATION_KEY);
         if (mOrganizationKey == null) {
@@ -69,10 +66,13 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         mOrganizationNameView = (TextView) findViewById(R.id.organization_name);
 
 
+
+
+        // Set Joined button to visible only if not joined this organization before:
         mOrganizationEmailField = (EditText) findViewById(R.id.field_enter_email_text);
         mJoinButton = (Button) findViewById(R.id.button_join_organization);
 
-        mJoinButton.setOnClickListener(this);
+        hideJoinIfUserHasAlreadyJoinedOrganization();
 
     }
 
@@ -170,6 +170,38 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    // private methods:
+
+    private void setCanJoin(boolean canJoin) {
+        if (canJoin) {
+            mJoinButton.setOnClickListener(this);
+        }
+        else { // remove the option to join the organization:
+            mOrganizationEmailField.setVisibility(View.GONE);
+            mJoinButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideJoinIfUserHasAlreadyJoinedOrganization()
+    {
+        mDatabase.child("user-organizations").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.hasChild(getUid() + "/" + mOrganizationKey)) { // check if this user has a database record for this organization.
+                    setCanJoin(false); // user has already joined.
+                }
+                else {
+                    setCanJoin(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }
