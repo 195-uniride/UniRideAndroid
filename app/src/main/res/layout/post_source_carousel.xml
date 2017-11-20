@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:ignore="MissingPrefix"
     android:weightSum="2">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#5196A5"
+        android:background="@color/gradient0"
         android:paddingTop="10dp">
 
         <TextView
@@ -22,6 +25,7 @@
             android:layout_width="match_parent"
             android:text="@string/post_label_from"
             style="@style/post_label"
+            android:textAppearance="@style/TextAppearance.FontPath"
             android:layout_below="@id/carousel_title"/>
 
         <EditText

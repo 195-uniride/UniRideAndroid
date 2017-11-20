@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#291B3A</color>
-    <color name="colorPrimaryDark">#150E1E</color>
-    <color name="colorAccent">#FE5F55</color>
+    <color name="colorPrimary">#2A363B</color>
+    <color name="colorPrimaryDark">#101416</color>
+    <color name="colorAccent">#E84A5F</color>
 
-    <color name="primaryWhite">#FFFCFF</color>
+    <color name="primaryWhite">#F3EFE0</color>
 
     <color name="primary_text">#2F2E2F</color>
     <color name="secondary_text">#464546</color>
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
+
+    <color name="gradient0"> #355C7D </color>
+    <color name="gradient1"> #6C5B7B </color>
+    <color name="gradient2"> #C06C84</color>
+    <color name="gradient3"> #F67280</color>
+    <color name="gradient4"> #F8B195</color>
+
 </resources>

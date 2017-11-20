@@ -3,7 +3,7 @@ check.dependsOn 'assembleDebugAndroidTest'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.sjsu.se195.uniride"
@@ -43,6 +43,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
+
+    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
