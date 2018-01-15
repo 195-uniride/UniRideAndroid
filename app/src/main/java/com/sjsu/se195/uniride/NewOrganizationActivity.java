@@ -33,7 +33,10 @@ public class NewOrganizationActivity extends BaseActivity {
     // [END declare_database_ref]
 
     private EditText mNameField;
-    //private EditText mBodyField;
+    private EditText mClassificationField;
+    private EditText mDescriptionField;
+    private EditText mEmailPatternField;
+    private EditText mWebsiteField;
     private FloatingActionButton mSubmitButton;
 
     @Override
@@ -46,7 +49,10 @@ public class NewOrganizationActivity extends BaseActivity {
         // [END initialize_database_ref]
 
         mNameField = (EditText) findViewById(R.id.field_name);
-        //mBodyField = (EditText) findViewById(R.id.field_body);
+        mClassificationField = (EditText) findViewById(R.id.field_classification);
+        mDescriptionField = (EditText) findViewById(R.id.field_description);
+        mEmailPatternField = (EditText) findViewById(R.id.field_email_pattern);
+        mWebsiteField = (EditText) findViewById(R.id.field_website);
         mSubmitButton = (FloatingActionButton) findViewById(R.id.fab_submit_organization);
 
         mSubmitButton.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +65,10 @@ public class NewOrganizationActivity extends BaseActivity {
 
     private void submit() {
         final String name = mNameField.getText().toString();
-        //final String body = mBodyField.getText().toString();
+        final String classification = mClassificationField.getText().toString();
+        final String description = mDescriptionField.getText().toString();
+        final String emailPattern = mEmailPatternField.getText().toString();
+        final String website = mWebsiteField.getText().toString();
 
         // Title is required
         if (TextUtils.isEmpty(name)) {
@@ -78,7 +87,8 @@ public class NewOrganizationActivity extends BaseActivity {
         Toast.makeText(this, "Adding Organization...", Toast.LENGTH_SHORT).show();
 
         // add new organization to database:
-        addNewOrganization(name);
+
+        addNewOrganization(new Organization(name, classification, description, emailPattern, website));
 
         // Finish this Activity, back to the stream
         setEditingEnabled(true);
@@ -87,7 +97,11 @@ public class NewOrganizationActivity extends BaseActivity {
 
     private void setEditingEnabled(boolean enabled) {
         mNameField.setEnabled(enabled);
-//        mBodyField.setEnabled(enabled);
+        mClassificationField.setEnabled(enabled);
+        mDescriptionField.setEnabled(enabled);
+        mEmailPatternField.setEnabled(enabled);
+        mWebsiteField.setEnabled(enabled);
+
         if (enabled) {
             mSubmitButton.setVisibility(View.VISIBLE);
         } else {
@@ -96,11 +110,11 @@ public class NewOrganizationActivity extends BaseActivity {
     }
 
     // [START write_fan_out]
-    private void addNewOrganization(String name) {
+    private void addNewOrganization(Organization organization) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("organizations").push().getKey();
-        Organization organization = new Organization(name);
+
         Map<String, Object> organizationValues = organization.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();

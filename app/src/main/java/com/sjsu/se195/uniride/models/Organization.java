@@ -14,7 +14,6 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class Organization {
 
-    public String uid;
     public String name;
     public String classification;
     public String description;
@@ -26,23 +25,23 @@ public class Organization {
     }
 
 
-    public Organization(String name) {
+    public Organization(String name, String classification, String description, String emailPattern, String website) {
         this.name = name;
+        this.classification = classification;
+        this.description = description;
+        this.emailPattern = emailPattern;
+        this.website = website;
     }
-//    public Organization(String uid, String name, String classification, String description, String emailPattern, String website) {
-//        this.uid = uid;
-//        this.name = name;
-//        this.classification = classification;
-//        this.description = description;
-//        this.emailPattern = emailPattern;
-//        this.website = website;
-//    }
 
     // [START post_to_map]
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("name", name);
+        result.put("classification", classification);
+        result.put("description", description);
+        result.put("emailPattern", emailPattern);
+        result.put("website", website);
 
         return result;
     }

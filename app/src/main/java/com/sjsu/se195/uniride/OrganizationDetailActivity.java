@@ -38,6 +38,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private String mOrganizationKey;
 
     private TextView mOrganizationNameView;
+    private TextView mOrganizationClassificationView;
+    private TextView mOrganizationDescriptionView;
+    private TextView mOrganizationWebsiteView;
     private EditText mOrganizationEmailField;
     private Button mJoinButton;
     // TODO...add other fields...
@@ -62,10 +65,11 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         // [END initialize_database_ref]
 
 
-        // Initialize Views // TODO: all...vvv
+        // Initialize Views
         mOrganizationNameView = (TextView) findViewById(R.id.organization_name);
-
-
+        mOrganizationClassificationView = (TextView) findViewById(R.id.organization_classification);
+        mOrganizationDescriptionView = (TextView) findViewById(R.id.organization_description);
+        mOrganizationWebsiteView = (TextView) findViewById(R.id.organization_website);
 
 
         // Set Joined button to visible only if not joined this organization before:
@@ -87,6 +91,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
                 Organization organization = dataSnapshot.getValue(Organization.class);
                 // [START_EXCLUDE]
                 mOrganizationNameView.setText(organization.name);
+                mOrganizationClassificationView.setText(organization.classification);
+                mOrganizationDescriptionView.setText(organization.description);
+                mOrganizationWebsiteView.setText(organization.website);
                 // [END_EXCLUDE]
             }
 
@@ -111,7 +118,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     }
 
 
-    private void joinOrganization() {
+    private void joinOrganization() { // TODO: macke separate pop-up window.
         final String organizationEmail = mOrganizationEmailField.getText().toString();
 
         // User's organization email is required
@@ -122,9 +129,14 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         // Disable button so there are no multi-posts
         setEditingEnabled(false);
-        Toast.makeText(this, "Joining Organization...", Toast.LENGTH_SHORT).show();
+
+        // TODO: check if email pattern matches the required pattern.
+
+        // TODO: validate email is part of organization.
+
 
         // add new organization to database:
+        Toast.makeText(this, "Joining Organization...", Toast.LENGTH_SHORT).show();
         addUserToOrganization(organizationEmail);
         Toast.makeText(this, "Joined " + mOrganizationNameView.getText(), Toast.LENGTH_SHORT).show();
 
@@ -151,8 +163,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         Map<String, Object> userOrganizationValues = getMap("userOrganizationEmail",userOrganizationEmail);
 
         Map<String, Object> childUpdates = new HashMap<>();
-//        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey + "/" + key, userOrganizationValues);//TODO: is 'key' unnecessary here?
-        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey, userOrganizationValues);//TODO: is 'key' unnecessary here?
+        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey, userOrganizationValues);
 
 
         mDatabase.updateChildren(childUpdates);
