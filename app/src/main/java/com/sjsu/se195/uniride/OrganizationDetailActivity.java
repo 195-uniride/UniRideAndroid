@@ -43,7 +43,6 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private TextView mOrganizationWebsiteView;
     private EditText mOrganizationEmailField;
     private Button mJoinButton;
-    // TODO...add other fields...
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +117,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     }
 
 
-    private void joinOrganization() { // TODO: macke separate pop-up window.
+    private void joinOrganization() { // TODO: make separate pop-up window.
         final String organizationEmail = mOrganizationEmailField.getText().toString();
 
         // User's organization email is required
@@ -160,10 +159,10 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         // Link user with the organization, and include the user's organization email:
         String key = mDatabase.child("user-organizations").push().getKey();
 
-        Map<String, Object> userOrganizationValues = getMap("userOrganizationEmail",userOrganizationEmail);
+        Map<String, Object> userOrganizationValues = getUserOrganizationValuesMap(userOrganizationEmail, mOrganizationNameView.getText().toString());
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey, userOrganizationValues);
+        childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey, userOrganizationValues); // TODO: add needed organization fields to this list.
 
 
         mDatabase.updateChildren(childUpdates);
@@ -171,9 +170,10 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
     // [START post_to_map]
     @Exclude
-    public Map<String, Object> getMap(String fieldName, Object object) {
+    public Map<String, Object> getUserOrganizationValuesMap(String userOrganizationEmail, String organizationName) {
         HashMap<String, Object> result = new HashMap<>();
-        result.put(fieldName, object);
+        result.put("userOrganizationEmail", userOrganizationEmail);
+        result.put("name", organizationName);
 
         return result;
     }
