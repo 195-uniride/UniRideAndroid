@@ -68,7 +68,7 @@ public class NewPostTest {
         // Click sign up
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.signup2), withText(R.string.sign_up),
-                        withParent(withId(R.id.layout_buttons)),
+                        withParent(withId(R.id.sign_up_button_layout)),
                         isDisplayed()));
         appCompatButton.perform(click());
 
