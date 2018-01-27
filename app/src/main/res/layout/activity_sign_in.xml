@@ -52,9 +52,10 @@
         android:id="@+id/layout_buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_below="@+id/layout_email_password"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
+        android:layout_alignLeft="@+id/layout_email_password"
+        android:layout_alignStart="@+id/layout_email_password">
 
         <Button
             android:id="@+id/button_sign_in"
@@ -64,21 +65,12 @@
 
 
         <Button
-            android:id="@+id/button_sign_up"
+            android:id="@+id/signup2"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="@string/sign_up" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/signup2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_buttons"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="52dp"
-        android:text="Sign Up" />
 
 
 </RelativeLayout>
