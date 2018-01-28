@@ -25,7 +25,8 @@
                 android:text="@string/rider_post_button_title"
                 android:textAllCaps="false"
                 android:textColor="@color/primaryWhite"
-                android:textSize="18dp"/>
+                android:textSize="18dp"
+                android:fontFeatureSettings="smcp"/>
 
             <FrameLayout
                 android:id="@+id/post_fragment_placeholder"

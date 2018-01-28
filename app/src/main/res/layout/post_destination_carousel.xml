@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#F4BD4E"
+        android:background="@color/gradient1"
         android:paddingTop="10dp">
         <TextView
             android:id="@+id/carousel_title"

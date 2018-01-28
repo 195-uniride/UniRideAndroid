@@ -4,6 +4,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name = "fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
 
     <style name="post_title">
@@ -21,6 +22,7 @@
         <item name = "android:textColor"> @color/primaryWhite </item>
         <item name = "android:textAlignment"> center </item>
         <item name = "android:textSize"> 25sp </item>
+        <item name = "android:textAppearance"> @style/TextAppearance.FontPath </item>
     </style>
 
     <style name= "post_text_field">
@@ -28,9 +30,17 @@
         <item name="android:layout_marginRight"> 20dp </item>
         <item name = "android:alpha"> 0.9 </item>
         <item name="android:backgroundTint"> @color/primaryWhite </item>
-        <item name="android:textColorHint"> #88150E1E </item>
+        <item name="android:textColorHint"> #AAF3EFE0 </item>
         <item name="android:textColor"> @color/primaryWhite </item>
         <item name="android:windowSoftInputMode"> stateUnchanged </item>
+        <item name="android:paddingLeft"> 15dp </item>
+        <item name="android:paddingRight"> 15dp </item>
+        <item name="android:background"> @drawable/edittext_roundbox </item>
+    </style>
+
+    <style name="TextAppearance.FontPath" parent="android:TextAppearance">
+        <!-- Custom Attr-->
+        <item name="fontPath">fonts/Slabo27px-Regular.ttf</item>
     </style>
 
 </resources>
