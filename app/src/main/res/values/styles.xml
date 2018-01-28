@@ -12,7 +12,7 @@
     <style name="AppTheme.Widget"/>
 
     <style name="AppTheme.Widget.TextView" parent="android:Widget.Holo.Light.TextView">
-        <item name="fontPath">fonts/Slabo27px-Regular.ttf</item>
+        <item name="fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

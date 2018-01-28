@@ -4,7 +4,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name = "fontPath">fonts/Slabo27px-Regular.ttf</item>
+        <item name = "fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
 
     <style name="post_title">
@@ -22,6 +22,7 @@
         <item name = "android:textColor"> @color/primaryWhite </item>
         <item name = "android:textAlignment"> center </item>
         <item name = "android:textSize"> 25sp </item>
+        <item name = "android:textAppearance"> @style/TextAppearance.FontPath </item>
     </style>
 
     <style name= "post_text_field">

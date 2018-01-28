@@ -25,7 +25,6 @@
             android:layout_width="match_parent"
             android:text="@string/post_label_from"
             style="@style/post_label"
-            android:textAppearance="@style/TextAppearance.FontPath"
             android:layout_below="@id/carousel_title"/>
 
         <EditText
