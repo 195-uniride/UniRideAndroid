@@ -18,4 +18,9 @@
     <string name="heading_my_top_posts">My Top Posts</string>
     <string name="driver_post_button_title">Offer New Carpool</string>
     <string name="rider_post_button_title">Request New Carpool</string>
+    <string name="title_activity_map_detail">MapDetailActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_map">MapActivity</string>
 </resources>

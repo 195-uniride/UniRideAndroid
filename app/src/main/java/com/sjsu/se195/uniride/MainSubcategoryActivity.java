@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.sjsu.se195.uniride.fragment.MyPostsFragment;
 import com.sjsu.se195.uniride.fragment.MyTopPostsFragment;
 import com.sjsu.se195.uniride.fragment.PostListFragment;
@@ -20,10 +21,11 @@ import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
  * Created by akshat on 10/9/17.
  */
 
-public class MainSubcategoryActivity extends MainActivity {
+public class MainSubcategoryActivity extends MainActivity{
     private boolean postType;
     private ViewPager mViewPager;
     private FragmentPagerAdapter mPagerAdapter;
+
 
     protected void onCreate(Bundle savedInstanceState) {
 
