@@ -1,20 +1,9 @@
-/*
- * Copyright 2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+package com.sjsu.se195.uniride;
+
+/**
+ * Created by timhdavis on 11/11/17.
  */
 
-package com.sjsu.se195.uniride;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,16 +14,15 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.sjsu.se195.uniride.fragment.MyPostsFragment;
-import com.sjsu.se195.uniride.fragment.MyTopPostsFragment;
+import com.sjsu.se195.uniride.fragment.MyOrganizationsFragment;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
-import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 
-public class  MainActivity extends BaseActivity {
+public class  ShowOrganizationsActivity extends BaseActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "ShowOrganizationsActivity";
 
     private FragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
@@ -42,21 +30,17 @@ public class  MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_show_organizations);
 
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] {
-//                    new RecentOrganizationsFragment()
-                    new RecentPostsFragment(),
-                    new MyPostsFragment(),
-                    new MyTopPostsFragment(),
+                    new RecentOrganizationsFragment(),
+                    new MyOrganizationsFragment()
             };
             private final String[] mFragmentNames = new String[] {
-//                    getString(R.string.heading_recent_organizations)
-                    getString(R.string.heading_recent),
-                    getString(R.string.heading_my_posts),
-                    getString(R.string.heading_my_top_posts)
+                    getString(R.string.heading_recent_organizations),
+                    getString(R.string.heading_my_organizations)
             };
             @Override
             public Fragment getItem(int position) {
@@ -77,18 +61,18 @@ public class  MainActivity extends BaseActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        // Button launches NewPostActivity
+        // Button launches NewOrganizationActivity
         findViewById(R.id.fab_new_organization).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewPostActivity.class));
+                startActivity(new Intent(ShowOrganizationsActivity.this, NewOrganizationActivity.class));
             }
         });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_organizations, menu);
         return true;
     }
 
@@ -100,8 +84,8 @@ public class  MainActivity extends BaseActivity {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
             return true;
-        } else if (i == R.id.action_show_organizations) {
-            startActivity(new Intent(this, ShowOrganizationsActivity.class));
+        } else if (i == R.id.action_show_posts) {
+            startActivity(new Intent(this, MainActivity.class));
             finish();
             return true;
         } else {
@@ -110,3 +94,4 @@ public class  MainActivity extends BaseActivity {
     }
 
 }
+
