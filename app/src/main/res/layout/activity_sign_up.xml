@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.sjsu.se195.uniride.SignUpActivity">
+
+    <TextView
+        android:id="@+id/SignUpText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="34dp"
+        android:text="Sign Up" />
+
+    <TextView
+        android:id="@+id/FirstNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/SignUpText"
+        android:layout_marginLeft="34dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="19dp"
+        android:text="First Name:" />
+
+    <EditText
+        android:id="@+id/FirstNameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/FirstNameText"
+        android:layout_alignBottom="@+id/FirstNameText"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:ems="10"
+        android:hint="First name"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/LastNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/FirstNameText"
+        android:layout_alignStart="@+id/FirstNameText"
+        android:layout_below="@+id/FirstNameText"
+        android:layout_marginTop="19dp"
+        android:text="Last Name:" />
+
+    <EditText
+        android:id="@+id/LastNameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Last name"
+        android:layout_below="@+id/FirstNameEditText"
+        android:layout_alignLeft="@+id/FirstNameEditText"
+        android:layout_alignStart="@+id/FirstNameEditText" />
+
+    <TextView
+        android:id="@+id/EmailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email:"
+        android:layout_below="@+id/LastNameText"
+        android:layout_alignLeft="@+id/LastNameText"
+        android:layout_alignStart="@+id/LastNameText"
+        android:layout_marginTop="21dp" />
+
+    <EditText
+        android:id="@+id/EmailEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/LastNameEditText"
+        android:layout_alignStart="@+id/LastNameEditText"
+        android:layout_alignTop="@+id/EmailText"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Email" />
+
+    <TextView
+        android:id="@+id/PasswordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/EmailText"
+        android:layout_alignStart="@+id/EmailText"
+        android:layout_below="@+id/EmailText"
+        android:layout_marginTop="24dp"
+        android:hint="Password: " />
+
+    <EditText
+        android:id="@+id/PasswordEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:layout_below="@+id/EmailEditText"
+        android:layout_alignLeft="@+id/EmailEditText"
+        android:layout_alignStart="@+id/EmailEditText" />
+
+    <Button
+        android:id="@+id/SignUpButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/PasswordEditText"
+        android:layout_alignStart="@+id/PasswordEditText"
+        android:layout_below="@+id/PasswordEditText"
+        android:layout_marginTop="25dp"
+        android:text="Create Account" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"/>
+
+</RelativeLayout>

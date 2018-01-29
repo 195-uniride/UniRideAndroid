@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+      
         <activity android:name=".BaseActivity"/>
         <activity
         android:name=".MainActivity"
@@ -26,6 +26,7 @@
         <activity android:name=".OrganizationDetailActivity" />
         <activity android:name=".ShowOrganizationsActivity" />
         <activity android:name=".SignInActivity">
+        <activity android:name=".SignUpActivity"></activity>
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
