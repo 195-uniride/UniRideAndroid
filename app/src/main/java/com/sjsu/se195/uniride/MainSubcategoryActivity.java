@@ -10,7 +10,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.sjsu.se195.uniride.fragment.MyPostsFragment;
 import com.sjsu.se195.uniride.fragment.MyTopPostsFragment;
 import com.sjsu.se195.uniride.fragment.PostListFragment;
@@ -79,5 +84,6 @@ public class MainSubcategoryActivity extends MainActivity{
         mViewPager.setAdapter(mPagerAdapter);*/
 
     }
+
 
 }
