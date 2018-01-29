@@ -19,18 +19,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.models.DriverOfferPost;
+import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
-import com.sjsu.se195.uniride.models.Post;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostDetailActivity extends BaseActivity implements View.OnClickListener {
+public class PostDetailActivity extends MainActivity implements View.OnClickListener {
 
     private static final String TAG = "PostDetailActivity";
 
     public static final String EXTRA_POST_KEY = "post_key";
+    private boolean postType;
 
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
@@ -48,8 +50,8 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_detail);
-
+        setContentView(R.layout.activity_3_post_detail);
+        postType = getIntent().getExtras().getBoolean("postType");
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
         if (mPostKey == null) {
@@ -57,15 +59,26 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         // Initialize Database
-        mPostReference = FirebaseDatabase.getInstance().getReference()
-                .child("posts").child(mPostKey);
-        mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("post-comments").child(mPostKey);
+        if(postType){
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("rideRequests").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }else{
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("driveOffers").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+
+        System.out.println(mPostReference.toString());
+        /*mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                .child("post-comments").child(mPostKey);*/
 
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
-        mTitleView = (TextView) findViewById(R.id.post_title);
-        mBodyView = (TextView) findViewById(R.id.post_body);
+        mTitleView = (TextView) findViewById(R.id.post_source);
+        mBodyView = (TextView) findViewById(R.id.post_destination);
         mCommentField = (EditText) findViewById(R.id.field_comment_text);
         mCommentButton = (Button) findViewById(R.id.button_post_comment);
         mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
@@ -85,11 +98,21 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                Post post = dataSnapshot.getValue(Post.class);
-                // [START_EXCLUDE]
-                mAuthorView.setText(post.author);
-                mTitleView.setText(post.title);
-                mBodyView.setText(post.body);
+                System.out.println(dataSnapshot.toString());
+                if(postType){
+                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
+                    // [START_EXCLUDE]
+                    mAuthorView.setText(post.author);
+                    mTitleView.setText(post.source);
+                    mBodyView.setText(post.destination);
+                }
+                else{
+                    DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
+                    // [START_EXCLUDE]
+                    mAuthorView.setText(post.author);
+                    mTitleView.setText(post.source);
+                    mBodyView.setText(post.destination);
+                }
                 // [END_EXCLUDE]
             }
 

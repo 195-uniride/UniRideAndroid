@@ -16,72 +16,42 @@
 
 package com.sjsu.se195.uniride;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.sjsu.se195.uniride.fragment.MyPostsFragment;
-import com.sjsu.se195.uniride.fragment.MyTopPostsFragment;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
-import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 
 public class  MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
 
-    private FragmentPagerAdapter mPagerAdapter;
-    private ViewPager mViewPager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_0_main);
 
-        // Create the adapter that will return a fragment for each section
-        mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-            private final Fragment[] mFragments = new Fragment[] {
-//                    new RecentOrganizationsFragment()
-                    new RecentPostsFragment(),
-                    new MyPostsFragment(),
-                    new MyTopPostsFragment(),
-            };
-            private final String[] mFragmentNames = new String[] {
-//                    getString(R.string.heading_recent_organizations)
-                    getString(R.string.heading_recent),
-                    getString(R.string.heading_my_posts),
-                    getString(R.string.heading_my_top_posts)
-            };
+        findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
-            public Fragment getItem(int position) {
-                return mFragments[position];
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
+                intent.putExtra("driverMode", true);
+                startActivity(intent);
             }
-            @Override
-            public int getCount() {
-                return mFragments.length;
-            }
-            @Override
-            public CharSequence getPageTitle(int position) {
-                return mFragmentNames[position];
-            }
-        };
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        });
 
-        // Button launches NewPostActivity
-        findViewById(R.id.fab_new_organization).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.rider_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewPostActivity.class));
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
+                intent.putExtra("driverMode", false);
+                startActivity(intent);
             }
         });
     }

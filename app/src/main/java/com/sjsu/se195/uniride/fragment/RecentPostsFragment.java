@@ -12,8 +12,14 @@ public class RecentPostsFragment extends PostListFragment {
         // [START recent_posts_query]
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
-        Query recentPostsQuery = databaseReference.child("posts")
-                .limitToFirst(100);
+        Query recentPostsQuery;
+
+        if(!postType){
+            recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(100);
+        }
+        else{
+            recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(100);
+        }
         // [END recent_posts_query]
 
         return recentPostsQuery;

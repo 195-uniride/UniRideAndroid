@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="2">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@color/gradient2"
+        android:paddingTop="10dp">
+        <TextView
+            android:id="@+id/carousel_title"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            style="@style/post_title"/>
+
+        <TextView
+            android:id="@+id/post_carousel_label"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:text="@string/post_label_passengerCount"
+            style="@style/post_label"
+            android:layout_below="@id/carousel_title"/>
+
+        <EditText
+            android:id="@+id/passengerCount"
+            android:layout_width="300dp"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:layout_height="50dp"
+            android:hint="Maximum Number of Passengers"
+            android:inputType="number"
+            android:layout_below="@id/post_carousel_label"
+            style="@style/post_text_field" />
+    </RelativeLayout>
+</LinearLayout>

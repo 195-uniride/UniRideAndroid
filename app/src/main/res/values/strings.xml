@@ -16,6 +16,12 @@
     <string name="heading_recent">Recent</string>
     <string name="heading_my_posts">My Posts</string>
     <string name="heading_my_top_posts">My Top Posts</string>
+    <string name="driver_post_button_title">Offer New Carpool</string>
+    <string name="rider_post_button_title">Request New Carpool</string>
+    <string name="post_label_from">From</string>
+    <string name="post_label_to">To</string>
+    <string name="post_label_passengerCount">Maximum Passengers</string>
+    <string name="post_label_pickupPoint">Pickup Point</string>
     <string name="heading_recent_organizations">All Organizations</string>
     <string name="heading_my_organizations">My Organizations</string>
     <string name="title_activity_main">MainActivity</string>
