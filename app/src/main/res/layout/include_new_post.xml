@@ -6,37 +6,28 @@
     tools:context="com.sjsu.se195.uniride.NewPostActivity">
 
     <EditText
-        android:id="@+id/field_title"
+        android:id="@+id/field_source"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
-        android:hint="Title"
+        android:hint="Source"
         android:maxLines="1" />
 
     <EditText
-        android:id="@+id/field_body"
+        android:id="@+id/field_destination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/field_title"
+        android:layout_below="@+id/field_source"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="5dp"
-        android:hint="Write your post..."
+        android:hint="Destination"
         android:inputType="textMultiLine"
-        android:maxLines="10"
+        android:maxLines="1"
         android:scrollHorizontally="false" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_submit_post"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_navigation_check_24"/>
 
 </RelativeLayout>

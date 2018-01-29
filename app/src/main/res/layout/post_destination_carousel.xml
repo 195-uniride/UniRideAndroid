@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="2">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/gradient1"
+        android:paddingTop="10dp">
+        <TextView
+            android:id="@+id/carousel_title"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            style="@style/post_title"/>
+
+        <TextView
+            android:id="@+id/post_carousel_label"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:text="@string/post_label_to"
+            style="@style/post_label"
+            android:layout_below="@id/carousel_title"/>
+
+        <EditText
+            android:id="@+id/field_destination"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Destination Location Address"
+            android:inputType="textPostalAddress"
+            android:layout_below="@id/post_carousel_label"
+            style="@style/post_text_field"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/primaryWhite" />
+</LinearLayout>

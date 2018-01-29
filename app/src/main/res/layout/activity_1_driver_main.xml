@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+    <LinearLayout
+        android:id="@+id/button_driver_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/new_drive_offer_post"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_subcategory_new_post"
+            android:letterSpacing="0.1"
+            android:text="@string/driver_post_button_title"
+            android:textAllCaps="false"
+            android:textColor="@color/primaryWhite"
+            android:textSize="18dp"
+            android:fontFeatureSettings="smcp"/>
+
+        <!-- TODO: add "class" instead of "name" -->
+        <FrameLayout
+            android:id="@+id/post_fragment_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_below="@id/new_drive_offer_post"
+            tools:layout="@layout/fragment_all_posts" />
+
+    </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
