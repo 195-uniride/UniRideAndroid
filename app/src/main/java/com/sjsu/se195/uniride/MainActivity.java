@@ -24,9 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
-
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
 
 public class  MainActivity extends BaseActivity {
 
@@ -68,6 +68,10 @@ public class  MainActivity extends BaseActivity {
         if (i == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, SignInActivity.class));
+            finish();
+            return true;
+        } else if (i == R.id.action_show_organizations) {
+            startActivity(new Intent(this, ShowOrganizationsActivity.class));
             finish();
             return true;
         } else {

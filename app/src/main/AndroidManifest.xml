@@ -21,6 +21,10 @@
         <activity android:name=".NewPostActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".MainSubcategoryActivity"/>
+        <activity android:name=".NewOrganizationActivity" />
+        <activity android:name=".PostDetailActivity" />
+        <activity android:name=".OrganizationDetailActivity" />
+        <activity android:name=".ShowOrganizationsActivity" />
         <activity android:name=".SignInActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -28,6 +32,6 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
-        <activity android:name=".PostDetailActivity"></activity>
     </application>
 </manifest>
+

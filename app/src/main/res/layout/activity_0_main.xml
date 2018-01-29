@@ -30,7 +30,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="40dp"
             android:background="@drawable/button_main_usertype"
-            android:elevation="8dp"1
+            android:elevation="8dp"
             android:src="@drawable/ic_search_white_48dp" />
 
     </LinearLayout>

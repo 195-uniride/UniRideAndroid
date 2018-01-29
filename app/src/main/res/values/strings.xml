@@ -22,4 +22,7 @@
     <string name="post_label_to">To</string>
     <string name="post_label_passengerCount">Maximum Passengers</string>
     <string name="post_label_pickupPoint">Pickup Point</string>
+    <string name="heading_recent_organizations">All Organizations</string>
+    <string name="heading_my_organizations">My Organizations</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

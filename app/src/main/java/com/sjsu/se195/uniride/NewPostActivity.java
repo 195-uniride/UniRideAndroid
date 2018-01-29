@@ -135,6 +135,7 @@ public class NewPostActivity extends BaseActivity  {
     }
 
     private void submitPost() {
+        System.out.println("mSourceField = "+ mSourceField);
         final String source = mSourceField.getText().toString();
         final String destination = mDestinationField.getText().toString();
 
