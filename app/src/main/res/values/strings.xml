@@ -25,4 +25,8 @@
     <string name="heading_recent_organizations">All Organizations</string>
     <string name="heading_my_organizations">My Organizations</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_map_detail">MapDetailActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_map">MapActivity</string>
 </resources>

@@ -14,10 +14,11 @@ import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
  * Created by akshat on 10/9/17.
  */
 
-public class MainSubcategoryActivity extends MainActivity {
+public class MainSubcategoryActivity extends MainActivity{
     private boolean postType;
     private ViewPager mViewPager;
     private FragmentPagerAdapter mPagerAdapter;
+
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -71,5 +72,6 @@ public class MainSubcategoryActivity extends MainActivity {
         mViewPager.setAdapter(mPagerAdapter);*/
 
     }
+
 
 }

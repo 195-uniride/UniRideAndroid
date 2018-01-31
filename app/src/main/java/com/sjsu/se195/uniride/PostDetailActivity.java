@@ -36,7 +36,7 @@ import com.sjsu.se195.uniride.models.Comment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback {
+public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback{
 
     private static final String TAG = "PostDetailActivity";
 
