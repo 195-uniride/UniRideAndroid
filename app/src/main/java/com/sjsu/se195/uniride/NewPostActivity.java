@@ -123,17 +123,17 @@ public class NewPostActivity extends BaseActivity  {
                 mSourceField = (EditText) post_from.findViewById(R.id.field_source);
             }
             if(i == 1) {
-                mDestinationField = (EditText) findViewById(R.id.field_destination);
                 post_from= getLayoutInflater().inflate(R.layout.post_destination_carousel, null);
+                mDestinationField = (EditText) post_from.findViewById(R.id.field_destination);
             }
             if(i==2){
                 if(postType){
-                    mpassengerCount = (EditText) findViewById(R.id.passengerCount);
                     post_from= getLayoutInflater().inflate(R.layout.post_passengercount_carousel, null);
+                    mpassengerCount = (EditText) post_from.findViewById(R.id.passengerCount);
                 }
                 else {
-                    mpickupPoint = (EditText) findViewById(R.id.pickupPoint);
                     post_from= getLayoutInflater().inflate(R.layout.post_pickuppoint_carousel, null);
+                    mpickupPoint = (EditText) post_from.findViewById(R.id.pickupPoint);
                 }
                 mSubmitButton.setVisibility(View.VISIBLE);
                 mSubmitButton.invalidate();
