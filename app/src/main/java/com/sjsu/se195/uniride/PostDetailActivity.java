@@ -13,6 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,7 +36,7 @@ import com.sjsu.se195.uniride.models.Comment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostDetailActivity extends MainActivity implements View.OnClickListener {
+public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback {
 
     private static final String TAG = "PostDetailActivity";
 
@@ -46,6 +55,12 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private EditText mCommentField;
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
+
+    private GoogleMap m_map;
+    private boolean mapReady;
+
+    //markers
+    private MarkerOptions sjsu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +101,14 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         mCommentButton.setOnClickListener(this);
         mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
 
+        //marker for sjsu
+        sjsu = new MarkerOptions()
+                .position(new LatLng(37.335188, -121.881066))
+                .title("SJSU")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.extra_icon));
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -327,5 +350,20 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
             }
         }
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map){
+        mapReady = true;
+        m_map = map;
+        m_map.addMarker(sjsu);
+        LatLng city = new LatLng(37.3394, -121.8938);
+        CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
+        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+    }
+
+    //to animate when moving to a new location
+    public void flyTo(CameraPosition target){
+        m_map.animateCamera(CameraUpdateFactory.newCameraPosition(target));
     }
 }
