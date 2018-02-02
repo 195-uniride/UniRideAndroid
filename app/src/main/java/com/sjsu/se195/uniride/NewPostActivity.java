@@ -12,6 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,13 +39,15 @@ public class NewPostActivity extends BaseActivity  {
     private static final String REQUIRED = "Required";
     int NUMBER_OF_PAGES = 3;
     CarouselView formCarousel;
+    private String source_place;
+    private String destination_place;
     private int currentPosition;
     // [START declare_database_ref]
     private DatabaseReference mDatabase;
     // [END declare_database_ref]
 
-    private EditText mSourceField;
-    private EditText mDestinationField;
+    private PlaceAutocompleteFragment mSourceField;
+    private PlaceAutocompleteFragment mDestinationField;
     private FloatingActionButton mSubmitButton;
     private boolean postType = false; //true = driveOffer; false = rideRequest
 
@@ -92,10 +98,38 @@ public class NewPostActivity extends BaseActivity  {
             public void onPageSelected(int position) {
                 currentPosition = position;
                 if(position == 0) {
-                    mSourceField = (EditText) findViewById(R.id.field_source);
+                    mSourceField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_source);
+                    mSourceField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                        @Override
+                        public void onPlaceSelected(Place place) {
+                            //TODO: Get info about the selected place
+                            Log.i(TAG, "Place: " + place.getName());
+                            source_place = place.getAddress().toString();
+                        }
+
+                        @Override
+                        public void onError(Status status) {
+                            //TODO: Handle the error
+                            Log.i(TAG, "An error occured: " + status);
+                        }
+                    });
                 }
                 if(position == 1) {
-                    mDestinationField = (EditText) findViewById(R.id.field_destination);
+                    mDestinationField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_destination);
+                    mDestinationField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                        @Override
+                        public void onPlaceSelected(Place place) {
+                            //TODO: Get info about the selected place
+                            Log.i(TAG, "Place: " + place.getName());
+                            destination_place = place.getAddress().toString();
+                        }
+
+                        @Override
+                        public void onError(Status status) {
+                            //TODO: Handle the error
+                            Log.i(TAG, "An error occured: " + status);
+                        }
+                    });
                 }
                 if(position==2){
                     if(postType)mpassengerCount = (EditText) findViewById(R.id.passengerCount);
@@ -120,11 +154,39 @@ public class NewPostActivity extends BaseActivity  {
             View post_from = null;
             if(i == 0) {
                 post_from= getLayoutInflater().inflate(R.layout.post_source_carousel, null);
-                mSourceField = (EditText) post_from.findViewById(R.id.field_source);
+                mSourceField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_source);
+                mSourceField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                    @Override
+                    public void onPlaceSelected(Place place) {
+                        //TODO: Get info about the selected place
+                        Log.i(TAG, "Place: " + place.getName());
+                        source_place = place.getAddress().toString();
+                    }
+
+                    @Override
+                    public void onError(Status status) {
+                        //TODO: Handle the error
+                        Log.i(TAG, "An error occured: " + status);
+                    }
+                });
             }
             if(i == 1) {
                 post_from= getLayoutInflater().inflate(R.layout.post_destination_carousel, null);
-                mDestinationField = (EditText) post_from.findViewById(R.id.field_destination);
+                mDestinationField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_destination);
+                mDestinationField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                    @Override
+                    public void onPlaceSelected(Place place) {
+                        //TODO: Get info about the selected place
+                        Log.i(TAG, "Place: " + place.getName());
+                        destination_place = place.getAddress().toString();
+                    }
+
+                    @Override
+                    public void onError(Status status) {
+                        //TODO: Handle the error
+                        Log.i(TAG, "An error occured: " + status);
+                    }
+                });
             }
             if(i==2){
                 if(postType){
@@ -154,8 +216,9 @@ public class NewPostActivity extends BaseActivity  {
     }
 
     private void submitPost() {
-        final String source = mSourceField.getText().toString();
-        final String destination = mDestinationField.getText().toString();
+        System.out.println("2. " + source_place);
+        final String source = source_place;
+        final String destination = destination_place;
 
         String pickupPoint_temp = "nil";
         int passengerCount_temp = 0;
@@ -187,13 +250,13 @@ public class NewPostActivity extends BaseActivity  {
 
         // Title is required
         if (TextUtils.isEmpty(source)) {
-            mSourceField.setError(REQUIRED);
+            //mSourceField.setError(REQUIRED);
             return;
         }
 
         // Body is required
         if (TextUtils.isEmpty(destination)) {
-            mDestinationField.setError(REQUIRED);
+            //mDestinationField.setError(REQUIRED);
             return;
         }
 
@@ -245,8 +308,8 @@ public class NewPostActivity extends BaseActivity  {
     }
 
     private void setEditingEnabled(boolean enabled) {
-        mSourceField.setEnabled(enabled);
-        mDestinationField.setEnabled(enabled);
+        //mSourceField.setEnabled(enabled);
+        //mDestinationField.setEnabled(enabled);
         if (enabled) {
             mSubmitButton.setVisibility(View.VISIBLE);
         } else {
