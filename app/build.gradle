@@ -36,6 +36,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:26.0.0'
     compile 'com.android.support:design:26.0.0'
     compile 'com.google.android.gms:play-services-maps:11.2.0'
+    compile 'com.google.android.gms:play-services-places:11.2.0'
 
     compile 'com.firebaseui:firebase-ui-database:1.2.0'
 

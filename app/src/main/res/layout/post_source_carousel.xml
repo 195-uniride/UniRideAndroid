@@ -27,13 +27,14 @@
             style="@style/post_label"
             android:layout_below="@id/carousel_title"/>
 
-        <EditText
+        <fragment
             android:id="@+id/field_source"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Source Location Address"
             android:inputType="textPostalAddress"
             android:layout_below="@id/post_carousel_label"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             style="@style/post_text_field"/>
     </RelativeLayout>
 
