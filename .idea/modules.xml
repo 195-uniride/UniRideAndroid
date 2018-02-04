@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/UniRideAndroid.iml" filepath="$PROJECT_DIR$/UniRideAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/uniride.iml" filepath="$PROJECT_DIR$/uniride.iml" />
     </modules>
   </component>
 </project>

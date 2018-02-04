@@ -1,5 +1,7 @@
 package com.sjsu.se195.uniride;
 
+import android.content.Context;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -27,13 +29,27 @@ import com.sjsu.se195.uniride.models.User;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ViewListener;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import android.location.Geocoder;
+import android.location.Location;
+
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class NewPostActivity extends BaseActivity  {
+public class NewPostActivity extends BaseActivity implements OnMapReadyCallback {
 
     private static final String TAG = "NewPostActivity";
     private static final String REQUIRED = "Required";
@@ -57,6 +73,47 @@ public class NewPostActivity extends BaseActivity  {
 
     private static final String DRIVER_TITLE = "Offer a Ride";
     private static final String RIDER_TITLE = "Request a Ride";
+
+    private GoogleMap m_map;
+
+    private MarkerOptions set_marker;
+
+    @Override
+    public void onMapReady(GoogleMap map){
+        //mapReady = true;
+        String location = source_place;
+        m_map = map;
+        m_map.addMarker(location);
+        CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
+        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+    }
+
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            //coder.getFromLocationName(strAddress, 5)
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +170,9 @@ public class NewPostActivity extends BaseActivity  {
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
+                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                    mapFragment.getMapAsync(NewPostActivity.this);
+
                 }
                 if(position == 1) {
                     mDestinationField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_destination);
