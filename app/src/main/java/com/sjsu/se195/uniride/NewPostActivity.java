@@ -57,6 +57,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     int NUMBER_OF_PAGES = 3;
     CarouselView formCarousel;
     private String source_place;
+    private String source_place_redraw_check;
     private String destination_place;
     private int currentPosition;
     // [START declare_database_ref]
@@ -175,11 +176,12 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
-
-                    NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
-                    SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                    mapFragment.getMapAsync(NewPostActivity.this);
-
+                    if(source_place != null && !source_place.equals("") && !source_place.equals(source_place_redraw_check)) {
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                        mapFragment.getMapAsync(NewPostActivity.this);
+                        source_place_redraw_check = source_place;
+                    }
                 }
                 if(position == 1) {
                     mDestinationField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_destination);
@@ -201,11 +203,6 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
-                    /*if(destination_place != null && !destination_place.equals("")) {
-                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
-                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
-                        mapFragment.getMapAsync(NewPostActivity.this);
-                    }*/
                 }
                 if(position==2){
                     if(postType)mpassengerCount = (EditText) findViewById(R.id.passengerCount);
