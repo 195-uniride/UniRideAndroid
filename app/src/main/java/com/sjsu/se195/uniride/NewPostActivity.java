@@ -188,7 +188,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                         public void onPlaceSelected(Place place) {
                             //TODO: Get info about the selected place
                             Log.i(TAG, "Place: " + place.getName());
+                            System.out.println("line 191: " +place.getName() );
                             destination_place = place.getAddress().toString();
+                            NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
+                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+                            mapFragment.getMapAsync(NewPostActivity.this);
                         }
 
                         @Override
@@ -197,11 +201,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
-                    if(destination_place != null && !destination_place.equals("")) {
+                    /*if(destination_place != null && !destination_place.equals("")) {
                         NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
                         mapFragment.getMapAsync(NewPostActivity.this);
-                    }
+                    }*/
                 }
                 if(position==2){
                     if(postType)mpassengerCount = (EditText) findViewById(R.id.passengerCount);
@@ -255,6 +259,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                     public void onPlaceSelected(Place place) {
                         //TODO: Get info about the selected place
                         Log.i(TAG, "Place: " + place.getName());
+                        System.out.println("line 258: " +place.getName() );
                         destination_place = place.getAddress().toString();
                         NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
