@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.text.TextWatcher;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -63,6 +64,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     // [END declare_database_ref]
 
     private PlaceAutocompleteFragment mSourceField;
+    private EditText sourceFieldWatcher;
     private PlaceAutocompleteFragment mDestinationField;
     private FloatingActionButton mSubmitButton;
     private boolean postType = false; //true = driveOffer; false = rideRequest
@@ -77,14 +79,17 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     private GoogleMap m_map;
 
     private MarkerOptions set_marker;
+    private LatLng location_latlng;
 
     @Override
     public void onMapReady(GoogleMap map){
         //mapReady = true;
-        String location = source_place;
         m_map = map;
-        m_map.addMarker(location);
-        CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
+        set_marker = new MarkerOptions()
+                .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
+                .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        m_map.addMarker(set_marker);
+        CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
         m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
     }
 
@@ -170,6 +175,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
+
+                    NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     mapFragment.getMapAsync(NewPostActivity.this);
 
@@ -190,6 +197,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
+                    if(destination_place != null && !destination_place.equals("")) {
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+                        mapFragment.getMapAsync(NewPostActivity.this);
+                    }
                 }
                 if(position==2){
                     if(postType)mpassengerCount = (EditText) findViewById(R.id.passengerCount);
@@ -221,6 +233,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                         //TODO: Get info about the selected place
                         Log.i(TAG, "Place: " + place.getName());
                         source_place = place.getAddress().toString();
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                        mapFragment.getMapAsync(NewPostActivity.this);
                     }
 
                     @Override
@@ -229,6 +244,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                         Log.i(TAG, "An error occured: " + status);
                     }
                 });
+
+
             }
             if(i == 1) {
                 post_from= getLayoutInflater().inflate(R.layout.post_destination_carousel, null);
@@ -239,6 +256,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                         //TODO: Get info about the selected place
                         Log.i(TAG, "Place: " + place.getName());
                         destination_place = place.getAddress().toString();
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+                        mapFragment.getMapAsync(NewPostActivity.this);
                     }
 
                     @Override
@@ -276,7 +296,6 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     }
 
     private void submitPost() {
-        System.out.println("2. " + source_place);
         final String source = source_place;
         final String destination = destination_place;
 

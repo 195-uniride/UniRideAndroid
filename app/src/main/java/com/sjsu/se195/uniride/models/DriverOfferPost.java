@@ -19,6 +19,8 @@ public class DriverOfferPost extends Post {
         this.passengerCount = pasCount;
     }
 
+    public int getPassengerCount() { return passengerCount; }
+
     public  Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);

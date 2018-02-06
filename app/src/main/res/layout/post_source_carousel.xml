@@ -48,20 +48,16 @@
         <LinearLayout
             android:id="@+id/for_map_layout"
             android:layout_width="match_parent"
-            android:layout_height="800dp"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_below="@+id/post_text_layout"
             android:weightSum="1.0">
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/map"
                 android:layout_width="match_parent"
-                android:layout_height="800dp"
+                android:layout_height="match_parent"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
-                map:cameraTargetLat="37.3394"
-                map:cameraTargetLng="-121.8938"
-                map:cameraBearing="112.3"
-                map:cameraTilt="65"
-                map:cameraZoom="17"/>
+                map:cameraBearing="112.3"/>
         </LinearLayout>
 
     </RelativeLayout>
