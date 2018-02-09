@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="6">
@@ -24,7 +25,7 @@
             android:layout_marginBottom="0dp"
             android:layout_below="@id/carousel_title"/>
 
-        <EditText
+        <!--<EditText
             android:id="@+id/pickupPoint"
             android:layout_width="match_parent"
             android:layout_centerHorizontal="true"
@@ -33,10 +34,39 @@
             android:hint="Will be removed when maps implemented"
             android:inputType="number"
             android:layout_below="@id/post_carousel_label"
-            style="@style/post_text_field"/>
+            style="@style/post_text_field"/>-->
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"></RelativeLayout>
+        android:layout_weight="4">
+        <LinearLayout
+            android:id="@+id/for_map_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/post_text_layout"
+            android:weightSum="1.0">
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                map:cameraBearing="112.3"/>
+            <LinearLayout
+                android:id="@+id/locationMarker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="30dp"
+                android:gravity="center"
+                android:orientation="vertical" >
+                <ImageView
+                    android:id="@+id/imageMarker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pin" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

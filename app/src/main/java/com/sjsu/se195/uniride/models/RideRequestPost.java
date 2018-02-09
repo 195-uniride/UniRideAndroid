@@ -1,5 +1,7 @@
 package com.sjsu.se195.uniride.models;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,12 +10,12 @@ import java.util.Map;
  */
 
 public class RideRequestPost extends Post {
-    private String pickuppoint;
+    private LatLng pickuppoint;
 
     public RideRequestPost(){}
 
     //Constructer
-    public RideRequestPost(String uid, String author, String source, String destination, String point){
+    public RideRequestPost(String uid, String author, String source, String destination, LatLng point){
         super(uid, author, source, destination);
         this.pickuppoint = point;
     }
