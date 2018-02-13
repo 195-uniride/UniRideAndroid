@@ -100,11 +100,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             m_map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener(){
                 @Override
                 public void onCameraMove(){
-                    Log.d("Camera postion change" + "", m_map.getCameraPosition().target + "");
-                    mpickupPoint = m_map.getCameraPosition().target;
+                Log.d("Camera postion change" + "", m_map.getCameraPosition().target + "");
+                CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+                mpickupPoint = m_map.getCameraPosition().target;
                 }
             });
         }
+        pickup_point_check = false;
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
@@ -172,6 +174,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
 
             @Override
             public void onPageSelected(int position) {
+                mSubmitButton.setVisibility(View.GONE);
                 currentPosition = position;
                 pickup_point_check = false;
                 if(position == 0) {
@@ -225,6 +228,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                     if(postType)mpassengerCount = (EditText) findViewById(R.id.passengerCount);
                     else{
                         pickup_point_check = true;
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.pickup_map);
+                        mapFragment.getMapAsync(NewPostActivity.this);
                     }
                     mSubmitButton.setVisibility(View.VISIBLE);
                     mSubmitButton.invalidate();
@@ -334,11 +340,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             return;
         }
         else{
-            this.pickupPoint = mpickupPoint;
+            //TODO: do something with mpickuppoint ??
         }
 
         final int passengerCount = passengerCount_temp;
-        final LatLng pickupPoint = pickupPoint_temp;
+        final LatLng pickupPoint = mpickupPoint;
 
         //if drive offer post and passenger count empty
         if(postType && passengerCount_temp==0) {
@@ -346,11 +352,12 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             return;
         }
 
+        //TODO: probably not needed
         //if ride request post and pickup point empty
-        if (!postType && TextUtils.isEmpty(pickupPoint_temp)) {
+        /*if (!postType && TextUtils.isEmpty(pickupPoint_temp)) {
             mpickupPoint.setError(REQUIRED);
             return;
-        }
+        }*/
 
         // Title is required
         if (TextUtils.isEmpty(source)) {
@@ -440,7 +447,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     }
 
     //creating a ride request
-    private void writeNewRideRequestPost(String userId, String username, String source, String destination, String pickupPoint){
+    private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint){
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
