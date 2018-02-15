@@ -1,6 +1,7 @@
 package com.sjsu.se195.uniride;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +20,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.model.LatLngBounds;
+//import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,12 +49,15 @@ import android.location.Geocoder;
 import android.location.Location;
 
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class NewPostActivity extends BaseActivity implements OnMapReadyCallback {
 
@@ -57,9 +66,12 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     int NUMBER_OF_PAGES = 3;
     CarouselView formCarousel;
     private String source_place;
-    private String source_place_redraw_check;
+    private Boolean source_check = false;
     private String destination_place;
     private boolean pickup_point_check = false;
+    private Boolean destination_check = false;
+    private Boolean route_present = false;
+    private Boolean state_changed = false;
     private int currentPosition;
     // [START declare_database_ref]
     private DatabaseReference mDatabase;
@@ -79,14 +91,19 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     private static final String RIDER_TITLE = "Request a Ride";
 
     private GoogleMap m_map;
+    private GMapV2Direction md;
 
     private MarkerOptions set_marker;
+    private MarkerOptions [] markers = new MarkerOptions[2];
     private LatLng location_latlng;
+    private LatLng location_latlng2;
+    private boolean first_time_running = false;
 
     @Override
     public void onMapReady(GoogleMap map){
         //mapReady = true;
         m_map = map;
+        m_map.clear();
         if(!pickup_point_check) {
             set_marker = new MarkerOptions()
                     .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
@@ -100,13 +117,120 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             m_map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener(){
                 @Override
                 public void onCameraMove(){
-                Log.d("Camera postion change" + "", m_map.getCameraPosition().target + "");
-                CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
-                mpickupPoint = m_map.getCameraPosition().target;
+                    Log.d("Camera postion change" + "", m_map.getCameraPosition().target + "");
+                    CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+                    mpickupPoint = m_map.getCameraPosition().target;
                 }
             });
         }
         pickup_point_check = false;
+        //Check if the array positions are empty if so fill it up
+        if(markers[0] == null && source_place != null){ markers[0] = new MarkerOptions(); }
+        if(markers[1] == null && destination_place != null){ markers[1] = new MarkerOptions();}
+
+        //Set the latitude and longitude of the markers
+        if(source_place != null) {
+            markers[0].position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
+                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+            m_map.addMarker(markers[0]);
+        }
+        if(destination_place != null) {
+            markers[1].position(new LatLng(this.location_latlng2.latitude, this.location_latlng2.longitude))
+                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+            m_map.addMarker(markers[1]);
+        }
+
+        //markers.add(set_marker);
+        //markers[0];
+
+        /*
+        set_marker = new MarkerOptions()
+                .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
+                .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        if(source_place != null && !source_place.equals("")
+                && source_place_redraw_check != null && !source_place.equals(source_place_redraw_check)
+                && markers[0] != null){
+            System.out.println("Source has been changed to : " + source_place);
+            markers[0].position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
+                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        }
+
+        if(destination_place != null && !destination_place.equals("") && destination_place_redraw_check == null) {
+            set_marker = new MarkerOptions()
+                    .position(new LatLng(this.location_latlng2.latitude, this.location_latlng2.longitude))
+                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+            //markers.add(set_marker2);
+            m_map.addMarker(set_marker);
+            markers[1] = set_marker;
+            System.out.println("First time adding destination which is: " + destination_place);
+        }
+        else if(destination_place != null && !destination_place.equals("")
+                && destination_place_redraw_check != null && !destination_place.equals(destination_place_redraw_check)){
+            markers[1].position(new LatLng(this.location_latlng2.latitude, this.location_latlng2.longitude))
+                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+            System.out.println("Changin the destination to a new this: " + destination_place);
+        }
+
+        if((source_place_redraw_check == null) ||
+                (source_place_redraw_check != null && !source_place.equals(source_place_redraw_check))){
+            source_place_redraw_check = source_place;
+        }
+        if((destination_place_redraw_check == null) ||
+                (destination_place_redraw_check != null && !destination_place.equals(destination_place_redraw_check))){
+            destination_place_redraw_check = destination_place;
+        }*/
+        try {
+            drawDirections();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setCamera();
+    }
+
+    private void drawDirections() throws ExecutionException, InterruptedException {
+        md = new GMapV2Direction();
+        Document doc;
+
+        //if(source_place != null && !source_place.equals("") && destination_place != null && destination_place.equals("")) {
+        if(destination_place != null){
+            doc = (Document) new GMapV2Direction().execute(location_latlng, location_latlng2).get();
+            ArrayList<LatLng> directionPoint = md.getDirection(doc);
+            PolylineOptions rectLine = new PolylineOptions().width(3).color(
+                    Color.RED);
+
+            if(doc != null) {
+                for (int i = 0; i < directionPoint.size(); i++) {
+                    rectLine.add(directionPoint.get(i));
+                }
+            }
+            else{
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Polyline polylin = m_map.addPolyline(rectLine);
+        }
+
+    }
+
+    private void setCamera(){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        if(markers[0] != null){ builder.include(markers[0].getPosition()); }
+        if(markers[1] != null){ builder.include(markers[1].getPosition()); }
+        LatLngBounds bounds = builder.build();
+        int padding = 100; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        int zoomLevel = 0;
+        m_map.moveCamera(cu);
+        //This is only done to set the zoom for a single point at a comfortable level
+        if(destination_place == null){m_map.animateCamera(CameraUpdateFactory.zoomTo(15));}
+
+        //CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+        //m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
@@ -186,6 +310,21 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             //TODO: Get info about the selected place
                             Log.i(TAG, "Place: " + place.getName());
                             source_place = place.getAddress().toString();
+                            NewPostActivity.this.source_check = true;
+                            state_changed = true; //Source was changed
+                            //if((source_place != null && !source_place.equals(""))){
+                            NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                            if (NewPostActivity.this.destination_check){
+                                NewPostActivity.this.route_present = true;
+                                NewPostActivity.this.destination_check = false;
+                                NewPostActivity.this.location_latlng2 = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
+                            }
+                            else {
+                                NewPostActivity.this.route_present = false;
+                            }
+                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                            mapFragment.getMapAsync(NewPostActivity.this);
+                            //}
                         }
 
                         @Override
@@ -194,11 +333,10 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
-                    if(source_place != null && !source_place.equals("") && !source_place.equals(source_place_redraw_check)) {
-                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                    if(state_changed){
+                        state_changed = false;
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                         mapFragment.getMapAsync(NewPostActivity.this);
-                        source_place_redraw_check = source_place;
                     }
                 }
                 if(position == 1) {
@@ -209,11 +347,22 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                         public void onPlaceSelected(Place place) {
                             //TODO: Get info about the selected place
                             Log.i(TAG, "Place: " + place.getName());
-                            System.out.println("line 191: " +place.getName() );
                             destination_place = place.getAddress().toString();
-                            NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
+                            NewPostActivity.this.destination_check = true;
+                            state_changed = true;//Destination was changed
+                            //if(destination_place != null && !destination_place.equals("") && (destination_place_redraw_check == null || !destination_place.equals(destination_place_redraw_check))) {
+                            NewPostActivity.this.location_latlng2 = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
+                            if (NewPostActivity.this.source_check){
+                                NewPostActivity.this.route_present = true;
+                                NewPostActivity.this.source_check = false;
+                                NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                            }
+                            else {
+                                NewPostActivity.this.route_present = false;
+                            }
                             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
                             mapFragment.getMapAsync(NewPostActivity.this);
+                            //}
                         }
 
                         @Override
@@ -222,6 +371,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                             Log.i(TAG, "An error occured: " + status);
                         }
                     });
+                    if(state_changed){
+                        state_changed = false;
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                        mapFragment.getMapAsync(NewPostActivity.this);
+                    }
                 }
                 if(position==2){
                     pickup_point_check = false;
@@ -284,11 +438,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                     public void onPlaceSelected(Place place) {
                         //TODO: Get info about the selected place
                         Log.i(TAG, "Place: " + place.getName());
-                        System.out.println("line 258: " +place.getName() );
                         destination_place = place.getAddress().toString();
-                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
-                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
-                        mapFragment.getMapAsync(NewPostActivity.this);
+                        if(destination_place != null && !destination_place.equals("")) {
+                            NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                            NewPostActivity.this.location_latlng2 = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
+                            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
+                            mapFragment.getMapAsync(NewPostActivity.this);
+                        }
                     }
 
                     @Override
