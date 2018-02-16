@@ -588,11 +588,15 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         Map<String, Object> postValuesPickupPoint = rideRequest_pickupPoint.toMap_pickupPoint();
 
         Map<String, Object> childUpdates = new HashMap<>();
+        Map<String, Object> childUpdates2 = new HashMap<>();
         childUpdates.put("/posts/rideRequests/" + key, postValues);
 
         childUpdates.put("/user-posts/" + userId + "/rideRequests/" + key, postValues);
-
         mDatabase.updateChildren(childUpdates);
+
+        childUpdates2.put("/posts/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
+        childUpdates2.put("/user-posts/" + userId + "/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
+        mDatabase.updateChildren(childUpdates2);
     }
     // [END write_fan_out]
 }
