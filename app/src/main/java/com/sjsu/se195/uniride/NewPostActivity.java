@@ -68,6 +68,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     private String source_place;
     private Boolean source_check = false;
     private String destination_place;
+    private boolean pickup_point_check = false;
     private Boolean destination_check = false;
     private Boolean route_present = false;
     private Boolean state_changed = false;
@@ -84,7 +85,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
 
     private EditText mpassengerCount;
 
-    private EditText mpickupPoint;
+    private LatLng mpickupPoint;
 
     private static final String DRIVER_TITLE = "Offer a Ride";
     private static final String RIDER_TITLE = "Request a Ride";
@@ -103,7 +104,14 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         //mapReady = true;
         m_map = map;
         m_map.clear();
+        set_marker = new MarkerOptions()
+                .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
+                .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        m_map.addMarker(set_marker);
+        CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
         //Check if the array positions are empty if so fill it up
+
         if(markers[0] == null && source_place != null){ markers[0] = new MarkerOptions(); }
         if(markers[1] == null && destination_place != null){ markers[1] = new MarkerOptions();}
 
@@ -119,45 +127,17 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             m_map.addMarker(markers[1]);
         }
 
-        //markers.add(set_marker);
-        //markers[0];
-
-        /*
-        set_marker = new MarkerOptions()
-                .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
-                .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-        if(source_place != null && !source_place.equals("")
-                && source_place_redraw_check != null && !source_place.equals(source_place_redraw_check)
-                && markers[0] != null){
-            System.out.println("Source has been changed to : " + source_place);
-            markers[0].position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
-                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        if (pickup_point_check) {
+            m_map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener(){
+                @Override
+                public void onCameraMove(){
+                    Log.d("Camera postion change" + "", m_map.getCameraPosition().target + "");
+                    CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+                    mpickupPoint = m_map.getCameraPosition().target;
+                }
+            });
         }
 
-        if(destination_place != null && !destination_place.equals("") && destination_place_redraw_check == null) {
-            set_marker = new MarkerOptions()
-                    .position(new LatLng(this.location_latlng2.latitude, this.location_latlng2.longitude))
-                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-            //markers.add(set_marker2);
-            m_map.addMarker(set_marker);
-            markers[1] = set_marker;
-            System.out.println("First time adding destination which is: " + destination_place);
-        }
-        else if(destination_place != null && !destination_place.equals("")
-                && destination_place_redraw_check != null && !destination_place.equals(destination_place_redraw_check)){
-            markers[1].position(new LatLng(this.location_latlng2.latitude, this.location_latlng2.longitude))
-                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-            System.out.println("Changin the destination to a new this: " + destination_place);
-        }
-
-        if((source_place_redraw_check == null) ||
-                (source_place_redraw_check != null && !source_place.equals(source_place_redraw_check))){
-            source_place_redraw_check = source_place;
-        }
-        if((destination_place_redraw_check == null) ||
-                (destination_place_redraw_check != null && !destination_place.equals(destination_place_redraw_check))){
-            destination_place_redraw_check = destination_place;
-        }*/
         try {
             drawDirections();
         } catch (ExecutionException e) {
@@ -166,17 +146,16 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             e.printStackTrace();
         }
         setCamera();
-        System.out.println("*****************************");
+
+
     }
 
     private void drawDirections() throws ExecutionException, InterruptedException {
         md = new GMapV2Direction();
-        System.out.println("In the drawDirections");
         Document doc;
 
         //if(source_place != null && !source_place.equals("") && destination_place != null && destination_place.equals("")) {
         if(destination_place != null){
-            System.out.println("Route present between " + source_place + ", " + destination_place);
             doc = (Document) new GMapV2Direction().execute(location_latlng, location_latlng2).get();
             ArrayList<LatLng> directionPoint = md.getDirection(doc);
             PolylineOptions rectLine = new PolylineOptions().width(3).color(
@@ -189,33 +168,38 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             }
             else{
                 try {
-                    System.out.println("I m here");
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
             Polyline polylin = m_map.addPolyline(rectLine);
-            System.out.println("In the drawDirections 2");
         }
 
     }
 
     private void setCamera(){
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        if(markers[0] != null){ builder.include(markers[0].getPosition()); }
-        if(markers[1] != null){ builder.include(markers[1].getPosition()); }
-        System.out.println("setCamera");
-        LatLngBounds bounds = builder.build();
-        int padding = 100; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        int zoomLevel = 0;
-        m_map.moveCamera(cu);
-        //This is only done to set the zoom for a single point at a comfortable level
-        if(destination_place == null){m_map.animateCamera(CameraUpdateFactory.zoomTo(15));}
+        if(!pickup_point_check) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            if (markers[0] != null) {
+                builder.include(markers[0].getPosition());
+            }
+            if (markers[1] != null) {
+                builder.include(markers[1].getPosition());
+            }
+            LatLngBounds bounds = builder.build();
+            int padding = 100; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            int zoomLevel = 0;
+            m_map.moveCamera(cu);
+            //This is only done to set the zoom for a single point at a comfortable level
+            if (destination_place == null) {
+                m_map.animateCamera(CameraUpdateFactory.zoomTo(15));
+            }
 
-        //CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
-        //m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+            //CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+            //m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+        }
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
@@ -283,9 +267,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
 
             @Override
             public void onPageSelected(int position) {
+                mSubmitButton.setVisibility(View.GONE);
                 currentPosition = position;
+                pickup_point_check = false;
                 if(position == 0) {
-                    System.out.println("In on possition 0");
+                    pickup_point_check = false;
                     mSourceField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_source);
                     mSourceField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                         @Override
@@ -323,6 +309,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                     }
                 }
                 if(position == 1) {
+                    pickup_point_check = false;
                     mDestinationField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_destination);
                     mDestinationField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                         @Override
@@ -360,8 +347,14 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                     }
                 }
                 if(position==2){
+                    pickup_point_check = false;
                     if(postType)mpassengerCount = (EditText) findViewById(R.id.passengerCount);
-                    else mpickupPoint = (EditText) findViewById(R.id.pickupPoint);
+                    else{
+                        pickup_point_check = true;
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.pickup_map);
+                        mapFragment.getMapAsync(NewPostActivity.this);
+                    }
                     mSubmitButton.setVisibility(View.VISIBLE);
                     mSubmitButton.invalidate();
                 }
@@ -380,7 +373,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         @Override
         public View setViewForPosition(int i) {
             View post_from = null;
+            pickup_point_check = false;
             if(i == 0) {
+                pickup_point_check = false;
                 post_from= getLayoutInflater().inflate(R.layout.post_source_carousel, null);
                 mSourceField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_source);
                 mSourceField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -404,22 +399,20 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
 
             }
             if(i == 1) {
+                pickup_point_check = false;
                 post_from= getLayoutInflater().inflate(R.layout.post_destination_carousel, null);
                 mDestinationField = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.field_destination);
                 mDestinationField.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                     @Override
                     public void onPlaceSelected(Place place) {
-                        System.out.println("u dont time");
                         //TODO: Get info about the selected place
                         Log.i(TAG, "Place: " + place.getName());
                         destination_place = place.getAddress().toString();
-                        System.out.println("line 258: " +place.getName() );
                         if(destination_place != null && !destination_place.equals("")) {
                             NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
                             NewPostActivity.this.location_latlng2 = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.destination_place);
                             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map2);
                             mapFragment.getMapAsync(NewPostActivity.this);
-                            System.out.println("ViewListener, position = 1, if");
                         }
                     }
 
@@ -436,8 +429,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                     mpassengerCount = (EditText) post_from.findViewById(R.id.passengerCount);
                 }
                 else {
+                    pickup_point_check = false;
                     post_from= getLayoutInflater().inflate(R.layout.post_pickuppoint_carousel, null);
-                    mpickupPoint = (EditText) post_from.findViewById(R.id.pickupPoint);
+                    if(source_place != null){
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.pickup_map);
+                        mapFragment.getMapAsync(NewPostActivity.this);
+                    }
                 }
                 mSubmitButton.setVisibility(View.VISIBLE);
                 mSubmitButton.invalidate();
@@ -451,6 +449,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         }
     };
 
+
     /****Helper functions*****/
     private void setTitle(TextView tv){
         if(postType)tv.setText(DRIVER_TITLE);
@@ -461,7 +460,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         final String source = source_place;
         final String destination = destination_place;
 
-        String pickupPoint_temp = "nil";
+        //LatLng pickupPoint_temp;
         int passengerCount_temp = 0;
         if(postType && !mpassengerCount.getText().toString().equals("")){
             passengerCount_temp = Integer.parseInt(mpassengerCount.getText().toString());
@@ -471,11 +470,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             return;
         }
         else{
-            pickupPoint_temp = mpickupPoint.getText().toString();
+            //TODO: do something with mpickuppoint ??
         }
 
         final int passengerCount = passengerCount_temp;
-        final String pickupPoint = pickupPoint_temp;
+        final LatLng pickupPoint = mpickupPoint;
 
         //if drive offer post and passenger count empty
         if(postType && passengerCount_temp==0) {
@@ -483,11 +482,12 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             return;
         }
 
+        //TODO: probably not needed
         //if ride request post and pickup point empty
-        if (!postType && TextUtils.isEmpty(pickupPoint_temp)) {
+        /*if (!postType && TextUtils.isEmpty(pickupPoint_temp)) {
             mpickupPoint.setError(REQUIRED);
             return;
-        }
+        }*/
 
         // Title is required
         if (TextUtils.isEmpty(source)) {
@@ -577,16 +577,19 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     }
 
     //creating a ride request
-    private void writeNewRideRequestPost(String userId, String username, String source, String destination, String pickupPoint){
+    private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint){
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
 
-        RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination, pickupPoint);
+        RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination);
         Map<String, Object> postValues = rideRequest.toMap();
+        RideRequestPost rideRequest_pickupPoint = new RideRequestPost(pickupPoint);
+        Map<String, Object> postValuesPickupPoint = rideRequest_pickupPoint.toMap_pickupPoint();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/posts/rideRequests/" + key, postValues);
+
         childUpdates.put("/user-posts/" + userId + "/rideRequests/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
