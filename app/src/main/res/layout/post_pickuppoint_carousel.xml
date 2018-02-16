@@ -54,8 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
-                map:cameraBearing="112.3"/>
-            <!--<LinearLayout
+                map:cameraBearing="112.3">
+            <LinearLayout
                 android:id="@+id/locationMarker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,10 +65,11 @@
                 android:orientation="vertical" >
                 <ImageView
                     android:id="@+id/imageMarker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:src="@drawable/pin" />
-            </LinearLayout>-->
+            </LinearLayout>
+            </fragment>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

@@ -15,9 +15,19 @@ public class RideRequestPost extends Post {
     public RideRequestPost(){}
 
     //Constructer
-    public RideRequestPost(String uid, String author, String source, String destination, LatLng point){
+    public RideRequestPost(String uid, String author, String source, String destination){
         super(uid, author, source, destination);
+    }
+
+    public RideRequestPost(LatLng point){
         this.pickuppoint = point;
+    }
+
+    public Map<String, Object> toMap_pickupPoint(){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("latitude", pickuppoint.latitude);
+        result.put("longitude", pickuppoint.longitude);
+        return result;
     }
 
     public Map<String, Object> toMap(){
@@ -28,7 +38,6 @@ public class RideRequestPost extends Post {
         result.put("destination", destination);
         result.put("starCount", starCount);
         result.put("stars", stars);
-        result.put("pickupPoint", pickuppoint);
         return result;
     }
 }

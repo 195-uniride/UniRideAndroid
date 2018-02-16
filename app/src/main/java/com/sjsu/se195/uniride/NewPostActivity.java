@@ -104,27 +104,14 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         //mapReady = true;
         m_map = map;
         m_map.clear();
-        if(!pickup_point_check) {
-            set_marker = new MarkerOptions()
-                    .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
-                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-            m_map.addMarker(set_marker);
-            CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
-            m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
-        }
-
-        else{
-            m_map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener(){
-                @Override
-                public void onCameraMove(){
-                    Log.d("Camera postion change" + "", m_map.getCameraPosition().target + "");
-                    CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
-                    mpickupPoint = m_map.getCameraPosition().target;
-                }
-            });
-        }
-        pickup_point_check = false;
+        set_marker = new MarkerOptions()
+                .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
+                .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        m_map.addMarker(set_marker);
+        CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
         //Check if the array positions are empty if so fill it up
+
         if(markers[0] == null && source_place != null){ markers[0] = new MarkerOptions(); }
         if(markers[1] == null && destination_place != null){ markers[1] = new MarkerOptions();}
 
@@ -140,45 +127,17 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             m_map.addMarker(markers[1]);
         }
 
-        //markers.add(set_marker);
-        //markers[0];
-
-        /*
-        set_marker = new MarkerOptions()
-                .position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
-                .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-        if(source_place != null && !source_place.equals("")
-                && source_place_redraw_check != null && !source_place.equals(source_place_redraw_check)
-                && markers[0] != null){
-            System.out.println("Source has been changed to : " + source_place);
-            markers[0].position(new LatLng(this.location_latlng.latitude, this.location_latlng.longitude))
-                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        if (pickup_point_check) {
+            m_map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener(){
+                @Override
+                public void onCameraMove(){
+                    Log.d("Camera postion change" + "", m_map.getCameraPosition().target + "");
+                    CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+                    mpickupPoint = m_map.getCameraPosition().target;
+                }
+            });
         }
 
-        if(destination_place != null && !destination_place.equals("") && destination_place_redraw_check == null) {
-            set_marker = new MarkerOptions()
-                    .position(new LatLng(this.location_latlng2.latitude, this.location_latlng2.longitude))
-                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-            //markers.add(set_marker2);
-            m_map.addMarker(set_marker);
-            markers[1] = set_marker;
-            System.out.println("First time adding destination which is: " + destination_place);
-        }
-        else if(destination_place != null && !destination_place.equals("")
-                && destination_place_redraw_check != null && !destination_place.equals(destination_place_redraw_check)){
-            markers[1].position(new LatLng(this.location_latlng2.latitude, this.location_latlng2.longitude))
-                    .title("title").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-            System.out.println("Changin the destination to a new this: " + destination_place);
-        }
-
-        if((source_place_redraw_check == null) ||
-                (source_place_redraw_check != null && !source_place.equals(source_place_redraw_check))){
-            source_place_redraw_check = source_place;
-        }
-        if((destination_place_redraw_check == null) ||
-                (destination_place_redraw_check != null && !destination_place.equals(destination_place_redraw_check))){
-            destination_place_redraw_check = destination_place;
-        }*/
         try {
             drawDirections();
         } catch (ExecutionException e) {
@@ -187,6 +146,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             e.printStackTrace();
         }
         setCamera();
+
+
     }
 
     private void drawDirections() throws ExecutionException, InterruptedException {
@@ -218,19 +179,27 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     }
 
     private void setCamera(){
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        if(markers[0] != null){ builder.include(markers[0].getPosition()); }
-        if(markers[1] != null){ builder.include(markers[1].getPosition()); }
-        LatLngBounds bounds = builder.build();
-        int padding = 100; // offset from edges of the map in pixels
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-        int zoomLevel = 0;
-        m_map.moveCamera(cu);
-        //This is only done to set the zoom for a single point at a comfortable level
-        if(destination_place == null){m_map.animateCamera(CameraUpdateFactory.zoomTo(15));}
+        if(!pickup_point_check) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            if (markers[0] != null) {
+                builder.include(markers[0].getPosition());
+            }
+            if (markers[1] != null) {
+                builder.include(markers[1].getPosition());
+            }
+            LatLngBounds bounds = builder.build();
+            int padding = 100; // offset from edges of the map in pixels
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            int zoomLevel = 0;
+            m_map.moveCamera(cu);
+            //This is only done to set the zoom for a single point at a comfortable level
+            if (destination_place == null) {
+                m_map.animateCamera(CameraUpdateFactory.zoomTo(15));
+            }
 
-        //CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
-        //m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+            //CameraPosition target = CameraPosition.builder().target(location_latlng).zoom(14).build();
+            //m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+        }
     }
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
@@ -462,6 +431,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                 else {
                     pickup_point_check = false;
                     post_from= getLayoutInflater().inflate(R.layout.post_pickuppoint_carousel, null);
+                    if(source_place != null){
+                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.pickup_map);
+                        mapFragment.getMapAsync(NewPostActivity.this);
+                    }
                 }
                 mSubmitButton.setVisibility(View.VISIBLE);
                 mSubmitButton.invalidate();
@@ -608,11 +582,14 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
 
-        RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination, pickupPoint);
+        RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination);
         Map<String, Object> postValues = rideRequest.toMap();
+        RideRequestPost rideRequest_pickupPoint = new RideRequestPost(pickupPoint);
+        Map<String, Object> postValuesPickupPoint = rideRequest_pickupPoint.toMap_pickupPoint();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/posts/rideRequests/" + key, postValues);
+
         childUpdates.put("/user-posts/" + userId + "/rideRequests/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
