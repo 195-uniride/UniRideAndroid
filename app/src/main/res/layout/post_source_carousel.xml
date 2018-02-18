@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix"
+    android:weightSum="2">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/gradient0"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/carousel_title"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            style="@style/post_title"/>
+
+        <TextView
+            android:id="@+id/post_carousel_label"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:text="@string/post_label_from"
+            style="@style/post_label"
+            android:layout_below="@id/carousel_title"/>
+
+        <fragment
+            android:id="@+id/field_source"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Source Location Address"
+            android:inputType="textPostalAddress"
+            android:layout_below="@id/post_carousel_label"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            style="@style/post_text_field"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/primaryWhite">
+
+        <LinearLayout
+            android:id="@+id/for_map_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/post_text_layout"
+            android:weightSum="1.0">
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                map:cameraBearing="112.3"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

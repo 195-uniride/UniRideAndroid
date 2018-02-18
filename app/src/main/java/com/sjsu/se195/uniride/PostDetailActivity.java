@@ -13,24 +13,35 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.models.DriverOfferPost;
+import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
-import com.sjsu.se195.uniride.models.Post;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostDetailActivity extends BaseActivity implements View.OnClickListener {
+public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback{
 
     private static final String TAG = "PostDetailActivity";
 
     public static final String EXTRA_POST_KEY = "post_key";
+    private boolean postType;
 
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
@@ -45,11 +56,17 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
 
+    private GoogleMap m_map;
+    private boolean mapReady;
+
+    //markers
+    private MarkerOptions sjsu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_detail);
-
+        setContentView(R.layout.activity_3_post_detail);
+        postType = getIntent().getExtras().getBoolean("postType");
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
         if (mPostKey == null) {
@@ -57,15 +74,26 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
         }
 
         // Initialize Database
-        mPostReference = FirebaseDatabase.getInstance().getReference()
-                .child("posts").child(mPostKey);
-        mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("post-comments").child(mPostKey);
+        if(postType){
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("rideRequests").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }else{
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("driveOffers").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+
+        System.out.println(mPostReference.toString());
+        /*mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                .child("post-comments").child(mPostKey);*/
 
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
-        mTitleView = (TextView) findViewById(R.id.post_title);
-        mBodyView = (TextView) findViewById(R.id.post_body);
+        mTitleView = (TextView) findViewById(R.id.post_source);
+        mBodyView = (TextView) findViewById(R.id.post_destination);
         mCommentField = (EditText) findViewById(R.id.field_comment_text);
         mCommentButton = (Button) findViewById(R.id.button_post_comment);
         mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
@@ -73,6 +101,14 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
         mCommentButton.setOnClickListener(this);
         mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
 
+        //marker for sjsu
+        sjsu = new MarkerOptions()
+                .position(new LatLng(37.335188, -121.881066))
+                .title("SJSU")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.extra_icon));
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -85,11 +121,21 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                Post post = dataSnapshot.getValue(Post.class);
-                // [START_EXCLUDE]
-                mAuthorView.setText(post.author);
-                mTitleView.setText(post.title);
-                mBodyView.setText(post.body);
+                System.out.println(dataSnapshot.toString());
+                if(postType){
+                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
+                    // [START_EXCLUDE]
+                    mAuthorView.setText(post.author);
+                    mTitleView.setText(post.source);
+                    mBodyView.setText(post.destination);
+                }
+                else{
+                    DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
+                    // [START_EXCLUDE]
+                    mAuthorView.setText(post.author);
+                    mTitleView.setText(post.source);
+                    mBodyView.setText(post.destination);
+                }
                 // [END_EXCLUDE]
             }
 
@@ -304,5 +350,20 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
             }
         }
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map){
+        mapReady = true;
+        m_map = map;
+        m_map.addMarker(sjsu);
+        LatLng city = new LatLng(37.3394, -121.8938);
+        CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
+        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+    }
+
+    //to animate when moving to a new location
+    public void flyTo(CameraPosition target){
+        m_map.animateCamera(CameraUpdateFactory.newCameraPosition(target));
     }
 }

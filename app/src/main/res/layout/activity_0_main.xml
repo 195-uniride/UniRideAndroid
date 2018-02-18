@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal"
+        android:padding="@dimen/fab_margin"
+        android:clipToPadding="false">
+
+        <ImageButton
+            android:id="@+id/driver_mode_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/button_main_usertype"
+            android:elevation="8dp"
+            android:src="@drawable/ic_directions_car_white_48dp" />
+
+        <ImageButton
+            android:id="@+id/rider_mode_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/button_main_usertype"
+            android:elevation="8dp"
+            android:src="@drawable/ic_search_white_48dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>

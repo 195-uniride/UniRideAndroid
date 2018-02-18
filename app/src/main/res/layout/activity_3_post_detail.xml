@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -18,7 +19,7 @@
 
     <include
         android:id="@+id/post_text_layout"
-        layout="@layout/include_post_text"
+        layout="@layout/include_post_addresses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -59,5 +60,25 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/comment_form"
         tools:listitem="@layout/item_comment" />
+
+    <LinearLayout
+        android:id="@+id/for_map_layout"
+        android:layout_width="match_parent"
+        android:layout_height="800dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/post_text_layout"
+        android:layout_marginTop="20dp"
+        android:weightSum="1.0">
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="800dp"
+            android:name="com.google.android.gms.maps.MapFragment"
+            map:cameraTargetLat="37.3394"
+            map:cameraTargetLng="-121.8938"
+            map:cameraBearing="112.3"
+            map:cameraTilt="65"
+            map:cameraZoom="17"/>
+    </LinearLayout>
 
 </RelativeLayout>

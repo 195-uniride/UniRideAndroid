@@ -7,69 +7,131 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.sjsu.se195.uniride.SignInActivity">
+    tools:context="com.sjsu.se195.uniride.SignInActivity"
+    android:background="@color/red">
 
-
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:src="@drawable/firebase_lockup_400" />
 
     <LinearLayout
-        android:id="@+id/layout_email_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/field_email"
-            android:layout_width="150dp"
+        <ImageView
+            android:id="@+id/uniride_logo"
+            android:layout_width="match_parent"
+            android:layout_height="200px"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:adjustViewBounds="false"
+            android:src="@mipmap/uniride_logo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/field_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_horizontal"
-            android:hint="@string/hint_email"
-            android:inputType="textEmailAddress"
-            android:maxLines="1" />
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/field_password"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_horizontal"
-            android:hint="@string/hint_password"
-            android:inputType="textPassword"
-            android:maxLines="1" />
+            <EditText
+                android:id="@+id/field_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+        </LinearLayout>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_buttons"
+        <LinearLayout
+        android:id="@+id/sign_in_button_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_below="@+id/layout_email_password"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal">
+        android:layout_alignLeft="@+id/layout_email_password"
+        android:layout_alignStart="@+id/layout_email_password">
 
-        <Button
-            android:id="@+id/button_sign_in"
-            android:layout_width="150dp"
+            <Button
+                android:id="@+id/button_sign_in"
+                android:layout_width="354dp"
+                android:layout_height="match_parent"
+                android:text="@string/sign_in" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/sign_up_button_layout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in" />
+            android:orientation="horizontal"
+            android:layout_below="@+id/layout_email_password"
+            android:layout_alignLeft="@+id/layout_email_password"
+            android:layout_alignStart="@+id/layout_email_password">
 
-
-        <Button
-            android:id="@+id/button_sign_up"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="@string/sign_up" />
+            <Button
+                android:id="@+id/signup2"
+                android:layout_width="354dp"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_up" />
+        </LinearLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>
+
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
+    <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
+    <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+    <!--tools:context="com.sjsu.se195.uniride.SignInActivity"-->
+    <!--android:background="@color/red">-->
+
+
+    <!--<ImageView-->
+        <!--android:id="@+id/uniride_logo"-->
+        <!--android:layout_width="200px"-->
+        <!--android:layout_height="200px"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="@dimen/activity_vertical_margin"-->
+        <!--android:adjustViewBounds="false"-->
+        <!--android:src="@mipmap/uniride_logo" />-->
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/layout_email_password"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/uniride_logo"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:orientation="horizontal">-->
+
+    <!--</LinearLayout>-->
+
+
+<!--</RelativeLayout>-->
