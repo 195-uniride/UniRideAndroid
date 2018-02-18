@@ -354,7 +354,6 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
 
     @Override
     public void onMapReady(GoogleMap map){
-
         mapReady = true;
         m_map = map;
         m_map.addMarker(sjsu);
