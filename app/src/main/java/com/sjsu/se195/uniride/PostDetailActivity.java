@@ -1,8 +1,6 @@
 package com.sjsu.se195.uniride;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +33,6 @@ import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,9 +55,6 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private EditText mCommentField;
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
-
-    private LatLng source;
-    private LatLng destination;
 
     private GoogleMap m_map;
     private boolean mapReady;
@@ -96,12 +90,6 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         /*mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("post-comments").child(mPostKey);*/
 
-        System.out.println("i m here: " + mPostReference.child("source").toString());
-
-        //Initialize map stuff
-        source = getLocationFromAddress(this, mPostReference.child("source").toString());
-        System.out.println("I m togo: " + source);
-
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
         mTitleView = (TextView) findViewById(R.id.post_source);
@@ -121,33 +109,6 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-    }
-
-    public LatLng getLocationFromAddress(Context context, String strAddress) {
-
-        Geocoder coder = new Geocoder(context);
-        List<Address> address;
-        LatLng p1 = null;
-
-        try {
-            // May throw an IOException
-            //coder.getFromLocationName(strAddress, 5)
-            address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
-                return null;
-            }
-            Address location = address.get(0);
-            location.getLatitude();
-            location.getLongitude();
-
-            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
-
-        } catch (IOException ex) {
-
-            ex.printStackTrace();
-        }
-
-        return p1;
     }
 
     @Override
