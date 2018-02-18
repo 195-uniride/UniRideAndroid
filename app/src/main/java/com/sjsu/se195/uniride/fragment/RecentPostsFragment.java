@@ -18,7 +18,8 @@ public class RecentPostsFragment extends PostListFragment {
             recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(100);
         }
         else{
-            recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(100);
+            recentPostsQuery = databaseReference.child("organization-posts").child("-L47q6ayVu4wPq23hnmm")
+                    .child("rideRequests").limitToFirst(100);
         }
         // [END recent_posts_query]
 
