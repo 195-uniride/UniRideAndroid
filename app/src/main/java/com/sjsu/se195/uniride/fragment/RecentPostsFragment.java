@@ -18,7 +18,18 @@ public class RecentPostsFragment extends PostListFragment {
             recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(100);
         }
         else{
-            recentPostsQuery = databaseReference.child("organization-posts").child("-L47q6ayVu4wPq23hnmm")
+//            DatabaseReference userRef = mDatabase.child("users").child(getUid()).getRef();//("users")
+//
+//            System.out.println("find user email?? = " + (userRef.orderByValue().endAt("email")));
+//            userRef.orderByValue().on("value", function(data) {
+//
+//                data.forEach(function(data) {
+//                    console.log("The " + data.key + " rating is " + data.val());
+//                });
+//
+//            });
+
+            recentPostsQuery = databaseReference.child("organization-posts").child(getUserOrganizationId())
                     .child("rideRequests").limitToFirst(100);
         }
         // [END recent_posts_query]

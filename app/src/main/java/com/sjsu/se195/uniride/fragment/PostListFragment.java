@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.Post;
@@ -29,7 +30,7 @@ public abstract class PostListFragment extends Fragment {
     private static final String TAG = "PostListFragment";
 
     // [START define_database_reference]
-    private DatabaseReference mDatabase;
+    protected DatabaseReference mDatabase;
     // [END define_database_reference]
 
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
@@ -168,6 +169,32 @@ public abstract class PostListFragment extends Fragment {
 
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    public String getUserOrganizationId() {
+
+        String defaultOrganizationId = "-L47q6ayVu4wPq23hnmm";
+
+//        mDatabase.child("user").child(getUid())
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        /*Post post = dataSnapshot.getValue(Post.class);
+//                        System.out.println(post);*/
+//
+//                        //String orgKey = dataSnapshot.getValue()
+//                        defaultOrganizationId = "NEW";
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        System.out.println("The read failed: " + databaseError.getCode());
+//                    }
+//                });
+
+
+
+        return defaultOrganizationId;
     }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
