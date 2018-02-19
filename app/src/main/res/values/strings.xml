@@ -29,4 +29,11 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_map">MapActivity</string>
+
+    <string name="organizations_prompt">Choose an Organization</string>
+    <string-array name="organizations_list">
+        <item>San Jose State University</item>
+        <item>DeAnza College</item>
+        <item>West Valley College</item>
+    </string-array>
 </resources>
