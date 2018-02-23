@@ -33,8 +33,10 @@
         <activity android:name=".PostDetailActivity" />
         <activity android:name=".OrganizationDetailActivity" />
         <activity android:name=".ShowOrganizationsActivity" />
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".SignInActivity">
+        <activity android:name=".SignUpActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".SignInActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
