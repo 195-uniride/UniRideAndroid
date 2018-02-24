@@ -34,6 +34,7 @@
         <activity android:name=".OrganizationDetailActivity" />
         <activity android:name=".ShowOrganizationsActivity" />
         <activity android:name=".SignUpActivity"/>
+        <activity android:name=".AddUserInformation"/>
         <activity android:name=".SignInActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

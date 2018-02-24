@@ -101,18 +101,17 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void onAuthSuccess(FirebaseUser user) {
-
         //Save user information to database
         writeNewUser(user.getUid(),user.getEmail());
 
         //Go to MainActivity
-        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+        startActivity(new Intent(SignUpActivity.this, AddUserInformation.class));
         finish();
     }
 
+    //Writes user's email in users table
     private void writeNewUser(String userId, String email) {
         UserInformation user = new UserInformation(email);
-
         mDatabase.child("users").child(userId).setValue(user);
     }
 
