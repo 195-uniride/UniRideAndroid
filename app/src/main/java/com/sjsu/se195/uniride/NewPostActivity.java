@@ -1,5 +1,7 @@
 package com.sjsu.se195.uniride;
 
+import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Address;
@@ -11,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.TimePickerFragment;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
@@ -47,6 +51,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import android.location.Geocoder;
 import android.location.Location;
+import android.widget.TimePicker;
 
 
 import org.w3c.dom.Document;
@@ -59,11 +64,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class NewPostActivity extends BaseActivity implements OnMapReadyCallback {
+public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
 
     private static final String TAG = "NewPostActivity";
     private static final String REQUIRED = "Required";
-    int NUMBER_OF_PAGES = 3;
+    int NUMBER_OF_PAGES = 5;
     CarouselView formCarousel;
     private String source_place;
     private Boolean source_check = false;
@@ -92,6 +97,11 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
 
     private GoogleMap m_map;
     private GMapV2Direction md;
+
+    private TimePickerFragment starting_time;
+    private TimePickerFragment ending_time;
+    private Button mArriveTime;
+    private Button mDepartTime;
 
     private MarkerOptions set_marker;
     private MarkerOptions [] markers = new MarkerOptions[2];
@@ -146,8 +156,6 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             e.printStackTrace();
         }
         setCamera();
-
-
     }
 
     private void drawDirections() throws ExecutionException, InterruptedException {
@@ -358,6 +366,27 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                     mSubmitButton.setVisibility(View.VISIBLE);
                     mSubmitButton.invalidate();
                 }
+                if(position==3){
+                    //this.showTimePickerDialog(R.id.)
+                    NewPostActivity.this.mArriveTime = findViewById(R.id.arriveTime);
+                    NewPostActivity.this.mArriveTime.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showTimePickerDialog(v, true);
+                        }
+                    });
+
+                    NewPostActivity.this.mDepartTime = findViewById(R.id.departTime);
+                    mDepartTime.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showTimePickerDialog(v, false);
+                        }
+                    });
+                }
+                if (position==4){
+                    //post_from = getLayoutInflater().inflate(R.layout.post_date_carousel, null);
+                }
                 else{
                     mSubmitButton.setVisibility(View.GONE);
                     mSubmitButton.invalidate();
@@ -440,6 +469,12 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                 mSubmitButton.setVisibility(View.VISIBLE);
                 mSubmitButton.invalidate();
             }
+            if(i==3){
+                post_from = getLayoutInflater().inflate(R.layout.post_time_carousel, null);
+            }
+            if (i==4){
+                post_from = getLayoutInflater().inflate(R.layout.post_date_carousel, null);
+            }
             else{
                 mSubmitButton.setVisibility(View.GONE);
                 mSubmitButton.invalidate();
@@ -454,6 +489,18 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     private void setTitle(TextView tv){
         if(postType)tv.setText(DRIVER_TITLE);
         else tv.setText(RIDER_TITLE);
+    }
+
+    public void showTimePickerDialog(View v, Boolean arrivalTime) {
+        //arrivalTime = True : arrival time button, else departure time button
+        if(arrivalTime){
+            this.starting_time = new TimePickerFragment();
+            starting_time.show(getFragmentManager(), "timePicker");
+        }
+        else{
+            this.ending_time = new TimePickerFragment();
+            ending_time.show(getFragmentManager(), "timePicker");
+        }
     }
 
     private void submitPost() {
