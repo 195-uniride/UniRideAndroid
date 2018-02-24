@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,12 +25,14 @@ import com.sjsu.se195.uniride.models.User;
  * Created by Marta on 10/8/17.
  */
 
-public class SignUpActivity extends Activity implements View.OnClickListener {
+public class SignUpActivity extends BaseActivity implements View.OnClickListener {
+
+    private static final String TAG = "SignUpActivity";
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
-    private EditText FirstNameEditText, LastNameEditText, EmailEditText, PasswordEditText;
+    private EditText EmailEditText, PasswordEditText;
     private Button mSignUpButton;
 
     @Override
@@ -40,14 +43,12 @@ public class SignUpActivity extends Activity implements View.OnClickListener {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
-        FirstNameEditText = (EditText) findViewById(R.id.FirstNameEditText);
-        LastNameEditText = (EditText) findViewById(R.id.LastNameEditText);
-        EmailEditText = (EditText) findViewById(R.id.EmailEditText);
-        PasswordEditText = (EditText) findViewById(R.id.PasswordEditText);
+        EmailEditText = (EditText) findViewById(R.id.create_email);
+        PasswordEditText = (EditText) findViewById(R.id.create_password);
 
-        mSignUpButton = findViewById(R.id.SignUpButton);
+        mSignUpButton = findViewById(R.id.register_button);
 
-        findViewById(R.id.SignUpButton).setOnClickListener(this);
+        mSignUpButton.setOnClickListener(this);
     }
 
     public void onStart() {
@@ -60,13 +61,14 @@ public class SignUpActivity extends Activity implements View.OnClickListener {
     }
 
     private void SignUp() {
-
+        Log.d(TAG, "signUp");
         if (!validateForm()) {
             return;
         }
 
-        String email = EmailEditText.getText().toString().trim();
-        String password = PasswordEditText.getText().toString().trim();
+        showProgressDialog();
+        String email = EmailEditText.getText().toString();
+        String password = PasswordEditText.getText().toString();
 
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -81,58 +83,42 @@ public class SignUpActivity extends Activity implements View.OnClickListener {
     }
 
     private boolean validateForm() {
-            boolean result = true;
-            if (TextUtils.isEmpty(EmailEditText.getText().toString())) {
-                EmailEditText.setError("Required");
-                result = false;
-            } else {
-                EmailEditText.setError(null);
-            }
+        boolean result = true;
+        if (TextUtils.isEmpty(EmailEditText.getText().toString())) {
+            EmailEditText.setError("Required");
+            result = false;
+        } else {
+            EmailEditText.setError(null);
+        }
 
-            if (TextUtils.isEmpty(PasswordEditText.getText().toString())) {
-                PasswordEditText.setError("Required");
-                result = false;
-            } else {
-                PasswordEditText.setError(null);
-            }
-
-            if (TextUtils.isEmpty(FirstNameEditText.getText().toString())){
-                FirstNameEditText.setError("Required");
-                result = false;
-            } else {
-                FirstNameEditText.setError(null);
-            }
-
-            if (TextUtils.isEmpty(LastNameEditText.getText().toString())){
-                LastNameEditText.setError("Required");
-                result = false;
-            } else {
-                LastNameEditText.setError(null);
-            }
-            return result;
+        if (TextUtils.isEmpty(PasswordEditText.getText().toString())) {
+            PasswordEditText.setError("Required");
+            result = false;
+        } else {
+            PasswordEditText.setError(null);
+        }
+        return result;
     }
 
     private void onAuthSuccess(FirebaseUser user) {
-        String first = FirstNameEditText.getText().toString().trim();
-        String last = LastNameEditText.getText().toString().trim();
 
         //Save user information to database
-        writeNewUser(user.getUid(), first, last, user.getEmail());
+        writeNewUser(user.getUid(),user.getEmail());
 
         //Go to MainActivity
         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
         finish();
     }
 
-    private void writeNewUser(String userId, String first, String last, String email) {
-        UserInformation user = new UserInformation (first, last, email);
+    private void writeNewUser(String userId, String email) {
+        UserInformation user = new UserInformation(email);
 
         mDatabase.child("users").child(userId).setValue(user);
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.SignUpButton:
+            case R.id.register_button:
                 SignUp();
                 break;
 
