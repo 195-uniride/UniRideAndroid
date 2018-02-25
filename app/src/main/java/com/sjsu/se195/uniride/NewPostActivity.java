@@ -98,8 +98,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
     private GoogleMap m_map;
     private GMapV2Direction md;
 
-    private TimePickerFragment starting_time;
-    private TimePickerFragment ending_time;
+    private TimePickerFragment starting_time = new TimePickerFragment();;
+    private TimePickerFragment ending_time = new TimePickerFragment();
     private Button mArriveTime;
     private Button mDepartTime;
 
@@ -373,9 +373,10 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
                         @Override
                         public void onClick(View v) {
                             showTimePickerDialog(v, true);
+                            System.out.println("in onPageSelected: " + starting_time.getHour());
                         }
                     });
-
+                    //if(starting_time.gethour() != 25) || )
                     NewPostActivity.this.mDepartTime = findViewById(R.id.departTime);
                     mDepartTime.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -471,6 +472,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
             }
             if(i==3){
                 post_from = getLayoutInflater().inflate(R.layout.post_time_carousel, null);
+                System.out.println("in viewListener " + starting_time.getHour());
             }
             if (i==4){
                 post_from = getLayoutInflater().inflate(R.layout.post_date_carousel, null);
@@ -494,11 +496,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
     public void showTimePickerDialog(View v, Boolean arrivalTime) {
         //arrivalTime = True : arrival time button, else departure time button
         if(arrivalTime){
-            this.starting_time = new TimePickerFragment();
             starting_time.show(getFragmentManager(), "timePicker");
         }
         else{
-            this.ending_time = new TimePickerFragment();
             ending_time.show(getFragmentManager(), "timePicker");
         }
     }

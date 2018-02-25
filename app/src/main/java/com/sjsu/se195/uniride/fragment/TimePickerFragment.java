@@ -20,7 +20,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
     private int hour;
     private int minute;
-    public TimePicker.OnTimeChangedListener ontimeCahnged;
+    public TimePicker timePicker;
 
   @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -28,13 +28,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         final Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
-        this.ontimeCahnged = new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker timePicker, int i, int i1) {
-
-            }
-        };
-
         // Create a new instance of TimePickerDialog and return it
         return new TimePickerDialog(getActivity(), this, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
@@ -44,6 +37,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         // Do something with the time chosen by the user
         this.hour = hourOfDay;
         this.minute = min;
+        this.timePicker = view;
     }
 
     public int getHour(){
