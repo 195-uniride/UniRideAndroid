@@ -64,7 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
+public class NewPostActivity extends BaseActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener {
 
     private static final String TAG = "NewPostActivity";
     private static final String REQUIRED = "Required";
@@ -373,7 +373,6 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
                         @Override
                         public void onClick(View v) {
                             showTimePickerDialog(v, true);
-                            System.out.println("in onPageSelected: " + starting_time.getHour());
                         }
                     });
                     //if(starting_time.gethour() != 25) || )
@@ -472,7 +471,6 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
             }
             if(i==3){
                 post_from = getLayoutInflater().inflate(R.layout.post_time_carousel, null);
-                System.out.println("in viewListener " + starting_time.getHour());
             }
             if (i==4){
                 post_from = getLayoutInflater().inflate(R.layout.post_date_carousel, null);
@@ -491,6 +489,19 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
     private void setTitle(TextView tv){
         if(postType)tv.setText(DRIVER_TITLE);
         else tv.setText(RIDER_TITLE);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute){
+        System.out.println(hourOfDay + ":" + minute);
+        String time;
+        if(hourOfDay>12){
+            time = (hourOfDay-12) + ":" + minute  + "PM";
+        }
+        else{
+            time = (hourOfDay) + ":" + minute  + "AM";
+        }
+        this.mArriveTime.setText(time);
     }
 
     public void showTimePickerDialog(View v, Boolean arrivalTime) {
