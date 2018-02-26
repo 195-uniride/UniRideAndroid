@@ -8,6 +8,7 @@ public class User {
 
     public String username;
     public String email;
+    public String defaultOrganizationId;
 
     public User(){
         //empty constructor for firebase

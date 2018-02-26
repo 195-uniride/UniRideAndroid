@@ -1,7 +1,10 @@
 package com.sjsu.se195.uniride.fragment;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class RecentPostsFragment extends PostListFragment {
 
@@ -14,22 +17,16 @@ public class RecentPostsFragment extends PostListFragment {
         // due to sorting by push() keys
         Query recentPostsQuery;
 
-        if(!postType){
-            recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(100);
-        }
-        else{
-//            DatabaseReference userRef = mDatabase.child("users").child(getUid()).getRef();//("users")
-//
-//            System.out.println("find user email?? = " + (userRef.orderByValue().endAt("email")));
-//            userRef.orderByValue().on("value", function(data) {
-//
-//                data.forEach(function(data) {
-//                    console.log("The " + data.key + " rating is " + data.val());
-//                });
-//
-//            });
 
-            recentPostsQuery = databaseReference.child("organization-posts").child(getUserOrganizationId())
+
+        // Load Drive Offer Posts:
+        if(!postType){
+            recentPostsQuery = databaseReference.child("organization-posts").child(getUserDefaultOrganizationId())
+                    .child("driveOffers").limitToFirst(100);
+        }
+        // Load Ride Request Posts:
+        else{
+            recentPostsQuery = databaseReference.child("organization-posts").child(getUserDefaultOrganizationId())
                     .child("rideRequests").limitToFirst(100);
         }
         // [END recent_posts_query]
