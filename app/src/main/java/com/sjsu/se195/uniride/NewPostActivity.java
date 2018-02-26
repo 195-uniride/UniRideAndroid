@@ -108,16 +108,20 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
 
     private TimePickerFragment starting_time = new TimePickerFragment();
     private TimePickerFragment ending_time = new TimePickerFragment();
+    private boolean clickedOnArrivalTime = false;
     private Button mArriveTime;
     private Button mDepartTime;
+    private int departureTime = 0;
+    private int arrivalTime = 0;
 
     private DatePickerFragment date = new DatePickerFragment();
     private Button pick_day;
+    private int tripDate;
 
     private MarkerOptions set_marker;
     private MarkerOptions [] markers = new MarkerOptions[2];
-    private LatLng location_latlng;
-    private LatLng location_latlng2;
+    private LatLng location_latlng; //source
+    private LatLng location_latlng2;    //destination
     private boolean first_time_running = false;
 
     @Override
@@ -149,6 +153,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         }
 
         if (pickup_point_check) {
+            mpickupPoint = location_latlng;
             m_map.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener(){
                 @Override
                 public void onCameraMove(){
@@ -374,8 +379,6 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.pickup_map);
                         mapFragment.getMapAsync(NewPostActivity.this);
                     }
-                    mSubmitButton.setVisibility(View.VISIBLE);
-                    mSubmitButton.invalidate();
                 }
                 if(position==3){
                     //this.showTimePickerDialog(R.id.)
@@ -403,6 +406,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
                             showDatePickerDialog(v);
                         }
                     });
+                    mSubmitButton.setVisibility(View.VISIBLE);
+                    mSubmitButton.invalidate();
                     //post_from = getLayoutInflater().inflate(R.layout.post_date_carousel, null);
                 }
                 else{
@@ -518,26 +523,41 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         else{
             time = (hourOfDay) + ":" + minute  + "AM";
         }
-        this.mArriveTime.setText(time);
+
+        if(clickedOnArrivalTime) {
+            this.mArriveTime.setText(time);
+            arrivalTime = (hourOfDay*100) + (minute); //Format is H = hours, M = minutes: ->HHMM
+        }
+        else {
+            this.mDepartTime.setText(time);
+            departureTime = (hourOfDay*100) + (minute); //Format is H = hours, M = minutes: ->HHMM
+        }
+
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day){
         System.out.println("onDateSet: " + year);
+
         String picked_date = month + " " + day + ", " + year;
         this.pick_day.setText(picked_date);
+        tripDate = (year * 10000) + (month * 100) + (day); //date format is yearMonthDay (YYYYMMDD)
     }
 
-    public void showTimePickerDialog(View v, Boolean arrivalTime) {
+    //This function gets called to make the dialog for time picker
+    public void showTimePickerDialog(View v, Boolean arrival_time) {
         //arrivalTime = True : arrival time button, else departure time button
-        if(arrivalTime){
+        if(arrival_time){
+            clickedOnArrivalTime = true;
             starting_time.show(getFragmentManager(), "timePicker");
         }
         else{
+            clickedOnArrivalTime = false;
             ending_time.show(getFragmentManager(), "timePicker");
         }
     }
 
+    //This function gets called to make the date picker dialog
     public void showDatePickerDialog(View v){
         date.show(getFragmentManager(), "datePicker");
     }
@@ -610,10 +630,10 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
                         } else {
                             // Write new post
                             if(postType) {
-                                writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount);
+                                writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount, departureTime, arrivalTime, tripDate);
                             }
                             else{
-                                writeNewRideRequestPost(userId, user.username, source, destination, pickupPoint);
+                                writeNewRideRequestPost(userId, user.username, source, destination, pickupPoint, departureTime, arrivalTime, tripDate);
                             }
                         }
 
@@ -647,12 +667,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
     // [START write_fan_out]
 
     //creating a drive offer
-    private void writeNewDriveOfferPost(String userId, String username, String source, String destination, int count) {
+    private void writeNewDriveOfferPost(String userId, String username, String source, String destination, int count,
+                                        int dep_time, int arr_time, int t_day) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("driveOffers").push().getKey();
 
-        DriverOfferPost driverPost = new DriverOfferPost(userId, username, source, destination, count);
+        DriverOfferPost driverPost = new DriverOfferPost(userId, username, source, destination, count, dep_time, arr_time, t_day);
         Map<String, Object> postValues = driverPost.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
@@ -663,12 +684,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     //creating a ride request
-    private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint){
+    private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint,
+                                         int dep_time, int arr_time, int t_day){
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
 
-        RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination);
+        RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination, dep_time, arr_time, t_day);
         Map<String, Object> postValues = rideRequest.toMap();
         RideRequestPost rideRequest_pickupPoint = new RideRequestPost(pickupPoint);
         Map<String, Object> postValuesPickupPoint = rideRequest_pickupPoint.toMap_pickupPoint();
