@@ -1,15 +1,19 @@
 package com.sjsu.se195.uniride;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.location.Address;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -59,6 +63,7 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +103,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
     private GoogleMap m_map;
     private GMapV2Direction md;
 
-    private TimePickerFragment starting_time = new TimePickerFragment();;
+    private TimePickerFragment starting_time = new TimePickerFragment();
     private TimePickerFragment ending_time = new TimePickerFragment();
     private Button mArriveTime;
     private Button mDepartTime;
@@ -647,3 +652,5 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback{
     }
     // [END write_fan_out]
 }
+
+
