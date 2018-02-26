@@ -1,5 +1,6 @@
 package com.sjsu.se195.uniride;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.DatePickerFragment;
 import com.sjsu.se195.uniride.fragment.TimePickerFragment;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.RideRequestPost;
@@ -69,7 +72,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class NewPostActivity extends BaseActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener {
+public class NewPostActivity extends BaseActivity implements OnMapReadyCallback, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "NewPostActivity";
     private static final String REQUIRED = "Required";
@@ -107,6 +110,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
     private TimePickerFragment ending_time = new TimePickerFragment();
     private Button mArriveTime;
     private Button mDepartTime;
+
+    private DatePickerFragment date = new DatePickerFragment();
+    private Button pick_day;
 
     private MarkerOptions set_marker;
     private MarkerOptions [] markers = new MarkerOptions[2];
@@ -382,7 +388,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
                     });
                     //if(starting_time.gethour() != 25) || )
                     NewPostActivity.this.mDepartTime = findViewById(R.id.departTime);
-                    mDepartTime.setOnClickListener(new View.OnClickListener() {
+                    NewPostActivity.this.mDepartTime.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             showTimePickerDialog(v, false);
@@ -390,6 +396,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
                     });
                 }
                 if (position==4){
+                    NewPostActivity.this.pick_day = findViewById(R.id.postDate);
+                    NewPostActivity.this.pick_day.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View v){
+                            showDatePickerDialog(v);
+                        }
+                    });
                     //post_from = getLayoutInflater().inflate(R.layout.post_date_carousel, null);
                 }
                 else{
@@ -498,7 +511,6 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute){
-        System.out.println(hourOfDay + ":" + minute);
         String time;
         if(hourOfDay>12){
             time = (hourOfDay-12) + ":" + minute  + "PM";
@@ -509,6 +521,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         this.mArriveTime.setText(time);
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day){
+        System.out.println("onDateSet: " + year);
+        String picked_date = month + " " + day + ", " + year;
+        this.pick_day.setText(picked_date);
+    }
+
     public void showTimePickerDialog(View v, Boolean arrivalTime) {
         //arrivalTime = True : arrival time button, else departure time button
         if(arrivalTime){
@@ -517,6 +536,10 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         else{
             ending_time.show(getFragmentManager(), "timePicker");
         }
+    }
+
+    public void showDatePickerDialog(View v){
+        date.show(getFragmentManager(), "datePicker");
     }
 
     private void submitPost() {

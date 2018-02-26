@@ -32,7 +32,7 @@
             style="@style/post_label"
             android:layout_below="@id/post_carousel_label"/>
 
-        <EditText
+        <Button
             android:id="@+id/postDate"
             android:layout_width="300dp"
             android:textAlignment="center"
