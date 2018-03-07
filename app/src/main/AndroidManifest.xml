@@ -30,7 +30,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".MainSubcategoryActivity"/>
         <activity android:name=".NewOrganizationActivity" />
-        <activity android:name=".PostDetailActivity" />
+        <activity android:name=".PostDetailActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".OrganizationDetailActivity" />
         <activity android:name=".ShowOrganizationsActivity" />
         <activity android:name=".SignUpActivity"

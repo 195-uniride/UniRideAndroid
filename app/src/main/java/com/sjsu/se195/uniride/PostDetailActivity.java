@@ -1,15 +1,28 @@
 package com.sjsu.se195.uniride;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +48,7 @@ import com.sjsu.se195.uniride.models.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback{
 
@@ -54,10 +68,14 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private TextView mDestinationView;
     private EditText mCommentField;
     private Button mCommentButton;
+    private FloatingActionButton mShowMapButton;
     private RecyclerView mCommentsRecycler;
+    View my_view;
 
     private GoogleMap m_map;
     private boolean mapReady;
+
+    private Animation alpha_animation;
 
     //markers
     private MarkerOptions sjsu;
@@ -89,7 +107,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         System.out.println(mPostReference.toString());
         /*mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("post-comments").child(mPostKey);*/
-
+        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
         mSourceView = (TextView) findViewById(R.id.post_source);
@@ -97,11 +115,12 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         mCommentField = (EditText) findViewById(R.id.field_comment_text);
         mCommentButton = (Button) findViewById(R.id.button_post_comment);
         mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
+        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
 
         mCommentButton.setOnClickListener(this);
         mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        //marker for sjsu
+            //marker for sjsu
         sjsu = new MarkerOptions()
                 .position(new LatLng(37.335188, -121.881066))
                 .title("SJSU")
@@ -109,6 +128,78 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        my_view = findViewById(R.id.for_map_layout);
+        mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+        if(my_view.getVisibility()==View.VISIBLE){
+            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
+        }
+        else{
+            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
+        }
+        mShowMapButton.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                // get the center for the clipping circle
+                int cx = Math.round(mShowMapButton.getX() + (mShowMapButton.getWidth())/2);
+                int cy = Math.round(mShowMapButton.getY() + (mShowMapButton.getHeight())/2);
+
+                // get the final radius for the clipping circle
+                float finalRadius1 = (float) Math.hypot(cx, cy);
+                // create the animator for this view (the start radius is zero)
+
+                if(my_view.getVisibility() == View.INVISIBLE){
+                    Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, 0, finalRadius1);
+                    anim1.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                        /*mMapOverlay.animate().alpha(0f).setDuration(100).setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mMapOverlay.setVisibility(View.GONE);
+                            }
+                        });*/
+                            mMapOverlay.setVisibility(View.GONE);
+                            mMapOverlay.startAnimation(alpha_animation);
+                        }
+                    });
+                    // make the view visible and start the animation
+                    my_view.setVisibility(View.VISIBLE);
+                    anim1.start();
+                }
+                else{
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
+                    Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, finalRadius1, 0);
+                    anim1.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+                            mMapOverlay.animate().alphaBy(1f).setDuration(300);
+                            mMapOverlay.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            my_view.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+                    // make the view visible and start the animation
+                    anim1.start();
+                }
+            }
+        });
     }
 
     @Override
