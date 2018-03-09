@@ -28,7 +28,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.content.Context;
@@ -239,7 +241,7 @@ public class GMapV2Direction  extends AsyncTask<LatLng, Void, Document>{
         return p1;
     }
 
-    public void drawDirections(LatLng source, LatLng dest) throws ExecutionException, InterruptedException {
+    public void drawDirections(LatLng source, LatLng dest, GoogleMap m_map) throws ExecutionException, InterruptedException {
         Document doc;
 
         //if(source_place != null && !source_place.equals("") && destination_place != null && destination_place.equals("")) {
@@ -252,8 +254,14 @@ public class GMapV2Direction  extends AsyncTask<LatLng, Void, Document>{
             for (int i = 0; i < directionPoint.size(); i++) {
                 rectLine.add(directionPoint.get(i));
             }
+        }else{
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-
+        Polyline polylin = m_map.addPolyline(rectLine);
     }
 
 }

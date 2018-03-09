@@ -257,11 +257,11 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                     source_marker = new MarkerOptions()
                             .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
                             .title("Source")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_white_48dp));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
                     destination_marker = new MarkerOptions()
                             .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
                             .title("Destination")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_white_48dp));
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
                 }
                 // [END_EXCLUDE]
             }
@@ -495,7 +495,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         //Here the method that draws polylines gets called
         try {
             if(source_latlng != null && dest_latlng != null)
-                md.drawDirections(source_latlng, dest_latlng);
+                md.drawDirections(source_latlng, dest_latlng, m_map);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
