@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.sjsu.se195.uniride.SignInActivity"
-    android:background="@color/red">
+    android:background="@color/colorAccent">
 
 
     <LinearLayout

@@ -5,11 +5,14 @@ package com.sjsu.se195.uniride;
  */
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,8 +29,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -202,5 +209,51 @@ public class GMapV2Direction  extends AsyncTask<LatLng, Void, Document>{
         return poly;
     }
 
+
+    /******************Added later************************/
+    //This method returns the latitude and longitude of an address
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            //coder.getFromLocationName(strAddress, 5)
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
+    }
+
+    public void drawDirections(LatLng source, LatLng dest) throws ExecutionException, InterruptedException {
+        Document doc;
+
+        //if(source_place != null && !source_place.equals("") && destination_place != null && destination_place.equals("")) {
+        doc = (Document) new GMapV2Direction().execute(source, dest).get();
+        ArrayList<LatLng> directionPoint = getDirection(doc);
+        PolylineOptions rectLine = new PolylineOptions().width(3).color(
+                Color.RED);
+
+        if(doc != null) {
+            for (int i = 0; i < directionPoint.size(); i++) {
+                rectLine.add(directionPoint.get(i));
+            }
+        }
+
+    }
 
 }

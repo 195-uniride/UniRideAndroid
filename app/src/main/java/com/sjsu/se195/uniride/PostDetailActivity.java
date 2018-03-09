@@ -7,6 +7,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -34,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -42,13 +46,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
+import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback{
 
@@ -79,6 +86,15 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
 
     //markers
     private MarkerOptions sjsu;
+    private MarkerOptions source_marker;
+    private MarkerOptions destination_marker;
+
+    //latlng
+    private LatLng source_latlng;
+    private LatLng dest_latlng;
+
+    //Outside class GMapV2
+    private GMapV2Direction md = new GMapV2Direction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +142,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                 .title("SJSU")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.extra_icon));
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         my_view = findViewById(R.id.for_map_layout);
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
@@ -164,6 +179,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                         });*/
                             mMapOverlay.setVisibility(View.GONE);
                             mMapOverlay.startAnimation(alpha_animation);
+                            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+                            mapFragment.getMapAsync(PostDetailActivity.this);
                         }
                     });
                     // make the view visible and start the animation
@@ -205,7 +222,6 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     @Override
     public void onStart() {
         super.onStart();
-
         // Add value event listener to the post
         // [START post_value_event_listener]
         ValueEventListener postListener = new ValueEventListener() {
@@ -219,6 +235,16 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                     mAuthorView.setText(post.author);
                     mSourceView.setText(post.source);
                     mDestinationView.setText(post.destination);
+                    source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+                    dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+                    source_marker = new MarkerOptions()
+                            .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+                            .title("Source")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+                    destination_marker = new MarkerOptions()
+                            .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+                            .title("Destination")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
                 }
                 else{
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
@@ -226,6 +252,16 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                     mAuthorView.setText(post.author);
                     mSourceView.setText(post.source);
                     mDestinationView.setText(post.destination);
+                    source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+                    dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+                    source_marker = new MarkerOptions()
+                            .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+                            .title("Source")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_white_48dp));
+                    destination_marker = new MarkerOptions()
+                            .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+                            .title("Destination")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_white_48dp));
                 }
                 // [END_EXCLUDE]
             }
@@ -443,18 +479,50 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
 
     }
 
+    //Mandatory method when creating a map is involved
     @Override
     public void onMapReady(GoogleMap map){
         mapReady = true;
         m_map = map;
-        m_map.addMarker(sjsu);
-        LatLng city = new LatLng(37.3394, -121.8938);
-        CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
-        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+        if(source_marker != null)
+            m_map.addMarker(source_marker);
+        if(destination_marker != null)
+            m_map.addMarker(destination_marker);
+        //LatLng city = new LatLng(37.3394, -121.8938);
+        //CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
+        //m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+
+        //Here the method that draws polylines gets called
+        try {
+            if(source_latlng != null && dest_latlng != null)
+                md.drawDirections(source_latlng, dest_latlng);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(source_marker != null && destination_marker != null)
+            setCamera();
     }
 
     //to animate when moving to a new location
     public void flyTo(CameraPosition target){
         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(target));
     }
+
+    //Sets the camera for the view of the map
+    private void setCamera(){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(source_marker.getPosition());
+        builder.include(destination_marker.getPosition());
+        System.out.println(source_marker.getPosition());
+        System.out.println(destination_marker.getPosition());
+        LatLngBounds bounds = builder.build();
+        int padding = 100; // offset from edges of the map in pixels, newLatLngBounds(LatLngBounds, int, int, int)
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        int zoomLevel = 0;
+        m_map.moveCamera(cu);
+    }
+
 }
