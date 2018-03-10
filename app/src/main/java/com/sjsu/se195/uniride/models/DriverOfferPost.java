@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class DriverOfferPost extends Post {
 
-    private int passengerCount;
+    public int passengerCount;
 
     public DriverOfferPost(){}
 
@@ -17,6 +17,11 @@ public class DriverOfferPost extends Post {
     public DriverOfferPost(String uid, String author, String source, String destination, int pasCount,
                            int departureTime, int arrivalTime, int tripDay){
         super(uid, author, source, destination, departureTime, arrivalTime, tripDay);
+        this.passengerCount = pasCount;
+    }
+
+    public DriverOfferPost(String source, String destination, int pasCount, int departureTime, int arrivalTime, int tripDay){
+        super(source, destination, departureTime, arrivalTime, tripDay);
         this.passengerCount = pasCount;
     }
 

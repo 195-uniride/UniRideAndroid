@@ -76,6 +76,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private EditText mCommentField;
     private Button mCommentButton;
     private FloatingActionButton mShowMapButton;
+    private FloatingActionButton mCreateCarpoolButton;
     private RecyclerView mCommentsRecycler;
     View my_view;
 
@@ -145,6 +146,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         my_view = findViewById(R.id.for_map_layout);
+        mCreateCarpoolButton = findViewById(R.id.fab_create_carpool);
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
         if(my_view.getVisibility()==View.VISIBLE){
             mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));

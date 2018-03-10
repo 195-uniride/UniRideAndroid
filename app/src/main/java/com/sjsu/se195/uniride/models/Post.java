@@ -35,6 +35,14 @@ public class Post {
         this.tripDate = date;
     }
 
+    public Post(String source, String destination, int departure_time, int arrival_time, int date){
+        this.source = source;
+        this.destination = destination;
+        this.departure_time = departure_time;
+        this.arrival_time = arrival_time;
+        this.tripDate = date;
+    }
+
     // [START post_to_map]
    /* @Exclude
     protected Map<String, Object> toMap() {
