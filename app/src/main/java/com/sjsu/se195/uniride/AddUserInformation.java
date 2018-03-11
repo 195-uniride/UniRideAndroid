@@ -4,18 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Marta on 2/24/18.
@@ -37,6 +44,8 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     private EditText phoneNumber;
     //DateOfBirth and PhoneNumber might have to be saved differently
 
+    private Spinner orgSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +61,8 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
         skipButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
+
+        fillOrganizations();
     }
 
     private void updateInformation(String first, String last, String dob, String phone) {
@@ -77,6 +88,32 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         });
     }
 
+    private void fillOrganizations(){
+        final Spinner orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
+        ref = FirebaseDatabase.getInstance().getReference().child("organizations");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<String> allOrganizations = new ArrayList<String>();
+                for (DataSnapshot orgSnapshot: dataSnapshot.getChildren()) {
+                    String orgName = orgSnapshot.child("name").getValue(String.class);
+                    allOrganizations.add(orgName);
+                }
+
+                ArrayAdapter<String> orgAdapter = new ArrayAdapter<String>(AddUserInformation.this,
+                        android.R.layout.simple_spinner_item, allOrganizations);
+                orgAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                orgSpinner.setAdapter(orgAdapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
 
     public void onStart() {
         super.onStart();
