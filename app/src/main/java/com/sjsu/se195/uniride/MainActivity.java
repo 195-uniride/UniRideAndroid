@@ -74,7 +74,11 @@ public class  MainActivity extends BaseActivity {
             startActivity(new Intent(this, ShowOrganizationsActivity.class));
             finish();
             return true;
-        } else {
+        } else if (i == R.id.edit_profile){
+            startActivity(new Intent(this, AddUserInformation.class));
+            finish();
+            return true;
+        }else {
             return super.onOptionsItemSelected(item);
         }
     }
