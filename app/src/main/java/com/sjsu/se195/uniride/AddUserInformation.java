@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -59,13 +60,15 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         dateOfBirth = (EditText) findViewById(R.id.date_of_birth);
         phoneNumber = (EditText) findViewById(R.id.phone_number);
 
+        orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
+
         skipButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
 
         fillOrganizations();
     }
 
-    private void updateInformation(String first, String last, String dob, String phone) {
+    private void updateInformation(String first, String last, String dob, String phone, String organization) {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userID = currentUser.getUid();
         ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
@@ -75,6 +78,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         userInformation.put("last_name", last);
         userInformation.put("date_of_birth", dob);
         userInformation.put("phone_number", phone);
+        userInformation.put("organization", organization);
 
         ref.push().setValue(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -89,18 +93,19 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     }
 
     private void fillOrganizations(){
-        final Spinner orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
         ref = FirebaseDatabase.getInstance().getReference().child("organizations");
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<String> allOrganizations = new ArrayList<String>();
+                List<String> allOrganizations = new ArrayList<String>();
+                //Gets every name of existing organizations
                 for (DataSnapshot orgSnapshot: dataSnapshot.getChildren()) {
                     String orgName = orgSnapshot.child("name").getValue(String.class);
                     allOrganizations.add(orgName);
                 }
 
+                //Fills spinner with organization names
                 ArrayAdapter<String> orgAdapter = new ArrayAdapter<String>(AddUserInformation.this,
                         android.R.layout.simple_spinner_item, allOrganizations);
                 orgAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -112,7 +117,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
             }
         });
-
     }
 
     public void onStart() {
@@ -128,8 +132,9 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
                 String theLast = lastName.getText().toString();
                 String theDateOfBirth = dateOfBirth.getText().toString();
                 String thePhoneNumber = phoneNumber.getText().toString();
+                String organization = orgSpinner.getSelectedItem().toString();
 
-                updateInformation(theFirst, theLast, theDateOfBirth, thePhoneNumber);
+                updateInformation(theFirst, theLast, theDateOfBirth, thePhoneNumber, organization);
 
             case R.id.skip_this:
                 startActivity(new Intent(AddUserInformation.this, MainActivity.class));
