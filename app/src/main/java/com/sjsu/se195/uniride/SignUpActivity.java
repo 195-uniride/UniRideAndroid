@@ -125,7 +125,7 @@ public class SignUpActivity extends Activity implements View.OnClickListener {
     }
 
     private void writeNewUser(String userId, String first, String last, String email) {
-        UserInformation user = new UserInformation (first, last, email);
+        User user = new User (email, first, last, email); // TODO put actual username.
 
         mDatabase.child("users").child(userId).setValue(user);
     }

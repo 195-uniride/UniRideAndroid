@@ -92,10 +92,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         String username = usernameFromEmail(user.getEmail());
 
         // Write new user
+        // TODO: This seems like it overwrites the user object in Firebase...
         writeNewUser(user.getUid(), username, user.getEmail());
 
         // Go to MainActivity
-        startActivity(new Intent(SignInActivity.this, MainActivity.class)); //TODO: change to show org.s page.
+        startActivity(new Intent(SignInActivity.this, MainActivity.class));
 
 
 

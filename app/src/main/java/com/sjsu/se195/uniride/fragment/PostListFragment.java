@@ -125,13 +125,23 @@ public abstract class PostListFragment extends Fragment {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-    // TODO: change to throw error if user doesn't have a deafaul organization:
+    // TODO: change to throw error if user doesn't have a default organization:
     public String getUserDefaultOrganizationId() {
 
         String defaultUserOrganizationId = "";
 
         if (getCurrentUser() != null) {
             defaultUserOrganizationId = getCurrentUser().defaultOrganizationId;
+        }
+
+        if (defaultUserOrganizationId == null || defaultUserOrganizationId.equals("")) {
+            System.out.println("ERROR: No default Org Id found for user: " + getCurrentUser());
+
+            // TODO: show load page with no results and prompt user to choose a default organization.
+
+            // WIP ONLY: For testing purposes: set an arbitrary Org Id: // TODO: REMOVE: FOR WIP STATE ONLY.
+            defaultUserOrganizationId = "-L47q6ayVu4wPq23hnmm"; // "Marta's Organization"
+            System.out.println("WIP ONLY: Setting default Org Id to arbitrary Id: " + defaultUserOrganizationId);
         }
 
         System.out.println("User's default Org Id = " + defaultUserOrganizationId);
