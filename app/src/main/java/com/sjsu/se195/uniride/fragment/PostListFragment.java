@@ -308,12 +308,14 @@ public abstract class PostListFragment extends Fragment {
         });
 
         //TODO: research how to return ArrayList from Firebase query....
+        return driveOfferPosts;
     }
 
     private ArrayList<Post> getAllRideRequests() {
         ArrayList<Post> rideRequestPosts = new ArrayList<Post>();
 
-        //....
+        //....TODO:
+        return rideRequestPosts;
     }
 
     /*
