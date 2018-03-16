@@ -29,6 +29,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_map">MapActivity</string>
+
     <string name="infoprompt">Select One of the Following:</string>
     <string name="enter_info">Enter Your Information</string>
     <string name="info_first">First Name</string>
@@ -38,4 +39,11 @@
     <string name="info_choose_info">Choose Your Organization</string>
     <string name="info_save">Save Information</string>
     <string name="info_skip">Skip This</string>
+    <string name="organizations_prompt">Choose an Organization</string>
+
+    <string-array name="organizations_list">
+        <item>San Jose State University</item>
+        <item>DeAnza College</item>
+        <item>West Valley College</item>
+    </string-array>
 </resources>

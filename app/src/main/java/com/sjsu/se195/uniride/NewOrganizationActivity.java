@@ -113,13 +113,18 @@ public class NewOrganizationActivity extends BaseActivity {
     private void addNewOrganization(Organization organization) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
-        String key = mDatabase.child("organizations").push().getKey();
+        String organizationKey = mDatabase.child("organizations").push().getKey();
 
         Map<String, Object> organizationValues = organization.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/organizations/" + key, organizationValues);
+        childUpdates.put("/organizations/" + organizationKey, organizationValues);
 //        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+
+        // also add this new org Id as the user's default organization Id:
+        mDatabase.child("users").child(getUid()).child("defaultOrganizationId").setValue(organizationKey);
+        System.out.println("Updated user's default Org Id to: " + organizationKey);
+
 
         mDatabase.updateChildren(childUpdates);
     }

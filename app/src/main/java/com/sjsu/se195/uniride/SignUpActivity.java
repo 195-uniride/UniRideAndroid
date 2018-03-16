@@ -112,6 +112,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     //Writes user's email in users table
     private void writeNewUser(String userId, String email) {
         UserInformation user = new UserInformation(email);
+
         mDatabase.child("users").child(userId).setValue(user);
     }
 

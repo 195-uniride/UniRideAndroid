@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
     <LinearLayout
         android:id="@+id/button_driver_layout"
         android:layout_width="match_parent"
@@ -26,6 +27,14 @@
             android:textColor="@color/primaryWhite"
             android:textSize="18dp"
             android:fontFeatureSettings="smcp"/>
+
+        <Spinner
+            android:id="@+id/orgSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:entries="@array/organizations_list"
+            android:prompt="@string/organizations_prompt"/>
+
 
         <!-- TODO: add "class" instead of "name" -->
         <FrameLayout

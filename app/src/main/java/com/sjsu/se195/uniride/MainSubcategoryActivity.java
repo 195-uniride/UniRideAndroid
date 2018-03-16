@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Spinner;
 
 import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 
@@ -15,15 +17,20 @@ import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
  */
 
 public class MainSubcategoryActivity extends MainActivity{
+
     private boolean postType;
     private ViewPager mViewPager;
     private FragmentPagerAdapter mPagerAdapter;
-
+    private Spinner orgSpinner;
+    private Button btnSubmit;
 
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         postType = getIntent().getExtras().getBoolean("driverMode");
+
+        addListenerOnButton();
+        addListenerOnSpinnerItemSelection();
 
         if (postType) {
             setContentView(R.layout.activity_1_driver_main);
@@ -73,5 +80,12 @@ public class MainSubcategoryActivity extends MainActivity{
 
     }
 
+    private void addListenerOnButton() {
+        orgSpinner = findViewById(R.id.orgSpinner);
+    }
+
+    private void addListenerOnSpinnerItemSelection(){
+        orgSpinner = findViewById(R.id.orgSpinner);
+    }
 
 }
