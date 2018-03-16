@@ -22,9 +22,14 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
+import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.viewholder.PostViewHolder;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public abstract class PostListFragment extends Fragment {
 
@@ -235,5 +240,115 @@ public abstract class PostListFragment extends Fragment {
 
     public User getCurrentUser() {
         return currentUser;
+    }
+
+    // ~~~~~~~~~~~~~~~~~~~~ SEARCHING: ~~~~~~~~~~~~~~~~~~~~
+
+    // ==== SEARCH ALGORITHM:
+    // parameters:
+    // - userPost: the post that we are checking every other post against.
+    // - user: the owner of the user post
+    public ArrayList<Post> getSearchResults(Post userPost, User user) {
+
+        ArrayList<Post> matchedPosts = new ArrayList<Post>();
+
+        // step 1: filter posts by type (drive offer or rider request):
+
+        if (userPost instanceof DriverOfferPost) {
+            matchedPosts = getAllRideRequests();
+        }
+        else if (userPost instanceof RideRequestPost) {
+            matchedPosts = getAllDriveOffers();
+        }
+
+        // step 2: filter posts by date: [might be able to combine with step 1]
+
+//        matchedPosts = filterPostsByDate(matchedPosts, userPost.date);
+        //OR just: filterPostsByDate(matchedPosts, userPost.date);
+
+        // step 3: filter posts by general area:
+
+//        matchedPosts = filterPostsByGeneralArea(matchedPosts);
+
+        // step 4: filter posts based on
+        //  whether each participant can reach the destination on time or not:
+
+//        matchedPosts = filterPostsByTimePossibility(matchedPosts);
+
+        // return the matches:
+
+        return matchedPosts;
+    }
+
+    // ==== Steps:
+
+
+    // step 1: filter posts by type (drive offer or rider request):
+    private ArrayList<Post> getAllDriveOffers() {
+        ArrayList<Post> driveOfferPosts = new ArrayList<Post>();
+
+        // search Firebase: organization-posts/[user's org]/driveOffers
+
+        Query driveOfferPostsQuery = getAllDriveOfferPosts().orderByChild("date"); // TODO: add date field.
+
+        driveOfferPostsQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    // TODO: handle the post
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
+
+        //TODO: research how to return ArrayList from Firebase query....
+    }
+
+    private ArrayList<Post> getAllRideRequests() {
+        ArrayList<Post> rideRequestPosts = new ArrayList<Post>();
+
+        //....
+    }
+
+    /*
+
+    // step 2: filter posts by date:
+
+    private ArrayList<Post> filterPostsByDate(ArrayList<Post> posts, Date filterDate) {
+
+        // search firebase: organization-posts/[user's org]/driveOffers WHERE post.date = filterDate
+    }
+
+    // step 3: filter posts by general area:
+    private ArrayList<Post> filterPostsByGeneralArea(ArrayList<Post> posts) {
+
+        //....
+    }
+
+    // step 4: filter posts based on
+    //  whether each participant can reach the destination on time or not:
+    private ArrayList<Post> filterPostsByTimePossibility(ArrayList<Post> posts) {
+
+        //....
+    }
+
+    */
+
+    // ~~~~~~~~~~~~~~~~~~~~ SEARCHING end. ~~~~~~~~~~~~~~~~
+
+    protected Query getAllDriveOfferPosts() {
+        return mDatabase.child("organization-posts").child(getUserDefaultOrganizationId())
+                .child("driveOffers");
+    }
+
+    protected Query getAllRideRequestPosts() {
+        return mDatabase.child("organization-posts").child(getUserDefaultOrganizationId())
+                .child("rideRequests");
     }
 }

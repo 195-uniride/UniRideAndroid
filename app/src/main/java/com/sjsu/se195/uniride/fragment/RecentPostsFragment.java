@@ -17,17 +17,13 @@ public class RecentPostsFragment extends PostListFragment {
         // due to sorting by push() keys
         Query recentPostsQuery;
 
-
-
         // Load Drive Offer Posts:
         if(!postType){
-            recentPostsQuery = databaseReference.child("organization-posts").child(getUserDefaultOrganizationId())
-                    .child("driveOffers").limitToFirst(100);
+            recentPostsQuery = getAllDriveOfferPosts().limitToFirst(100);
         }
         // Load Ride Request Posts:
         else{
-            recentPostsQuery = databaseReference.child("organization-posts").child(getUserDefaultOrganizationId())
-                    .child("rideRequests").limitToFirst(100);
+            recentPostsQuery = getAllRideRequestPosts().limitToFirst(100);
         }
         // [END recent_posts_query]
 
