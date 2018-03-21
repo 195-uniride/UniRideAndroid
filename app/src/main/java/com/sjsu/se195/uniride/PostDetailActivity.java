@@ -7,10 +7,12 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,6 +71,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private ValueEventListener mPostListener;
     private String mPostKey;
     private CommentAdapter mAdapter;
+
+    private Post mPost;
 
     private TextView mAuthorView;
     private TextView mSourceView;
@@ -146,7 +150,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         my_view = findViewById(R.id.for_map_layout);
-        mCreateCarpoolButton = findViewById(R.id.fab_create_carpool);
+        mCreateCarpoolButton = (FloatingActionButton) findViewById(R.id.fab_create_carpool);
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
         if(my_view.getVisibility()==View.VISIBLE){
             mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
@@ -219,6 +223,18 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                 }
             }
         });
+
+        mCreateCarpoolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PostDetailActivity.this, CarpoolDetailActivity.class);
+                intent.putExtra("isRiderPost", postType);
+                // intent.putExtra("post", (Parcelable) mPost); // TODO: jackass insists
+                intent.putExtra("postId", mPostKey); // for: FirebaseDatabase.getInstance().getReference().child("posts").child("rideRequests").child(mPostKey);
+
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -247,6 +263,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                             .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
                             .title("Destination")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+
+                    mPost = post;
                 }
                 else{
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
@@ -264,6 +282,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                             .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
                             .title("Destination")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+
+                    mPost = post;
                 }
                 // [END_EXCLUDE]
             }
