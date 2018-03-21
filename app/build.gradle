@@ -52,5 +52,15 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 }
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '26.0.0'
+            }
+        }
+    }
+}
 
 apply plugin: 'com.google.gms.google-services'
