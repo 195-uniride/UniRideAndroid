@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/for_map_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorAccent"
+        android:paddingTop="10dp">
+        <View
+            android:id="@+id/map_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:name="com.google.android.gms.maps.MapFragment"/>
+    </LinearLayout>

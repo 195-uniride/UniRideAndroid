@@ -15,8 +15,9 @@ public class RideRequestPost extends Post {
     public RideRequestPost(){}
 
     //Constructer
-    public RideRequestPost(String uid, String author, String source, String destination){
-        super(uid, author, source, destination);
+    public RideRequestPost(String uid, String author, String source, String destination
+            , int departureTime, int arrivalTime, int tripDate){
+        super(uid, author, source, destination, departureTime, arrivalTime, tripDate);
     }
 
     public RideRequestPost(LatLng point){
@@ -36,6 +37,9 @@ public class RideRequestPost extends Post {
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);
+        result.put("departure", departure_time);
+        result.put("arrivalTime", arrival_time);
+        result.put("tripDate", tripDate);
         result.put("starCount", starCount);
         result.put("stars", stars);
         return result;

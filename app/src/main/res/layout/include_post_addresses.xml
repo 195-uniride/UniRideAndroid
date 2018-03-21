@@ -2,8 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    android:gravity="center"
+    android:layout_centerHorizontal="true">
 
     <TextView
         android:id="@+id/post_source"
@@ -11,15 +14,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="1"
-        android:textStyle="bold"
-        tools:text="My First Post" />
+        android:fontFamily="sans-serif-medium"
+        android:layout_marginTop="5dp"
+        android:maxLines="3"
+        tools:text="@string/lorem" />
+
+    <TextView
+        android:id="@+id/post_addresses_to"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-thin"
+        android:layout_marginTop="5dp"
+        tools:text="To"/>
 
     <TextView
         android:id="@+id/post_destination"
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
         android:layout_marginTop="5dp"
+        android:maxLines="3"
         tools:text="@string/lorem" />
 
 </LinearLayout>
