@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
@@ -26,6 +27,7 @@ public class CarpoolDetailActivity extends AppCompatActivity {
     private String mSelectedPostKey;
     private DatabaseReference mPostReference;
     private Post mUserPost;
+    private ValueEventListener mPostListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +101,21 @@ public class CarpoolDetailActivity extends AppCompatActivity {
         mPostListener = postListener;
 
         // Listen for comments
-        mAdapter = new CommentAdapter(this, mCommentsReference);
-        mCommentsRecycler.setAdapter(mAdapter);
+        // mAdapter = new CommentAdapter(this, mCommentsReference);
+        // mCommentsRecycler.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Remove post value event listener
+        if (mPostListener != null) {
+            mPostReference.removeEventListener(mPostListener);
+        }
+
+        // // Clean up comments listener
+        // mAdapter.cleanupListener();
     }
 
     private void getPostReference(String postKey, boolean isRiderPost) {
@@ -108,13 +123,13 @@ public class CarpoolDetailActivity extends AppCompatActivity {
       if(isRiderPost){
           mPostReference = FirebaseDatabase.getInstance().getReference()
                   .child("posts").child("rideRequests").child(postKey);
-          mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                  .child("post-comments").child(postKey);
+          // mCommentsReference = FirebaseDatabase.getInstance().getReference()
+          //         .child("post-comments").child(postKey);
       }else{
           mPostReference = FirebaseDatabase.getInstance().getReference()
                   .child("posts").child("driveOffers").child(postKey);
-          mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                  .child("post-comments").child(postKey);
+          // mCommentsReference = FirebaseDatabase.getInstance().getReference()
+          //         .child("post-comments").child(postKey);
       }
     }
 
