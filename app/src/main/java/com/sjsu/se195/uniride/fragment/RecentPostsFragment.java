@@ -24,6 +24,9 @@ public class RecentPostsFragment extends PostListFragment {
         // Load Ride Request Posts:
         else{
             recentPostsQuery = getAllRideRequestPosts().limitToFirst(100);
+            //TESTING (For Query testing only): try to chain orderByChild on Query -- causes app to crash.
+//            recentPostsQuery = getAllRideRequestPosts().orderByChild("uid").equalTo("0HDHPr4wDxhrX00RUfe5Melucsv2")
+//                    .orderByChild("source").equalTo("wryj").limitToFirst(100);
         }
         // [END recent_posts_query]
 

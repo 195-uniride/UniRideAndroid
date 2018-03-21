@@ -243,6 +243,7 @@ public abstract class PostListFragment extends Fragment {
     }
 
     // ~~~~~~~~~~~~~~~~~~~~ SEARCHING: ~~~~~~~~~~~~~~~~~~~~
+    // TODO: move to own fragment? SearchFragment (?)
 
     // ==== SEARCH ALGORITHM:
     // parameters:
@@ -252,19 +253,31 @@ public abstract class PostListFragment extends Fragment {
 
         ArrayList<Post> matchedPosts = new ArrayList<Post>();
 
-        // step 1: filter posts by type (drive offer or rider request):
+        // step 1: filter posts by type (drive offer or rider request): (in getAllPostsBySearchType)
+        boolean isLookingForDriver = true;
 
         if (userPost instanceof DriverOfferPost) {
-            matchedPosts = getAllRideRequests();
+            isLookingForDriver = false;
         }
-        else if (userPost instanceof RideRequestPost) {
-            matchedPosts = getAllDriveOffers();
+        else { // if (userPost instanceof RideRequestPost) {
+            isLookingForDriver = true;
         }
 
-        // step 2: filter posts by date: [might be able to combine with step 1]
 
-//        matchedPosts = filterPostsByDate(matchedPosts, userPost.date);
-        //OR just: filterPostsByDate(matchedPosts, userPost.date);
+        // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
+/*
+ TO ADD ONCE tripDate IS ADDED TO FIREBASE:
+
+        Query searchQuery = getAllPostsBySearchType(isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate); // TODO: add date field.
+
+        if (isLookingForDriver) {
+            findDriveOffers(searchQuery);
+        }
+        else {
+            findRideRequests(searchQuery);
+        }
+*/
+
 
         // step 3: filter posts by general area:
 
@@ -280,22 +293,26 @@ public abstract class PostListFragment extends Fragment {
         return matchedPosts;
     }
 
-    // ==== Steps:
+    private Query getAllPostsBySearchType(boolean isLookingForDriver) {
+        if (isLookingForDriver) {
+            return getAllDriveOfferPosts();
+        }
+        else {
+            return getAllRideRequestPosts();
+        }
+    }
 
 
-    // step 1: filter posts by type (drive offer or rider request):
-    private ArrayList<Post> getAllDriveOffers() {
-        ArrayList<Post> driveOfferPosts = new ArrayList<Post>();
-
-        // search Firebase: organization-posts/[user's org]/driveOffers
-
-        Query driveOfferPostsQuery = getAllDriveOfferPosts().orderByChild("date"); // TODO: add date field.
-
-        driveOfferPostsQuery.addValueEventListener(new ValueEventListener() {
+    private void findRideRequests(Query searchQuery) {
+        searchQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    // TODO: handle the post
+                    // Handle each post:
+                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class); // can use parameter & getClass?
+
+                    // TODO: determine if each post is a possible post (if som add to some global list?)
+                    //....
                 }
             }
 
@@ -306,6 +323,22 @@ public abstract class PostListFragment extends Fragment {
                 // ...
             }
         });
+    }
+
+    private void findDriveOffers(Query searchQuery) {
+        // TODO....
+    }
+
+    // ==== Steps:
+
+
+    // step 1: filter posts by type (drive offer or rider request):
+    private ArrayList<Post> getAllDriveOffers() {
+        ArrayList<Post> driveOfferPosts = new ArrayList<Post>();
+
+        // search Firebase: organization-posts/[user's org]/driveOffers
+
+
 
         //TODO: research how to return ArrayList from Firebase query....
         return driveOfferPosts;
