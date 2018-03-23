@@ -26,6 +26,7 @@ public class CarpoolDetailActivity extends AppCompatActivity {
     private Post mSelectedPost;
     private String mSelectedPostKey;
     private DatabaseReference mPostReference;
+    private Post mUserPostKey;
     private Post mUserPost;
     private ValueEventListener mPostListener;
 
@@ -119,7 +120,7 @@ public class CarpoolDetailActivity extends AppCompatActivity {
     }
 
     private void getPostReference(String postKey, boolean isRiderPost) {
-      // Initialize Database
+      // Initialize Database // TODO: remove & change to just get carpool path. (do all of this in New Carpool Activity)
       if(isRiderPost){
           mPostReference = FirebaseDatabase.getInstance().getReference()
                   .child("posts").child("rideRequests").child(postKey);

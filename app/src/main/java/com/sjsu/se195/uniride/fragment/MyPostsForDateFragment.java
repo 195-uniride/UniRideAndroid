@@ -17,12 +17,13 @@ public class MyPostsForDateFragment extends PostListFragment {
         // due to sorting by push() keys
         Query recentPostsQuery;
 
-        // [START my_top_posts_query]
-        // My top posts by number of stars
-        String myUserId = getUid();
-        recentPostsQuery = databaseReference.child("user-posts").child(myUserId)
-                .orderByChild("starCount");
-        // [END my_top_posts_query]
+        if(!postType){
+            recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(100);
+        }
+        else{
+            recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(100);
+        }
+        // [END recent_posts_query]
 
         return recentPostsQuery;
     }
