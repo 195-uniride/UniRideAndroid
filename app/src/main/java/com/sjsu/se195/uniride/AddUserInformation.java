@@ -73,23 +73,20 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         userID = currentUser.getUid();
         ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
 
-        HashMap<String, String> userInformation = new HashMap<>();
-        userInformation.put("first_name", first);
-        userInformation.put("last_name", last);
-        userInformation.put("date_of_birth", dob);
-        userInformation.put("phone_number", phone);
-        userInformation.put("organization", organization);
-
-        ref.push().setValue(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(AddUserInformation.this, "Information Saved", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(AddUserInformation.this, "Failed to Save Information", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        // TODO: continue WIP:
+        // TODO: get user, update fields by doing user.updateEmail(newEmail), etc., then do ref.updateChildren after user.toMap
+//        HashMap<String, Object> userInformation = user.toMap();
+//
+//        ref.updateChildren(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Toast.makeText(AddUserInformation.this, "Information Saved", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(AddUserInformation.this, "Failed to Save Information", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
 
     private void fillOrganizations(){
