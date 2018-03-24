@@ -227,11 +227,11 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         mCreateCarpoolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PostDetailActivity.this, CarpoolDetailActivity.class);
+                Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
                 intent.putExtra("isRiderPost", postType);
-                // intent.putExtra("post", (Parcelable) mPost); // TODO: jackass insists
                 intent.putExtra("postId", mPostKey); // for: FirebaseDatabase.getInstance().getReference().child("posts").child("rideRequests").child(mPostKey);
 
+                System.out.println("Starting NewCarpoolActivity...");
                 startActivity(intent);
             }
         });

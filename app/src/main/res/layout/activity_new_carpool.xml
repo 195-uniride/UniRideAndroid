@@ -34,7 +34,6 @@
         android:id="@+id/my_post_for_date_fragment_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/new_drive_offer_post"
         tools:layout="@layout/fragment_all_posts" />
 
 </android.support.design.widget.CoordinatorLayout>

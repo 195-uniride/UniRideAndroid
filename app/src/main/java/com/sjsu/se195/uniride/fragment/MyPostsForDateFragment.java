@@ -18,10 +18,10 @@ public class MyPostsForDateFragment extends PostListFragment {
         Query recentPostsQuery;
 
         if(!postType){
-            recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(100);
+            recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(10);
         }
         else{
-            recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(100);
+            recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(10);
         }
         // [END recent_posts_query]
 

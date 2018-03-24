@@ -19,7 +19,6 @@ public class MainSubcategoryActivity extends MainActivity{
     private ViewPager mViewPager;
     private FragmentPagerAdapter mPagerAdapter;
 
-
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);

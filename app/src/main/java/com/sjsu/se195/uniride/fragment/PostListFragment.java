@@ -9,8 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,9 +23,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.CarpoolDetailActivity;
+import com.sjsu.se195.uniride.NewCarpoolActivity;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.models.Carpool;
+import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
+import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.viewholder.PostViewHolder;
 
 public abstract class PostListFragment extends Fragment {
@@ -36,6 +46,9 @@ public abstract class PostListFragment extends Fragment {
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     protected boolean postType; //true = driverpost ; false = riderequest
+
+    private DriverOfferPost mDriverPost;
+    private RideRequestPost mRideRequestPost;
 
     public PostListFragment() {}
 
@@ -69,6 +82,7 @@ public abstract class PostListFragment extends Fragment {
         mManager.setStackFromEnd(true);
         mRecycler.setLayoutManager(mManager);
 
+
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
         mAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(Post.class, R.layout.item_post,
@@ -82,11 +96,20 @@ public abstract class PostListFragment extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-                        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
-                        intent.putExtra("postType", postType);
-                        startActivity(intent);
+
+                        if (getActivity() instanceof NewCarpoolActivity) {
+
+                            setPostsAndCreateCarpool(postRef);
+                        }
+                        else {
+                            // Launch PostDetailActivity
+                            Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+                            intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
+                            intent.putExtra("postType", postType);
+                            startActivity(intent);
+                        }
+
+
                     }
                 });
 
@@ -171,5 +194,77 @@ public abstract class PostListFragment extends Fragment {
     }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
+
+
+    private void setPostsAndCreateCarpool(final DatabaseReference postRef) {
+        String driverPostKey = getArguments().getString("driverPostKey");
+
+        DatabaseReference driverPostRef = FirebaseDatabase.getInstance().getReference()
+                .child("posts").child("driveOffers").child(driverPostKey);
+
+        // Add value event listener to the post
+        // [START post_value_event_listener]
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+
+                System.out.println(dataSnapshot.toString());
+
+                mDriverPost = dataSnapshot.getValue(DriverOfferPost.class);
+
+                setRiderPostAndCreateCarpool(postRef);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        driverPostRef.addValueEventListener(postListener);
+        // [END post_value_event_listener]
+    }
+
+
+    private void setRiderPostAndCreateCarpool(DatabaseReference mPostReference) {
+        // Add value event listener to the post
+        // [START post_value_event_listener]
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+
+                System.out.println(dataSnapshot.toString());
+
+                mRideRequestPost = dataSnapshot.getValue(RideRequestPost.class);
+
+                // make a Carpool object:
+
+                Carpool carpool = new Carpool(mDriverPost);
+
+                try {
+                    carpool.addRider(mRideRequestPost); // get from PostRef
+                }
+                catch (Carpool.OverPassengerLimitException ex) {
+                    // tell user can't join because carpool is full.
+                }
+
+                // Create the Carpool object:
+                Intent intent = new Intent(getActivity(), CarpoolDetailActivity.class);
+                // intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey); // TODO change.
+                intent.putExtra("postType", postType);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mPostReference.addValueEventListener(postListener);
+        // [END post_value_event_listener]
+    }
 
 }
