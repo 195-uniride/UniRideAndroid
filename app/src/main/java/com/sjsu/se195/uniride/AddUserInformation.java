@@ -102,19 +102,22 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     private void fillOrganizations() {
         OrganizationNameIdMap = new HashMap<>();
 
-        DatabaseReference organizationsReference = FirebaseDatabase.getInstance().getReference().child("organizations");
+        DatabaseReference userOrgsRef = FirebaseDatabase.getInstance().getReference()
+                .child("user-organizations").child(getUid());
 
-        organizationsReference.addValueEventListener(new ValueEventListener() {
+        userOrgsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> allOrganizationNames = new ArrayList<String>();
 
-                //Gets every name of existing organizations
+                // Gets the name of all organizations the user has joined:
                 for (DataSnapshot orgSnapshot: dataSnapshot.getChildren()) {
                     String orgName = orgSnapshot.child("name").getValue(String.class);
-                    String orgId = orgSnapshot.getKey();
 
                     allOrganizationNames.add(orgName);
+
+                    // Link the organization name to its key (for later lookup):
+                    String orgId = orgSnapshot.getKey();
                     OrganizationNameIdMap.put(orgName, orgId); // NOTE: This assumes all org names are unique.
                 }
 

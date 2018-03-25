@@ -36,7 +36,7 @@
     <string name="info_last">Last Name</string>
     <string name="info_date">Date of Birth</string>
     <string name="info_phone">(555)555-555</string>
-    <string name="info_choose_info">Choose Your Organization</string>
+    <string name="info_choose_info">Choose Your Default Organization</string>
     <string name="info_save">Save Information</string>
     <string name="info_skip">Skip This</string>
     <string name="organizations_prompt">Choose an Organization</string>
