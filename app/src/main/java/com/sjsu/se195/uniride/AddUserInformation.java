@@ -37,12 +37,13 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     private static final String TAG = "AddUserInformation";
 
     private DatabaseReference mUserReference;
-    private FirebaseUser currentUser;
+    private User currentUser;
 
     private String userID;
 
     private Button saveButton;
     private Button skipButton;
+    private Button mJoinOrganizationButton;
 
     private HashMap<String, String> OrganizationNameIdMap;
 
@@ -53,6 +54,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     //DateOfBirth and PhoneNumber might have to be saved differently
 
     private Spinner orgSpinner;
+    private ArrayAdapter<String> orgAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
         saveButton = findViewById(R.id.save_information);
         skipButton = findViewById(R.id.skip_this);
+        mJoinOrganizationButton = findViewById(R.id.join_an_organization);
 
         mFirstNameField = (EditText)findViewById(R.id.first_name);
         mLastNameField = (EditText) findViewById(R.id.last_name);
@@ -71,14 +74,16 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
         saveButton.setOnClickListener(this);
         skipButton.setOnClickListener(this);
+        mJoinOrganizationButton.setOnClickListener(this);
 
         // If this activity was not started by SignUpActivity, change skipButton text to "Cancel" instead of "Skip This":
         if (getIntent().getExtras() == null ||
                 !getIntent().getExtras().getString("callingActivity").equals("SignUpActivity")) {
+
             skipButton.setText("Cancel");
         }
 
-        fillOrganizations();
+        // fillOrganizations();
     }
 
     private void updateInformation(String first, String last, String dob, String phone, String defaultOrganizationId) {
@@ -116,22 +121,36 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> allOrganizationNames = new ArrayList<String>();
 
+                String defaultOrgName = "";
                 // Gets the name of all organizations the user has joined:
                 for (DataSnapshot orgSnapshot: dataSnapshot.getChildren()) {
+                    // Change text if has already joined at least one organization:
+                    if (!mJoinOrganizationButton.getText().equals("Join Another Organization")) {
+                        mJoinOrganizationButton.setText("Join Another Organization");
+                    }
+
                     String orgName = orgSnapshot.child("name").getValue(String.class);
 
                     allOrganizationNames.add(orgName);
-
+                    
                     // Link the organization name to its key (for later lookup):
                     String orgId = orgSnapshot.getKey();
                     OrganizationNameIdMap.put(orgName, orgId); // NOTE: This assumes all org names are unique.
+
+                    // Get default org name to set as the selected item in the list:
+                    if (currentUser.defaultOrganizationId.equals(orgId)) {
+                        defaultOrgName = orgName;
+                    }
                 }
 
                 //Fills spinner with organization names
-                ArrayAdapter<String> orgAdapter = new ArrayAdapter<String>(AddUserInformation.this,
+                orgAdapter = new ArrayAdapter<String>(AddUserInformation.this,
                         android.R.layout.simple_spinner_item, allOrganizationNames);
                 orgAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 orgSpinner.setAdapter(orgAdapter);
+
+                // Set the default org name as the initial selected item:
+                orgSpinner.setSelection(orgAdapter.getPosition(defaultOrgName));
             }
 
             @Override
@@ -144,8 +163,8 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     public void onStart() {
         super.onStart();
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        userID = currentUser.getUid();
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        userID = currentFirebaseUser.getUid();
 
         mUserReference = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
 
@@ -153,12 +172,30 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Organization object and use the values to update the UI
-                User user = dataSnapshot.getValue(User.class);
+                currentUser = dataSnapshot.getValue(User.class);
                 // [START_EXCLUDE]
-                mFirstNameField.setText(user.firstName);
-                mLastNameField.setText(user.lastName);
-                mLastNameField.setText(user.lastName);
-                mPhoneNumberField.setText(user.phoneNumber);
+                mFirstNameField.setText(currentUser.firstName);
+                mLastNameField.setText(currentUser.lastName);
+                mLastNameField.setText(currentUser.lastName);
+                mPhoneNumberField.setText(currentUser.phoneNumber);
+
+                fillOrganizations();
+
+                // Set selected item as user's default organization:
+//                System.out.println("currentUser.defaultOrganizationId = " + currentUser.defaultOrganizationId);
+//                if (!currentUser.defaultOrganizationId.equals("")) {
+//                    String defaultOrgName = "";
+//                    for (String orgId : OrganizationNameIdMap.values()) {
+//                        System.out.println("in keySet: orgId = " + orgId);
+//                        if (currentUser.defaultOrganizationId.equals(orgId)) {
+//                            System.out.println("found default orgId = " + orgId);
+//                            defaultOrgName = OrganizationNameIdMap.
+//                        }
+//                    }
+//
+//                    System.out.println("defaultOrgName = " + defaultOrgName);
+//                    orgSpinner.setSelection(orgAdapter.getPosition(defaultOrgName));
+//                }
                 // [END_EXCLUDE]
             }
 
@@ -188,9 +225,15 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
                 String organizationId = OrganizationNameIdMap.get(organizationName);
 
                 updateInformation(theFirst, theLast, theDateOfBirth, thePhoneNumber, organizationId);
+                // falls through.
 
             case R.id.skip_this:
                 startActivity(new Intent(AddUserInformation.this, MainActivity.class));
+                break;
+
+            case R.id.join_an_organization:
+                startActivity(new Intent(AddUserInformation.this, ShowOrganizationsActivity.class));
+                break;
         }
     }
 }

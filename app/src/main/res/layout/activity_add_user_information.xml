@@ -76,6 +76,17 @@
             android:spinnerMode="dialog" />
 
         <Button
+            android:id="@+id/join_an_organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/info_join_an_organization" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="45dp" />
+
+        <Button
             android:id="@+id/save_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

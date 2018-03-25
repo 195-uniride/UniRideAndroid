@@ -40,6 +40,7 @@
     <string name="info_save">Save Information</string>
     <string name="info_skip">Skip This</string>
     <string name="organizations_prompt">Choose an Organization</string>
+    <string name="info_join_an_organization">Join an Organization</string>
 
     <string-array name="organizations_list">
         <item>San Jose State University</item>
