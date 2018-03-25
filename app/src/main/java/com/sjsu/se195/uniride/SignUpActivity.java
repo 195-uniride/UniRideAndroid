@@ -105,7 +105,9 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         writeNewUser(user.getUid(),user.getEmail());
 
         //Go to MainActivity
-        startActivity(new Intent(SignUpActivity.this, AddUserInformation.class));
+        Intent intent = new Intent(SignUpActivity.this, AddUserInformation.class);
+        intent.putExtra("callingActivity", "SignUpActivity");
+        startActivity(intent);
         finish();
     }
 

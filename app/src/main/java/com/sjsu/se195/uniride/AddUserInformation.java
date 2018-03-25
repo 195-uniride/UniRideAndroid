@@ -69,8 +69,14 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
         orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
 
-        skipButton.setOnClickListener(this);
         saveButton.setOnClickListener(this);
+        skipButton.setOnClickListener(this);
+
+        // If this activity was not started by SignUpActivity, change skipButton text to "Cancel" instead of "Skip This":
+        if (getIntent().getExtras() == null ||
+                !getIntent().getExtras().getString("callingActivity").equals("SignUpActivity")) {
+            skipButton.setText("Cancel");
+        }
 
         fillOrganizations();
     }
