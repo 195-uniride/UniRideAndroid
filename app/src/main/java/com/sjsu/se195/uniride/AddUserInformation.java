@@ -3,6 +3,7 @@ package com.sjsu.se195.uniride;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.models.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,9 +31,12 @@ import java.util.List;
  * Created by Marta on 2/24/18.
  */
 
+// EditPersonalInformationActivity:
 public class AddUserInformation extends BaseActivity implements View.OnClickListener{
 
-    private DatabaseReference ref;
+    private static final String TAG = "AddUserInformation";
+
+    private DatabaseReference mUserReference;
     private FirebaseUser currentUser;
 
     private String userID;
@@ -69,10 +74,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     }
 
     private void updateInformation(String first, String last, String dob, String phone, String organization) {
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        userID = currentUser.getUid();
-        ref = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
-
         // TODO: continue WIP:
         // TODO: get user, update fields by doing user.updateEmail(newEmail), etc., then do ref.updateChildren after user.toMap
         HashMap<String, Object> userInformation = new HashMap<>();
@@ -84,7 +85,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         userInformation.put("phoneNumber", phone);
         // userInformation.put("defaultOrganizationId", defaultOrganizationId); //TODO: update with OrgID.
 
-        ref.updateChildren(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
+        mUserReference.updateChildren(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
@@ -97,9 +98,9 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     }
 
     private void fillOrganizations(){
-        ref = FirebaseDatabase.getInstance().getReference().child("organizations");
+        DatabaseReference organizationsReference = FirebaseDatabase.getInstance().getReference().child("organizations");
 
-        ref.addValueEventListener(new ValueEventListener() {
+        organizationsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<String> allOrganizations = new ArrayList<String>();
@@ -125,7 +126,36 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
     public void onStart() {
         super.onStart();
-        }
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        userID = currentUser.getUid();
+
+        mUserReference = FirebaseDatabase.getInstance().getReference().child("users").child(userID);
+
+        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Organization object and use the values to update the UI
+                User user = dataSnapshot.getValue(User.class);
+                // [START_EXCLUDE]
+                mFirstNameField.setText(user.firstName);
+                mLastNameField.setText(user.lastName);
+                mLastNameField.setText(user.lastName);
+                mPhoneNumberField.setText(user.phoneNumber);
+                // [END_EXCLUDE]
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Organization failed, log a message
+                Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                // [START_EXCLUDE]
+                Toast.makeText(AddUserInformation.this, "Failed to load user.",
+                        Toast.LENGTH_SHORT).show();
+                // [END_EXCLUDE]
+            }
+        });
+    }
 
 
     @Override

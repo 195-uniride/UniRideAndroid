@@ -14,7 +14,7 @@ public class User {
     public String username;
     public String firstName;
     public String lastName;
-    private String phoneNumber;
+    public String phoneNumber;
     public String defaultOrganizationId;
 
     public User() {
