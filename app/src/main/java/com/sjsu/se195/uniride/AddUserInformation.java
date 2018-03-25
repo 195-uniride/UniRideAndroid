@@ -39,10 +39,10 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     private Button saveButton;
     private Button skipButton;
 
-    private EditText firstName;
-    private EditText lastName;
-    private EditText dateOfBirth;
-    private EditText phoneNumber;
+    private EditText mFirstNameField;
+    private EditText mLastNameField;
+    private EditText mDateOfBirthField;
+    private EditText mPhoneNumberField;
     //DateOfBirth and PhoneNumber might have to be saved differently
 
     private Spinner orgSpinner;
@@ -55,10 +55,10 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         saveButton = findViewById(R.id.save_information);
         skipButton = findViewById(R.id.skip_this);
 
-        firstName = (EditText)findViewById(R.id.first_name);
-        lastName = (EditText) findViewById(R.id.last_name);
-        dateOfBirth = (EditText) findViewById(R.id.date_of_birth);
-        phoneNumber = (EditText) findViewById(R.id.phone_number);
+        mFirstNameField = (EditText)findViewById(R.id.first_name);
+        mLastNameField = (EditText) findViewById(R.id.last_name);
+        mDateOfBirthField = (EditText) findViewById(R.id.date_of_birth);
+        mPhoneNumberField = (EditText) findViewById(R.id.phone_number);
 
         orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
 
@@ -75,18 +75,25 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
         // TODO: continue WIP:
         // TODO: get user, update fields by doing user.updateEmail(newEmail), etc., then do ref.updateChildren after user.toMap
-//        HashMap<String, Object> userInformation = user.toMap();
-//
-//        ref.updateChildren(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Toast.makeText(AddUserInformation.this, "Information Saved", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(AddUserInformation.this, "Failed to Save Information", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+        HashMap<String, Object> userInformation = new HashMap<>();
+
+//        userInformation.put("email", email);
+//        userInformation.put("username", username);
+        userInformation.put("firstName", first);
+        userInformation.put("lastName", last);
+        userInformation.put("phoneNumber", phone);
+        // userInformation.put("defaultOrganizationId", defaultOrganizationId); //TODO: update with OrgID.
+
+        ref.updateChildren(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Toast.makeText(AddUserInformation.this, "Information Saved", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddUserInformation.this, "Failed to Save Information", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void fillOrganizations(){
@@ -125,11 +132,11 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.save_information:
-                String theFirst = firstName.getText().toString();
-                String theLast = lastName.getText().toString();
-                String theDateOfBirth = dateOfBirth.getText().toString();
-                String thePhoneNumber = phoneNumber.getText().toString();
-                String organization = orgSpinner.getSelectedItem().toString();
+                String theFirst = mFirstNameField.getText().toString();
+                String theLast = mLastNameField.getText().toString();
+                String theDateOfBirth = mDateOfBirthField.getText().toString();
+                String thePhoneNumber = mPhoneNumberField.getText().toString();
+                String organization = orgSpinner.getSelectedItem().toString(); // TODO: convert to get OrdID.
 
                 updateInformation(theFirst, theLast, theDateOfBirth, thePhoneNumber, organization);
 
