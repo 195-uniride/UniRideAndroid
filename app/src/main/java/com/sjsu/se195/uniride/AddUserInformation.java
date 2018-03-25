@@ -44,6 +44,8 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     private Button saveButton;
     private Button skipButton;
 
+    private HashMap<String, String> OrganizationNameIdMap;
+
     private EditText mFirstNameField;
     private EditText mLastNameField;
     private EditText mDateOfBirthField;
@@ -73,7 +75,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         fillOrganizations();
     }
 
-    private void updateInformation(String first, String last, String dob, String phone, String organization) {
+    private void updateInformation(String first, String last, String dob, String phone, String defaultOrganizationId) {
         // TODO: continue WIP:
         // TODO: get user, update fields by doing user.updateEmail(newEmail), etc., then do ref.updateChildren after user.toMap
         HashMap<String, Object> userInformation = new HashMap<>();
@@ -83,7 +85,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         userInformation.put("firstName", first);
         userInformation.put("lastName", last);
         userInformation.put("phoneNumber", phone);
-        // userInformation.put("defaultOrganizationId", defaultOrganizationId); //TODO: update with OrgID.
+        userInformation.put("defaultOrganizationId", defaultOrganizationId);
 
         mUserReference.updateChildren(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -97,22 +99,28 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         });
     }
 
-    private void fillOrganizations(){
+    private void fillOrganizations() {
+        OrganizationNameIdMap = new HashMap<>();
+
         DatabaseReference organizationsReference = FirebaseDatabase.getInstance().getReference().child("organizations");
 
         organizationsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<String> allOrganizations = new ArrayList<String>();
+                List<String> allOrganizationNames = new ArrayList<String>();
+
                 //Gets every name of existing organizations
                 for (DataSnapshot orgSnapshot: dataSnapshot.getChildren()) {
                     String orgName = orgSnapshot.child("name").getValue(String.class);
-                    allOrganizations.add(orgName);
+                    String orgId = orgSnapshot.getKey();
+
+                    allOrganizationNames.add(orgName);
+                    OrganizationNameIdMap.put(orgName, orgId); // NOTE: This assumes all org names are unique.
                 }
 
                 //Fills spinner with organization names
                 ArrayAdapter<String> orgAdapter = new ArrayAdapter<String>(AddUserInformation.this,
-                        android.R.layout.simple_spinner_item, allOrganizations);
+                        android.R.layout.simple_spinner_item, allOrganizationNames);
                 orgAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 orgSpinner.setAdapter(orgAdapter);
             }
@@ -166,9 +174,11 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
                 String theLast = mLastNameField.getText().toString();
                 String theDateOfBirth = mDateOfBirthField.getText().toString();
                 String thePhoneNumber = mPhoneNumberField.getText().toString();
-                String organization = orgSpinner.getSelectedItem().toString(); // TODO: convert to get OrdID.
+                String organizationName = orgSpinner.getSelectedItem().toString();
 
-                updateInformation(theFirst, theLast, theDateOfBirth, thePhoneNumber, organization);
+                String organizationId = OrganizationNameIdMap.get(organizationName);
+
+                updateInformation(theFirst, theLast, theDateOfBirth, thePhoneNumber, organizationId);
 
             case R.id.skip_this:
                 startActivity(new Intent(AddUserInformation.this, MainActivity.class));
