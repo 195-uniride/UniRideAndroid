@@ -87,6 +87,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
 
     private LatLng mpickupPoint;
 
+    private String mPostOrganizationId;
+
     private static final String DRIVER_TITLE = "Offer a Ride";
     private static final String RIDER_TITLE = "Request a Ride";
 
@@ -482,6 +484,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
             return;
         }
 
+        // TODO: set mPostOrganizationId here?
+
         //TODO: probably not needed
         //if ride request post and pickup point empty
         /*if (!postType && TextUtils.isEmpty(pickupPoint_temp)) {
@@ -522,12 +526,15 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
                                     "Error: could not fetch user.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+
+                            mPostOrganizationId = user.defaultOrganizationId; // TODO: Let user choose which org to post under.
+
                             // Write new post
                             if(postType) {
-                                writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount);
+                                writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount, mPostOrganizationId);
                             }
                             else{
-                                writeNewRideRequestPost(userId, user.username, source, destination, pickupPoint);
+                                writeNewRideRequestPost(userId, user.username, source, destination, pickupPoint, mPostOrganizationId);
                             }
                         }
 
@@ -561,7 +568,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
     // [START write_fan_out]
 
     //creating a drive offer
-    private void writeNewDriveOfferPost(String userId, String username, String source, String destination, int count) {
+    private void writeNewDriveOfferPost(String userId, String username, String source, String destination, int count, String organizationId) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("driveOffers").push().getKey();
@@ -572,12 +579,13 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/posts/driveOffers/" + key, postValues);
         childUpdates.put("/user-posts/" + userId + "/driveOffers/" + key, postValues);
+        childUpdates.put("/organization-posts/" + organizationId + "/driveOffers/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
     }
 
     //creating a ride request
-    private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint){
+    private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint, String organizationId){
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
@@ -592,6 +600,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback 
         childUpdates.put("/posts/rideRequests/" + key, postValues);
 
         childUpdates.put("/user-posts/" + userId + "/rideRequests/" + key, postValues);
+        childUpdates.put("/organization-posts/" + organizationId + "/rideRequests/" + key, postValues);
         mDatabase.updateChildren(childUpdates);
 
         childUpdates2.put("/posts/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);

@@ -132,7 +132,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
                     String orgName = orgSnapshot.child("name").getValue(String.class);
 
                     allOrganizationNames.add(orgName);
-                    
+
                     // Link the organization name to its key (for later lookup):
                     String orgId = orgSnapshot.getKey();
                     OrganizationNameIdMap.put(orgName, orgId); // NOTE: This assumes all org names are unique.
