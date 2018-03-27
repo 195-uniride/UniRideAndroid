@@ -18,15 +18,14 @@ public class RecentPostsFragment extends PostListFragment {
         Query recentPostsQuery;
 
         // Load Drive Offer Posts:
-        if(!postType){
-            recentPostsQuery = getAllDriveOfferPosts().limitToFirst(100);
+        if(!postType) {
+            recentPostsQuery = mDatabase.child("organization-posts").child(getSelectedOrganizationId())
+                    .child("driveOffers").limitToFirst(100);
         }
         // Load Ride Request Posts:
-        else{
-            recentPostsQuery = getAllRideRequestPosts().limitToFirst(100);
-            //TESTING (For Query testing only): try to chain orderByChild on Query -- causes app to crash.
-//            recentPostsQuery = getAllRideRequestPosts().orderByChild("uid").equalTo("0HDHPr4wDxhrX00RUfe5Melucsv2")
-//                    .orderByChild("source").equalTo("wryj").limitToFirst(100);
+        else {
+            recentPostsQuery = mDatabase.child("organization-posts").child(getSelectedOrganizationId())
+                    .child("rideRequests").limitToFirst(100);
         }
         // [END recent_posts_query]
 

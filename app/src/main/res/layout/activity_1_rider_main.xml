@@ -29,11 +29,12 @@
                 android:fontFeatureSettings="smcp"/>
 
             <Spinner
-                android:id="@+id/orgSpinner"
+                android:id="@+id/chosen_organization"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:entries="@array/organizations_list"
-                android:prompt="@string/organizations_prompt"/>
+                android:layout_height="wrap_content"
+                android:dropDownWidth="match_parent"
+                android:prompt="@string/organizations_prompt"
+                android:spinnerMode="dialog" />
 
             <FrameLayout
                 android:id="@+id/post_fragment_placeholder"

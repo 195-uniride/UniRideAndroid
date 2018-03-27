@@ -180,22 +180,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
                 mPhoneNumberField.setText(currentUser.phoneNumber);
 
                 fillOrganizations();
-
-                // Set selected item as user's default organization:
-//                System.out.println("currentUser.defaultOrganizationId = " + currentUser.defaultOrganizationId);
-//                if (!currentUser.defaultOrganizationId.equals("")) {
-//                    String defaultOrgName = "";
-//                    for (String orgId : OrganizationNameIdMap.values()) {
-//                        System.out.println("in keySet: orgId = " + orgId);
-//                        if (currentUser.defaultOrganizationId.equals(orgId)) {
-//                            System.out.println("found default orgId = " + orgId);
-//                            defaultOrgName = OrganizationNameIdMap.
-//                        }
-//                    }
-//
-//                    System.out.println("defaultOrgName = " + defaultOrgName);
-//                    orgSpinner.setSelection(orgAdapter.getPosition(defaultOrgName));
-//                }
                 // [END_EXCLUDE]
             }
 

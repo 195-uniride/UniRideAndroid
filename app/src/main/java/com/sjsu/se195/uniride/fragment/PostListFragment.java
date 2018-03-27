@@ -20,6 +20,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.MainSubcategoryActivity;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
@@ -67,7 +68,7 @@ public abstract class PostListFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
+        System.out.println("in Fragment onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
         //postType = savedInstanceState.getBundle("postType");
@@ -82,6 +83,7 @@ public abstract class PostListFragment extends Fragment {
         setCurrentUserAndLoadPosts();
 
     }
+
 
     // [START post_stars_transaction]
     private void onStarClicked(DatabaseReference postRef) {
@@ -128,6 +130,12 @@ public abstract class PostListFragment extends Fragment {
 
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    // TODO:
+    public String getSelectedOrganizationId() {
+        System.out.println("Getting selected org ID from MainSubcategoryActivity...");
+        return ((MainSubcategoryActivity)getActivity()).getSelectedOrganizationId();
     }
 
     // TODO: change to throw error if user doesn't have a default organization:
@@ -182,6 +190,7 @@ public abstract class PostListFragment extends Fragment {
     }
 
     private void loadPosts() {
+        System.out.println("About to load posts....."); // TODO: investigate why fragment reload not calling again...
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
 
