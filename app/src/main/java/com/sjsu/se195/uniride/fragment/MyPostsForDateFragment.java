@@ -15,16 +15,17 @@ public class MyPostsForDateFragment extends PostListFragment {
         // [START recent_posts_query]
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
-        Query recentPostsQuery;
+        Query recentUserPostsQuery;
 
+        String userKey = getUid();
         if(!postType){
-            recentPostsQuery = databaseReference.child("posts").child("driveOffers").limitToFirst(10);
+            recentUserPostsQuery = databaseReference.child("posts").child("driveOffers").orderByChild("uid").equalTo(userKey).limitToFirst(10);
         }
         else{
-            recentPostsQuery = databaseReference.child("posts").child("rideRequests").limitToFirst(10);
+            recentUserPostsQuery = databaseReference.child("posts").child("rideRequests").orderByChild("uid").equalTo(userKey).limitToFirst(10);
         }
         // [END recent_posts_query]
 
-        return recentPostsQuery;
+        return recentUserPostsQuery;
     }
 }

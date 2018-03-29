@@ -98,7 +98,7 @@ public abstract class PostListFragment extends Fragment {
                     public void onClick(View v) {
 
                         if (getActivity() instanceof NewCarpoolActivity) {
-
+                            System.out.println("current activity is newcarpoolactivity");
                             setPostsAndCreateCarpool(postRef);
                         }
                         else {
@@ -209,7 +209,7 @@ public abstract class PostListFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
 
-                System.out.println(dataSnapshot.toString());
+                System.out.println("datasnapshot from setpostsandcreatecarpool" + dataSnapshot.toString());
 
                 mDriverPost = dataSnapshot.getValue(DriverOfferPost.class);
 
@@ -235,7 +235,7 @@ public abstract class PostListFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
 
-                System.out.println(dataSnapshot.toString());
+                System.out.println("datasnapshot from setriderpostsandcreatecarpool" + dataSnapshot.toString());
 
                 mRideRequestPost = dataSnapshot.getValue(RideRequestPost.class);
 

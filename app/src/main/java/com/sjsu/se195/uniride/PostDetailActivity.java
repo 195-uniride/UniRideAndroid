@@ -228,7 +228,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
-                intent.putExtra("isRiderPost", postType);
+                intent.putExtra("postType", postType);
                 intent.putExtra("postId", mPostKey); // for: FirebaseDatabase.getInstance().getReference().child("posts").child("rideRequests").child(mPostKey);
 
                 System.out.println("Starting NewCarpoolActivity...");

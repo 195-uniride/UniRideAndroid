@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseError;
@@ -21,7 +23,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
-  private boolean isRiderPost;
+  private boolean postType; //true = driverpost ; false = riderequest
   private Post mSelectedPost;
   private String mSelectedPostKey;
   private DatabaseReference mPostReference;
@@ -35,20 +37,17 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
       System.out.println("NewCarpoolActivity started.");
       // get Intent data:
-      isRiderPost = getIntent().getExtras().getBoolean("isRiderPost");
+      postType = getIntent().getExtras().getBoolean("postType");
 
       mSelectedPostKey = getIntent().getExtras().getString("postId");
 
       // set post database path:
-      getPostReference(mSelectedPostKey, isRiderPost);
+      getPostReference(mSelectedPostKey, postType);
 
       // setup views:
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.activity_new_carpool);
-
-      Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-      setSupportActionBar(toolbar);
 
       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
       fab.setOnClickListener(new View.OnClickListener() {
@@ -66,18 +65,17 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
   }
 
   private void showUserPostList() {
-    // show list of user's posts for this day:
-    Bundle bundle = new Bundle();
-    bundle.putBoolean("postType", isRiderPost); // TODO: change back to "isRiderPost" after reformat MyPostsForDateFragment
-    bundle.putInt("date", mSelectedPost.tripDate);
-    bundle.putString("driverPostKey", mSelectedPostKey);
-    Fragment posts = new MyPostsForDateFragment(); // TODO: create other class to inherit from.
-    posts.setArguments(bundle);
-
-    System.out.println("About to show MyPostsForDateFragment...");
-    // display the fragment:
-    getSupportFragmentManager().beginTransaction().add(R.id.my_post_for_date_fragment_placeholder, posts).commit();
-  }
+      // show list of user's posts for this day:
+      Bundle bundle = new Bundle();
+      bundle.putBoolean("postType", postType); // TODO: change back to "isRiderPost" after reformat MyPostsForDateFragment //TODO: what?
+      bundle.putInt("date", mSelectedPost.tripDate);
+      bundle.putString("driverPostKey", mSelectedPostKey); //TODO: why driverpostkey? shouldnt it be either driver or rider?
+      Fragment posts = new MyPostsForDateFragment(); // TODO: create other class to inherit from.
+      posts.setArguments(bundle);
+      System.out.println("About to show MyPostsForDateFragment...");
+      //display the fragment:
+      getSupportFragmentManager().beginTransaction().add(R.id.my_post_for_date_fragment_placeholder, posts).commit();
+}
 
   @Override
   public void onStart() {
@@ -92,7 +90,7 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
               System.out.println("About to lookup selected post in Firebase...");
 
-              if(isRiderPost){
+              if(postType){
                   RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                   // [START_EXCLUDE]
                   mSelectedPost = post;
@@ -108,7 +106,6 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
               }
 
               System.out.println("Found post: KEY = " + mSelectedPostKey);
-
               showUserPostList(); // now that we have the post we can show the list of user posts with this post's date.
               // [END_EXCLUDE]
           }

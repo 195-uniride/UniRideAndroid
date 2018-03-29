@@ -56,12 +56,10 @@
         </activity>
         <activity
             android:name=".CarpoolDetailActivity"
-            android:label="@string/title_activity_carpool_detail"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_carpool_detail"/>
         <activity
             android:name=".NewCarpoolActivity"
-            android:label="@string/title_activity_new_carpool"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_new_carpool"></activity>
     </application>
 
 </manifest>
