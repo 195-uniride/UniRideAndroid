@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.sjsu.se195.uniride.models.User;
 
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
@@ -95,20 +94,17 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 //        writeNewUser(user.getUid(), username, user.getEmail());
 
         // Go to MainActivity
-        startActivity(new Intent(SignInActivity.this, MainActivity.class)); //TODO: change to show org.s page.
-
-
-
+        startActivity(new Intent(SignInActivity.this, MainActivity.class));
         finish();
     }
 
-    private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
-        } else {
-            return email;
-        }
-    }
+//    private String usernameFromEmail(String email) {
+//        if (email.contains("@")) {
+//            return email.split("@")[0];
+//        } else {
+//            return email;
+//        }
+//    }
 
     private boolean validateForm() {
         boolean result = true;

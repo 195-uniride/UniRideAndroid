@@ -15,6 +15,6 @@ public class MyOrganizationsFragment extends OrganizationListFragment {
     public Query getQuery(DatabaseReference databaseReference) {
         // All my organizations
         return databaseReference.child("user-organizations")
-                .child(getUid()); //TODO: investigate why this is returning null organizations in populateViewHolder in Query organizationsQuery in OrganizationListFragment...
+                .child(getUid());
     }
 }

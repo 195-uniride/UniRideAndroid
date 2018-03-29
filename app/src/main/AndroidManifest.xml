@@ -45,6 +45,7 @@
         <activity
             android:name=".SignUpActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".AddUserInformation"/>
         <activity
             android:name=".SignInActivity"
             android:theme="@style/AppTheme.NoActionBar">

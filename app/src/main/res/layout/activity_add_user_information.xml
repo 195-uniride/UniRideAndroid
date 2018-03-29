@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.sjsu.se195.uniride.AddUserInformation"
+    android:background="@color/gradient1">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/enter_info" />
+
+        <EditText
+            android:id="@+id/first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="@string/info_first"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="@string/info_last"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/date_of_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/info_date"
+            android:ems="10"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone"
+            android:hint="@string/info_phone" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="45dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/info_choose_info" />
+
+        <Spinner
+            android:id="@+id/chosen_organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:prompt="@string/organizations_prompt"
+            android:spinnerMode="dialog" />
+
+        <Button
+            android:id="@+id/join_an_organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/info_join_an_organization" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="45dp" />
+
+        <Button
+            android:id="@+id/save_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/info_save" />
+
+        <Button
+            android:id="@+id/skip_this"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/info_skip" />
+
+    </LinearLayout>
+</RelativeLayout>
