@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,7 +16,7 @@ public class Carpool extends DriverOfferPost{
 
     private DriverOfferPost driverPost;
     private String carpoolId;
-    private ArrayList<RideRequestPost> riderPosts;
+    private List<RideRequestPost> riderPosts;
     private Date actualStartTime; //TODO: change to time.zonedDateTime
     private Date actualCompletionTime;
     private enum CarpoolState{
@@ -39,8 +40,8 @@ public class Carpool extends DriverOfferPost{
         //TODO: get plannedStartTime from driver post (when driver has time)
     }
 
-    public ArrayList<RideRequestPost> getRiderPosts() {
-      return rideRequests;
+    public List<RideRequestPost> getRiderPosts() {
+      return riderPosts;
     }
 
     public DriverOfferPost getDriverPost() {
@@ -63,7 +64,6 @@ public class Carpool extends DriverOfferPost{
         }
     }
 
-
     public void startTrip(){
         //TODO: confirm carpool ready to start. driver presence, at least one rider, any additional steps.
         actualStartTime = Calendar.getInstance().getTime();
@@ -80,11 +80,19 @@ public class Carpool extends DriverOfferPost{
         HashMap<String, Object> result = new HashMap<>();
         result.put("carpoolId", carpoolId);
         result.put("driverPost", driverPost);
-        result.put("riderPosts", riderPosts);
+        result.put("riderPosts", this.riderToMap());
         result.put("actualStartTime", actualStartTime);
         result.put("actualCompletionTime", actualCompletionTime);
         result.put("carpoolState", carpoolState);
         result.put("currentLocation", currentLocation); //TODO: firebase nested object saving ??
+        return result;
+    }
+
+    private Map<String, RideRequestPost> riderToMap(){
+        HashMap<String, RideRequestPost> result = new HashMap<>();
+        for(RideRequestPost r : this.riderPosts){
+            result.put(r.uid, r);
+        }
         return result;
     }
 }

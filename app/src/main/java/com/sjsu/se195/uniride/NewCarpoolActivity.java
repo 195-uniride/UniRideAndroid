@@ -34,8 +34,7 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
   private String mSelectedPostKey;
   private DatabaseReference mDatabase;
   private DatabaseReference mPostReference;
-  private Post mUserPostKey;
-  private Post mUserPost;
+  String carpoolID;
   private ValueEventListener mPostListener;
   private static final String TAG = "NewCarpoolActivity";
 
@@ -48,6 +47,7 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
       mSelectedPostKey = getIntent().getExtras().getString("postId");
 
+      mDatabase = FirebaseDatabase.getInstance().getReference();
       // set post database path:
       getPostReference(mSelectedPostKey, postType);
 
@@ -152,13 +152,11 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
   private void getPostReference(String postKey, boolean isRiderPost) {
     // Initialize Database
     if(postType){
-        mPostReference = FirebaseDatabase.getInstance().getReference()
-                .child("posts").child("rideRequests").child(postKey);
+        mPostReference = mDatabase.child("posts").child("rideRequests").child(postKey);
         // mCommentsReference = FirebaseDatabase.getInstance().getReference()
         //         .child("post-comments").child(postKey);
     }else{
-        mPostReference = FirebaseDatabase.getInstance().getReference()
-                .child("posts").child("driveOffers").child(postKey);
+        mPostReference = mDatabase.child("posts").child("driveOffers").child(postKey);
         // mCommentsReference = FirebaseDatabase.getInstance().getReference()
         //         .child("post-comments").child(postKey);
     }
@@ -173,23 +171,25 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
               System.out.println("datasnapshot from setriderpostsandcreatecarpool" + dataSnapshot.toString());
 
-              if (!postType) { // mselected = rider; lurker must be driver (false)
-                mLurkerPost = dataSnapshot.getValue(RideRequestPost.class);
-                Carpool carpool = new Carpool((DriverOfferPost) mLurkerPost);
+              Carpool carpool;
+              if (postType) { // mselected = rider; lurker must be driver
+                mLurkerPost = dataSnapshot.getValue(DriverOfferPost.class);
+                carpool = new Carpool((DriverOfferPost) mLurkerPost);
                 addRider(carpool, (RideRequestPost) mSelectedPost);
 
                 // save
               }
-              else {// mselected = driver; lurker must be rider (true)
+              else {// mselected = driver; lurker must be rider
                 mLurkerPost = dataSnapshot.getValue(RideRequestPost.class);
-                Carpool carpool = new Carpool((DriverOfferPost) mSelectedPost);
+                carpool = new Carpool((DriverOfferPost) mSelectedPost);
                 addRider(carpool, (RideRequestPost) mLurkerPost);
               }
 
+              writeNewCarpoolObject(carpool);
+
               // Create the Carpool object:
               Intent intent = new Intent(NewCarpoolActivity.this, CarpoolDetailActivity.class);
-              // intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey); // TODO change.
-              intent.putExtra("postType", postType);
+              intent.putExtra("carpoolID", carpoolID);
               startActivity(intent);
           }
 
@@ -205,12 +205,13 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
   private void writeNewCarpoolObject(Carpool carpool) {
       // Create new post at /user-posts/$userid/$postid and at
       // /posts/$postid simultaneously
-      String key = mDatabase.child("posts").child("carpool").push().getKey();
+      String key = mDatabase.child("posts").child("carpools").push().getKey();
+      carpoolID = key;
 
       Map<String, Object> carpoolValues = carpool.toMap();
 
       Map<String, Object> childUpdates = new HashMap<>();
-      childUpdates.put("/posts/carpool/" + key, carpoolValues);
+      childUpdates.put("/posts/carpools/" + key, carpoolValues);
 
       childUpdates.put("/user-carpools/" + carpool.getDriverPost().uid + "/" + key, carpoolValues);
       for (RideRequestPost post : carpool.getRiderPosts()) {

@@ -16,44 +16,37 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 
 public class CarpoolDetailActivity extends AppCompatActivity {
     private static final String TAG = "CarpoolDetailActivity";
-    private boolean isRiderPost;
-    private Post mSelectedPost;
-    private String mSelectedPostKey;
-    private DatabaseReference mPostReference;
+    private Carpool mCarpool;
+    private String carpoolId;
     private Post mUserPostKey;
     private Post mUserPost;
-    private ValueEventListener mPostListener;
+    DriverOfferPost driver;
+    private DatabaseReference mCarpoolReference;
+    private ValueEventListener mCarpoolListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        isRiderPost = getIntent().getExtras().getBoolean("isRiderPost");
-        // if (isRiderPost) {
-        //   mPost = (DriverOfferPost) getIntent().getExtras().get("post");
-        // } else {
-        //   mPost = (RideRequestPost) getIntent().getExtras().get("post");
-        // }
-        mSelectedPostKey = getIntent().getExtras().getString("postId");
+        carpoolId = getIntent().getExtras().getString("carpoolID");
 
-        getPostReference(mSelectedPostKey, isRiderPost);
+        getPostReference(carpoolId);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carpool_detail);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                System.out.println("Post source: " + mSelectedPost.source);
-                System.out.println("Post dest: " + mSelectedPost.destination);
-                System.out.println("Post is of type: " + mSelectedPost.getClass().getName());
+                System.out.println("Driver post source: " + driver.source);
+                System.out.println("Driver post is of type: " + driver.getClass().getName());
             }
         });
     }
@@ -63,23 +56,15 @@ public class CarpoolDetailActivity extends AppCompatActivity {
         super.onStart();
         // Add value event listener to the post
         // [START post_value_event_listener]
-        ValueEventListener postListener = new ValueEventListener() {
+        ValueEventListener carpoolListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 System.out.println(dataSnapshot.toString());
-                if(isRiderPost){
-                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
-                    // [START_EXCLUDE]
-                    mSelectedPost = post;
-                    // TODO: setup views.
-                }
-                else{
-                    DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
-                    // [START_EXCLUDE]
-                    mSelectedPost = post;
-                    // TODO: setup views.
-                }
+                Carpool carpool = dataSnapshot.getValue(Carpool.class);
+                // [START_EXCLUDE]
+                mCarpool = carpool;
+                driver = mCarpool.getDriverPost();
                 // [END_EXCLUDE]
             }
 
@@ -93,11 +78,11 @@ public class CarpoolDetailActivity extends AppCompatActivity {
                 // [END_EXCLUDE]
             }
         };
-        mPostReference.addValueEventListener(postListener);
+        mCarpoolReference.addValueEventListener(carpoolListener);
         // [END post_value_event_listener]
 
         // Keep copy of post listener so we can remove it when app stops
-        mPostListener = postListener;
+        mCarpoolListener = carpoolListener;
 
         // Listen for comments
         // mAdapter = new CommentAdapter(this, mCommentsReference);
@@ -109,27 +94,18 @@ public class CarpoolDetailActivity extends AppCompatActivity {
         super.onStop();
 
         // Remove post value event listener
-        if (mPostListener != null) {
-            mPostReference.removeEventListener(mPostListener);
+        if (mCarpoolListener != null) {
+            mCarpoolReference.removeEventListener(mCarpoolListener);
         }
 
         // // Clean up comments listener
         // mAdapter.cleanupListener();
     }
 
-    private void getPostReference(String postKey, boolean isRiderPost) {
+    private void getPostReference(String carpoolKey) {
       // Initialize Database // TODO: remove & change to just get carpool path. (do all of this in New Carpool Activity)
-      if(isRiderPost){
-          mPostReference = FirebaseDatabase.getInstance().getReference()
-                  .child("posts").child("rideRequests").child(postKey);
-          // mCommentsReference = FirebaseDatabase.getInstance().getReference()
-          //         .child("post-comments").child(postKey);
-      }else{
-          mPostReference = FirebaseDatabase.getInstance().getReference()
-                  .child("posts").child("driveOffers").child(postKey);
-          // mCommentsReference = FirebaseDatabase.getInstance().getReference()
-          //         .child("post-comments").child(postKey);
-      }
+        mCarpoolReference = FirebaseDatabase.getInstance().getReference()
+                .child("posts").child("carpools").child(carpoolKey);
     }
 
 
