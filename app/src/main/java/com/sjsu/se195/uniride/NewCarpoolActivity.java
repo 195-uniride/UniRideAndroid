@@ -67,8 +67,6 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
               System.out.println("Post is of type: " + mSelectedPost.getClass().getName());
           }
       });
-
-
   }
 
   private void showUserPostList() {
@@ -218,6 +216,8 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       for (RideRequestPost post : carpool.getRiderPosts()) {
           childUpdates.put("/user-carpools/" + post.uid + "/" + key, carpoolValues);
       }
+
+      // TODO: childUpdates.put("/organization-posts/" + carpool.getDriverPost().orgID + "/rideRequests/" + key, postValues);
 
       mDatabase.updateChildren(childUpdates);
   }
