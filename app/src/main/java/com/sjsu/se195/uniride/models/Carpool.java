@@ -39,6 +39,14 @@ public class Carpool extends DriverOfferPost{
         //TODO: get plannedStartTime from driver post (when driver has time)
     }
 
+    public ArrayList<RideRequestPost> getRiderPosts() {
+      return rideRequests;
+    }
+
+    public DriverOfferPost getDriverPost() {
+      return driverPost;
+    }
+
     public void addRider(RideRequestPost rider) throws OverPassengerLimitException {
         if (riderPosts.size() >= driverPost.getPassengerCount()){
             throw new OverPassengerLimitException("Over passenger limit. The carpool already has " + riderPosts.size() + " passengers.");

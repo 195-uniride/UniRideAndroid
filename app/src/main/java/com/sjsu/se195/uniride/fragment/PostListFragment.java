@@ -99,18 +99,9 @@ public abstract class PostListFragment extends Fragment {
 
                         if (getActivity() instanceof NewCarpoolActivity) {
                             System.out.println("current activity is newcarpoolactivity");
-
-                            //Set the driver and rider posts up (needed to make a carpool)
-                            if(postType){
-                                setPostsAndCreateCarpool(postRef);
-                            }
-                            else{
-                                //get recent driveOffers by current user
-                            }
-
-
+                            //setPostsAndCreateCarpool(postRef);
                             //Call the method in NewCarpoolActivity
-                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(mRideRequestPost, mDriverPost);
+                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
                         }
                         else {
                             // Launch PostDetailActivity
@@ -208,86 +199,4 @@ public abstract class PostListFragment extends Fragment {
 
     public abstract Query getQuery(DatabaseReference databaseReference);
 
-
-    private void setPostsAndCreateCarpool(final DatabaseReference postRef) {
-        String driverPostKey = getArguments().getString("driverPostKey");
-
-        DatabaseReference driverPostRef = FirebaseDatabase.getInstance().getReference()
-                .child("posts").child("driveOffers").child(driverPostKey);
-
-        // Add value event listener to the post
-        // [START post_value_event_listener]
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-
-                System.out.println("datasnapshot from setpostsandcreatecarpool" + dataSnapshot.toString());
-                mDriverPost = dataSnapshot.getValue(DriverOfferPost.class);
-
-                setRiderPostAndCreateCarpool(postRef);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        driverPostRef.addValueEventListener(postListener);
-        // [END post_value_event_listener]
-    }
-
-
-    private void setRiderPostAndCreateCarpool(DatabaseReference mPostReference) {
-        // Add value event listener to the post
-        // [START post_value_event_listener]
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-
-                System.out.println("datasnapshot from setriderpostsandcreatecarpool" + dataSnapshot.toString());
-
-                mRideRequestPost = dataSnapshot.getValue(RideRequestPost.class);
-
-                // make a Carpool object:
-
-                Carpool carpool = new Carpool(mDriverPost);
-
-                try {
-                    carpool.addRider(mRideRequestPost); // get from PostRef
-                }
-                catch (Carpool.OverPassengerLimitException ex) {
-                    // tell user can't join because carpool is full.
-                }
-
-                // Create the Carpool object:
-                Intent intent = new Intent(getActivity(), CarpoolDetailActivity.class);
-                // intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey); // TODO change.
-                intent.putExtra("postType", postType);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        mPostReference.addValueEventListener(postListener);
-        // [END post_value_event_listener]
-    }
-
 }
-
-//SCENARIO #1 : carpool from postDetailActivity (i.e. a new carpool object is to be created)
-//true = driverpost ; false = riderequest
-/*
-1.A. A driver is looking at a rider's post and wishes to create a carpool through it.
-    - mSelectedPost (from newcarpoolactivity) would be a rideRequest. [postType: false] TODO: this sould be true
-    - mLurkerPost (in PostDetailActivity) would be a driverPost. [postType: true]
-1.B. A rider is looking at driver's post and wishes to create a carpool through it.
-    - mSelectedPost (from newcarpoolactivity) would be a driverPost. [postType: true]
-    - mLurkerPost (in PostDetailActivity) would be a rideRequest. [postType: false]
-*/
