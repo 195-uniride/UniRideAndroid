@@ -45,7 +45,7 @@ public abstract class PostListFragment extends Fragment {
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
-    protected boolean postType; //true = driverpost ; false = riderequest
+    protected boolean postType; //false = driverpost ; true = riderequest
 
     private DriverOfferPost mDriverPost;
     private RideRequestPost mRideRequestPost;
@@ -99,7 +99,18 @@ public abstract class PostListFragment extends Fragment {
 
                         if (getActivity() instanceof NewCarpoolActivity) {
                             System.out.println("current activity is newcarpoolactivity");
-                            setPostsAndCreateCarpool(postRef);
+
+                            //Set the driver and rider posts up (needed to make a carpool)
+                            if(postType){
+                                setPostsAndCreateCarpool(postRef);
+                            }
+                            else{
+                                //get recent driveOffers by current user
+                            }
+
+
+                            //Call the method in NewCarpoolActivity
+                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(mRideRequestPost, mDriverPost);
                         }
                         else {
                             // Launch PostDetailActivity
@@ -190,7 +201,9 @@ public abstract class PostListFragment extends Fragment {
     }
 
     public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+        return FirebaseAuth.getInstance().//the postType in this file is opposite of usual
+                                //postType is false and !postType is true
+                            getCurrentUser().getUid();
     }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
@@ -210,7 +223,6 @@ public abstract class PostListFragment extends Fragment {
                 // Get Post object and use the values to update the UI
 
                 System.out.println("datasnapshot from setpostsandcreatecarpool" + dataSnapshot.toString());
-
                 mDriverPost = dataSnapshot.getValue(DriverOfferPost.class);
 
                 setRiderPostAndCreateCarpool(postRef);
@@ -268,3 +280,14 @@ public abstract class PostListFragment extends Fragment {
     }
 
 }
+
+//SCENARIO #1 : carpool from postDetailActivity (i.e. a new carpool object is to be created)
+//true = driverpost ; false = riderequest
+/*
+1.A. A driver is looking at a rider's post and wishes to create a carpool through it.
+    - mSelectedPost (from newcarpoolactivity) would be a rideRequest. [postType: false] TODO: this sould be true
+    - mLurkerPost (in PostDetailActivity) would be a driverPost. [postType: true]
+1.B. A rider is looking at driver's post and wishes to create a carpool through it.
+    - mSelectedPost (from newcarpoolactivity) would be a driverPost. [postType: true]
+    - mLurkerPost (in PostDetailActivity) would be a rideRequest. [postType: false]
+*/

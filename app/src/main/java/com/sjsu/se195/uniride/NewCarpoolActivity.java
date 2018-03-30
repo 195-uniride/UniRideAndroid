@@ -23,7 +23,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
 public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
-  private boolean postType; //true = driverpost ; false = riderequest
+  private boolean postType; //false = driverpost ; true = riderequest
   private Post mSelectedPost;
   private String mSelectedPostKey;
   private DatabaseReference mPostReference;
@@ -63,11 +63,16 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
 
   }
+//false = driverpost ; true = riderequest
+  //mSelectedPost is driverpost => postType = false | mSelectedPost is the post slected by the user
+  //showing all the posts that will be used alongside the mSelectedPost to create the carpool object
+  //rideRequests. !postType/true => PostListFragment
+  //PostListFragment: if(postType)>rideRequests == true = rideRequest
 
   private void showUserPostList() {
       // show list of user's posts for this day:
       Bundle bundle = new Bundle();
-      bundle.putBoolean("postType", postType); // TODO: change back to "isRiderPost" after reformat MyPostsForDateFragment //TODO: what?
+      bundle.putBoolean("postType", !postType); // TODO: change back to "isRiderPost" after reformat MyPostsForDateFragment //TODO: what?
       bundle.putInt("date", mSelectedPost.tripDate);
       bundle.putString("driverPostKey", mSelectedPostKey); //TODO: why driverpostkey? shouldnt it be either driver or rider?
       Fragment posts = new MyPostsForDateFragment(); // TODO: create other class to inherit from.
@@ -146,7 +151,7 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
   private void getPostReference(String postKey, boolean isRiderPost) {
     // Initialize Database
-    if(isRiderPost){
+    if(postType){
         mPostReference = FirebaseDatabase.getInstance().getReference()
                 .child("posts").child("rideRequests").child(postKey);
         // mCommentsReference = FirebaseDatabase.getInstance().getReference()
@@ -157,6 +162,11 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
         // mCommentsReference = FirebaseDatabase.getInstance().getReference()
         //         .child("post-comments").child(postKey);
     }
+  }
+
+  //Here we make the new carpool object and send that thing
+  public void createCarpoolObject(){
+
   }
 
 }
