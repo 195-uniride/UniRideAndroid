@@ -112,6 +112,10 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
             throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
         }
 
+        ///---
+        getIntent().getExtras().get("");
+        ///----
+
         // Initialize Database
         if(postType){
             mPostReference = FirebaseDatabase.getInstance().getReference()

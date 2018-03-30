@@ -37,4 +37,21 @@
     <string name="title_activity_new_carpool">NewCarpoolActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="infoprompt">Select One of the Following:</string>
+    <string name="enter_info">Enter Your Information</string>
+    <string name="info_first">First Name</string>
+    <string name="info_last">Last Name</string>
+    <string name="info_date">Date of Birth</string>
+    <string name="info_phone">(555)555-555</string>
+    <string name="info_choose_info">Choose Your Default Organization</string>
+    <string name="info_save">Save Information</string>
+    <string name="info_skip">Skip This</string>
+    <string name="organizations_prompt">Choose an Organization</string>
+    <string name="info_join_an_organization">Join an Organization</string>
+
+    <string-array name="organizations_list">
+        <item>San Jose State University</item>
+        <item>DeAnza College</item>
+        <item>West Valley College</item>
+    </string-array>
 </resources>

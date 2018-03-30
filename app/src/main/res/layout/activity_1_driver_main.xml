@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
     <LinearLayout
         android:id="@+id/button_driver_layout"
         android:layout_width="match_parent"
@@ -26,6 +27,15 @@
             android:textColor="@color/primaryWhite"
             android:textSize="18dp"
             android:fontFeatureSettings="smcp"/>
+
+        <Spinner
+            android:id="@+id/chosen_organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dropDownWidth="match_parent"
+            android:prompt="@string/organizations_prompt"
+            android:spinnerMode="dialog" />
+
 
         <!-- TODO: add "class" instead of "name" -->
         <FrameLayout

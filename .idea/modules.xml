@@ -3,8 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/UniRideAndroid.iml" filepath="$PROJECT_DIR$/UniRideAndroid.iml" />
+      <module fileurl="file://C:\Users\Marta\Desktop\Git\UniRideAndroid\UniRideAndroid.iml" filepath="C:\Users\Marta\Desktop\Git\UniRideAndroid\UniRideAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/uniride.iml" filepath="$PROJECT_DIR$/uniride.iml" />
+      <module fileurl="file://C:\Users\Marta\Desktop\Git\UniRideAndroid\uniride.iml" filepath="C:\Users\Marta\Desktop\Git\UniRideAndroid\uniride.iml" />
     </modules>
   </component>
 </project>

@@ -195,8 +195,10 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         }
     }
 
+
     private void hideJoinIfUserHasAlreadyJoinedOrganization()
     {
+
         mDatabase.child("user-organizations").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
