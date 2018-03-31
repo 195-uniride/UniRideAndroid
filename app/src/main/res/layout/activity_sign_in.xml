@@ -51,16 +51,18 @@
             android:id="@+id/button_sign_in"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="@string/sign_in"
+            android:layout_margin="10dp"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:text="@string/sign_in"
             android:layout_below="@id/field_password"
+            android:drawableLeft="@drawable/ic_navigation_check_24"
             android:layout_centerHorizontal="true"/>
 
         <TextView
             android:id="@+id/have_an_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already Have an account?"
+            android:text="Don't Have an account?"
             android:layout_centerHorizontal="true"
             android:layout_above="@+id/signup2"
             android:layout_margin="10dp"
@@ -73,7 +75,8 @@
             android:text="@string/sign_up"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            android:drawableLeft="@drawable/ic_keyboard_arrow_right_white_24dp"/>
 
 </RelativeLayout>
 
