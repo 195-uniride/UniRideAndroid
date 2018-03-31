@@ -41,10 +41,8 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
 
-      System.out.println("NewCarpoolActivity started.");
       // get Intent data:
       postType = getIntent().getExtras().getBoolean("postType"); //postType of mSelectedPost
-      System.out.println("NewCarpoolActivity line47 postType = " + postType);
 
       mSelectedPostKey = getIntent().getExtras().getString("postId");
 
@@ -63,9 +61,6 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
           public void onClick(View view) {
               Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                       .setAction("Action", null).show();
-              System.out.println("Post source: " + mSelectedPost.source);
-              System.out.println("Post dest: " + mSelectedPost.destination);
-              System.out.println("Post is of type: " + mSelectedPost.getClass().getName());
           }
       });
   }
@@ -78,7 +73,6 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       bundle.putString("driverPostKey", mSelectedPostKey); //TODO: why driverpostkey? shouldnt it be either driver or rider?
       Fragment posts = new MyPostsForDateFragment(); // TODO: create other class to inherit from.
       posts.setArguments(bundle);
-      System.out.println("About to show MyPostsForDateFragment...");
       //display the fragment:
       getSupportFragmentManager().beginTransaction().add(R.id.my_post_for_date_fragment_placeholder, posts).commit();
 }
@@ -92,26 +86,20 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
           @Override
           public void onDataChange(DataSnapshot dataSnapshot) {
               // Get Post object and use the values to update the UI
-              //System.out.println(dataSnapshot.toString());
-
-              System.out.println("About to lookup selected post in Firebase...");
 
               if(getSelectedPostType()) {
                   RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                   // [START_EXCLUDE]
                   mSelectedPost = post;
-                  System.out.println("Found post in Firebase.");
                   // TODO: setup views.
               }
               else{
                   DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                   // [START_EXCLUDE]
                   mSelectedPost = post;
-                  System.out.println("Found post in Firebase.");
                   // TODO: setup views.
               }
 
-              System.out.println("Found post: KEY = " + mSelectedPostKey);
               showUserPostList(); // now that we have the post we can show the list of user posts with this post's date.
               // [END_EXCLUDE]
           }
@@ -170,8 +158,6 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
           public void onDataChange(DataSnapshot dataSnapshot) {
               // Get Post object and use the values to update the UI
 
-              System.out.println("datasnapshot from setriderpostsandcreatecarpool" + dataSnapshot.toString());
-
               Carpool carpool;
               if (getSelectedPostType()) { // mselected = rider; lurker must be driver. postType = mselected.type (true)
                 mLurkerPost = dataSnapshot.getValue(DriverOfferPost.class);
@@ -212,38 +198,30 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       Map<String, Object> childUpdates = new HashMap<>();
       childUpdates.put("/posts/carpools/" + key, carpoolValues);
 
-      childUpdates.put("/user-carpools/" + carpool.getDriverPost().uid + "/" + key, carpoolValues);
+      Map<String, String> carpoolValuesUser = carpool.userToMap("driver");
+      childUpdates.put("/user-carpools/" + carpool.getDriverPost().uid + "/" + key, carpoolValuesUser);
 
+      carpoolValuesUser = carpool.userToMap("rider");
       for (RideRequestPost post : carpool.getRiderPosts()) {
-          childUpdates.put("/user-carpools/" + post.uid + "/" + key, carpoolValues);
+          childUpdates.put("/user-carpools/" + post.uid + "/" + key, carpoolValuesUser);
       }
 
       // TODO: childUpdates.put("/organization-posts/" + carpool.getDriverPost().orgID + "/rideRequests/" + key, postValues);
 
       mDatabase.updateChildren(childUpdates);
 
-      System.out.println("line227 NewCarpoolActivity");
       Map<String, Object> childUpdates2 = new HashMap<>();
 
       Map<String, RideRequestPost> carpoolRiders = carpool.riderToMap();
 
-      System.out.println("carpoolRiders = " + carpoolRiders);
-
       childUpdates2.put("/posts/carpools/" + key + "/riderposts", carpoolRiders);
-      childUpdates2.put("/user-carpools/" + carpool.getDriverPost().uid + "/" + key + "/riderposts", carpoolRiders);
 
-      for (RideRequestPost post : carpool.getRiderPosts()) {
-          childUpdates.put("/user-carpools/" + post.uid + "/riderposts" + key, carpoolRiders);
-      }
-
-      System.out.println("line236 NewCarpoolActivity");
       mDatabase.updateChildren(childUpdates2);
 
   }
 
   private void addRider(Carpool carpool, RideRequestPost riderPost) {
       try {
-          System.out.println("adding rider ID = " + riderPost.uid);
           carpool.addRider(riderPost); // get from PostRef
       }
       catch (Carpool.OverPassengerLimitException ex) {

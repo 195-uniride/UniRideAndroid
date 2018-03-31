@@ -97,4 +97,10 @@ public class Carpool extends DriverOfferPost{
         }
         return result;
     }
+
+    public Map<String, String> userToMap(String role){
+        HashMap<String, String> result = new HashMap<>();
+        result.put("userRole", role);
+        return result;
+    }
 }
