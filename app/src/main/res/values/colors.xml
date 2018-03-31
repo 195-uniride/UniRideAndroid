@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#2A363B</color>
-    <color name="colorPrimaryDark">#101416</color>
-    <color name="colorAccent">#E84A5F</color>
+    <color name="colorPrimary">#2f3d52</color>
+    <color name="colorPrimaryLight">#5a677e</color>
+    <color name="colorPrimaryDark">#061729</color>
+    <color name="colorAccent">#2F3D52</color>
     <color name="primaryWhite">#F3EFE0</color>
-    <color name="primary_text">#2F2E2F</color>
-    <color name="secondary_text">#464546</color>
+    <color name="primary_text">#e2e2e2</color>
+    <color name="secondary_text">#e2e2e2</color>
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
+
+    <color name="maroon">#A6637E</color>
+    <color name="teal">#539b96</color>
+    <color name="brown">#D59874</color>
 
     //UniRide Theme
     <color name="red">#FFFF4444</color>

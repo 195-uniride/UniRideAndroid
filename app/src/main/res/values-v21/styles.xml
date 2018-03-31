@@ -3,7 +3,6 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name = "fontPath">fonts/OpenSans-Regular.ttf</item>
     </style>
 
@@ -13,7 +12,16 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:actionMenuTextColor">@color/colorAccent</item>
+        <item name="android:buttonStyle">@style/customButton</item>
     </style>
+
+    <style name="customButton" parent="android:style/Widget.Button">
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/custom_button</item>
+    </style>
+
     <style name="post_title">
         <item name = "android:layout_marginTop"> 10dp </item>
         <item name = "android:layout_marginBottom"> 30dp </item>
@@ -38,7 +46,7 @@
         <item name = "android:alpha"> 0.9 </item>
         <item name="android:backgroundTint"> @color/primaryWhite </item>
         <item name="android:textColorHint"> #AAF3EFE0 </item>
-        <item name="android:textColor"> @color/primaryWhite </item>
+        <item name="android:textColor"> @color/primary_text </item>
         <item name="android:windowSoftInputMode"> stateUnchanged </item>
         <item name="android:paddingLeft"> 15dp </item>
         <item name="android:paddingRight"> 15dp </item>

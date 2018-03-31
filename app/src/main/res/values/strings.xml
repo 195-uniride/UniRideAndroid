@@ -10,8 +10,8 @@
     <string name="lorem">Lorem ipsum dolor sit amet</string>
     <string name="title_sign_in">Welcome</string>
     <string name="sign_up">Sign Up</string>
-    <string name="hint_password">password</string>
-    <string name="hint_email">email</string>
+    <string name="hint_password">••••••</string>
+    <string name="hint_email">E-mail Address</string>
     <string name="sign_in">Sign In</string>
     <string name="heading_recent">Recent</string>
     <string name="heading_my_posts">My Posts</string>
