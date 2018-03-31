@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.MainSubcategoryActivity;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
@@ -254,13 +255,13 @@ public abstract class PostListFragment extends Fragment {
     // ~~~~~~~~~~~~~~~~~~~~ SEARCHING: ~~~~~~~~~~~~~~~~~~~~
     // TODO: move to own fragment? SearchFragment (?)
 
+    public ArrayList<Post> mSearchResultsPosts;
+
     // ==== SEARCH ALGORITHM:
     // parameters:
     // - userPost: the post that we are checking every other post against.
     // - user: the owner of the user post
-    public ArrayList<Post> getSearchResults(Post userPost, User user) {
-
-        ArrayList<Post> matchedPosts = new ArrayList<Post>();
+    public void findSearchResults(Post userPost, User user) {
 
         // step 1: filter posts by type (drive offer or rider request): (in getAllPostsBySearchType)
         boolean isLookingForDriver = true;
@@ -274,18 +275,16 @@ public abstract class PostListFragment extends Fragment {
 
 
         // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
-/*
- TO ADD ONCE tripDate IS ADDED TO FIREBASE:
 
         Query searchQuery = getAllPostsBySearchType(isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate); // TODO: add date field.
 
         if (isLookingForDriver) {
-            findDriveOffers(searchQuery);
+            findDriveOfferSearchResults(searchQuery);
         }
         else {
-            findRideRequests(searchQuery);
+            findRideRequestSearchResults(userPost, searchQuery);
         }
-*/
+
 
 
         // step 3: filter posts by general area:
@@ -299,8 +298,10 @@ public abstract class PostListFragment extends Fragment {
 
         // return the matches:
 
-        return matchedPosts;
+        // list is set asynchronously.
     }
+
+    // Search helper methods:
 
     private Query getAllPostsBySearchType(boolean isLookingForDriver) {
         if (isLookingForDriver) {
@@ -312,16 +313,17 @@ public abstract class PostListFragment extends Fragment {
     }
 
 
-    private void findRideRequests(Query searchQuery) {
+    private void findRideRequestSearchResults(final Post userPost, Query searchQuery) {
         searchQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     // Handle each post:
-                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class); // can use parameter & getClass?
+                    RideRequestPost postToCheck = dataSnapshot.getValue(RideRequestPost.class);
 
-                    // TODO: determine if each post is a possible post (if som add to some global list?)
-                    //....
+                    if (isTripTimeWithinTimeLimit(userPost, postToCheck)) {
+                        mSearchResultsPosts.add(postToCheck);
+                    }
                 }
             }
 
@@ -334,55 +336,65 @@ public abstract class PostListFragment extends Fragment {
         });
     }
 
-    private void findDriveOffers(Query searchQuery) {
+    private void findDriveOfferSearchResults(Query searchQuery) { //
         // TODO....
     }
 
-    // ==== Steps:
-
-
-    // step 1: filter posts by type (drive offer or rider request):
-    private ArrayList<Post> getAllDriveOffers() {
-        ArrayList<Post> driveOfferPosts = new ArrayList<Post>();
-
-        // search Firebase: organization-posts/[user's org]/driveOffers
-
-
-
-        //TODO: research how to return ArrayList from Firebase query....
-        return driveOfferPosts;
-    }
-
-    private ArrayList<Post> getAllRideRequests() {
-        ArrayList<Post> rideRequestPosts = new ArrayList<Post>();
-
-        //....TODO:
-        return rideRequestPosts;
-    }
-
     /*
+        Returns true if potential carpool trip time is within the time limits,
+         where the potential carpool is a carpool including existingPost and newPostToCheck,
+         and where being within the time limits means that the carpool trip time is
+         less than the time between arrival time and destination time.
+     */
+    private boolean isTripTimeWithinTimeLimit(Post existingPost, Post newPostToCheck) {
+        Carpool potentialCarpool = null;
 
-    // step 2: filter posts by date:
+        // Case 1: newPostToCheck is a Ride Request Post:
+        if (newPostToCheck instanceof RideRequestPost) {
+            // Check if existingPost is already a Carpool or not:
+            if (existingPost instanceof Carpool) {
+                // Duplicate carpool object because don't want to edit existing carpool object:
+                potentialCarpool = new Carpool((Carpool) existingPost); // Use Copy Constructor to duplicate.
+            }
+            else if (existingPost instanceof DriverOfferPost) {
+                potentialCarpool = new Carpool((DriverOfferPost) existingPost);
+            }
+            else {
+                System.out.println("ERROR: Search:isTripTimeWithinTimeLimit with newPostToCheck=R.R. && existingPost NOT Carpool nor D.O.");
+                return false;
+            }
 
-    private ArrayList<Post> filterPostsByDate(ArrayList<Post> posts, Date filterDate) {
+            return isAddingNewRiderPossible(potentialCarpool, (RideRequestPost) newPostToCheck);
+        }
+        // Case 2: newPostToCheck is a Drive Offer Post:
+        else if (newPostToCheck instanceof DriverOfferPost) {
+            if (!(existingPost instanceof RideRequestPost)) { // if existingPost NOT a Ride Request:
+                System.out.println("ERROR: Search:isTripTimeWithinTimeLimit with newPostToCheck=D.O. && existingPost NOT R.R.");
+                return false;
+            }
 
-        // search firebase: organization-posts/[user's org]/driveOffers WHERE post.date = filterDate
+            potentialCarpool = new Carpool((DriverOfferPost) newPostToCheck);
+
+            return isAddingNewRiderPossible(potentialCarpool, (RideRequestPost) existingPost);
+        }
+        // Error Case:
+        else {
+            System.out.println("Search:isTripTimeWithinTimeLimit fell through to false.");
+            return false;
+        }
     }
 
-    // step 3: filter posts by general area:
-    private ArrayList<Post> filterPostsByGeneralArea(ArrayList<Post> posts) {
+    private boolean isAddingNewRiderPossible(Carpool potentialCarpool, RideRequestPost potentialNewRider) {
+        try {
+            potentialCarpool.addRider((RideRequestPost) potentialNewRider);
 
-        //....
+            // this method will calculate the distance of the trip and
+            //  make sure for each participant that arrival and destination time are met:
+            return potentialCarpool.areAllTripTimeLimitsSatisfied();
+        } catch (Carpool.OverPassengerLimitException e) {
+            return false; // If over passenger limit, then consider this NOT a match.
+        }
     }
-
-    // step 4: filter posts based on
-    //  whether each participant can reach the destination on time or not:
-    private ArrayList<Post> filterPostsByTimePossibility(ArrayList<Post> posts) {
-
-        //....
-    }
-
-    */
 
     // ~~~~~~~~~~~~~~~~~~~~ SEARCHING end. ~~~~~~~~~~~~~~~~
 

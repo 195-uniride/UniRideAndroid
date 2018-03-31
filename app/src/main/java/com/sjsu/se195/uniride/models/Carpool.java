@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +25,7 @@ public class Carpool extends DriverOfferPost{
     private CarpoolState carpoolState;
     private Location currentLocation; //TODO: add setter. only if carpool ONGOING
 
+    // Constructors:
     //TODO: used by parties with passengers only.
     public Carpool(){
         carpoolState = CarpoolState.PLANNED;
@@ -39,6 +41,33 @@ public class Carpool extends DriverOfferPost{
         //TODO: get plannedStartTime from driver post (when driver has time)
     }
 
+    // Copy Constructor for duplicating a carpool object (clone):
+    public Carpool(Carpool carpoolToCopy) {
+        this(carpoolToCopy.getDriverPost()); // Call the Constructor with the Drive Offer Post.
+
+        for (RideRequestPost rideRequestPost : carpoolToCopy.getRiderPosts()) {
+            try {
+                this.addRider(rideRequestPost);
+            } catch (OverPassengerLimitException e) {
+                // NOTE: This error should never happen because
+                //  was already an acceptable carpool object with all of these rideRequestPosts.
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Getters and Setters:
+
+    public List<RideRequestPost> getRiderPosts() {
+        return riderPosts;
+    }
+
+    public DriverOfferPost getDriverPost() {
+        return driverPost;
+    }
+
+    // Setup methods:
+
     public void addRider(RideRequestPost rider) throws OverPassengerLimitException {
         if (riderPosts.size() >= driverPost.getPassengerCount()){
             throw new OverPassengerLimitException("Over passenger limit. The carpool already has " + riderPosts.size() + " passengers.");
@@ -51,10 +80,25 @@ public class Carpool extends DriverOfferPost{
     public class OverPassengerLimitException extends Exception {
         OverPassengerLimitException(String message) {
             super(message);
-            //TODO: any Android message stuff.
         }
     }
 
+    // Information methods:
+
+    public boolean areAllTripTimeLimitsSatisfied() {
+
+
+
+        return false; // TODO.
+    }
+
+    public int getTotalTripTime() {
+
+
+        return 0; // TODO.
+    }
+
+    // State-changing methods:
 
     public void startTrip(){
         //TODO: confirm carpool ready to start. driver presence, at least one rider, any additional steps.
@@ -67,7 +111,9 @@ public class Carpool extends DriverOfferPost{
 
     //TODO: add abortTrip()
 
-    //TODO: add Mapper for Firebase.
+    // Other methods:
+
+    // Needed for saving to Firebase:
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("carpoolId", carpoolId);
