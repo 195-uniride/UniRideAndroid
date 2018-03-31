@@ -43,7 +43,7 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
     private ArrayAdapter<String> orgAdapter;
     private String selectedOrganizationId;
 
-    private boolean isShowingDriveOffers;
+    private boolean postType; //true: rideRequests. false: driveOffers
     private ViewPager mViewPager;
     private FragmentPagerAdapter mPagerAdapter;
 
@@ -51,10 +51,10 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        isShowingDriveOffers = getIntent().getExtras().getBoolean("driverMode");
+        postType = getIntent().getExtras().getBoolean("driverMode");
 
 
-        if (isShowingDriveOffers) {
+        if (postType) {
             setContentView(R.layout.activity_1_driver_main);
 
             findViewById(R.id.new_drive_offer_post).setOnClickListener(new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
 
     private void loadPosts() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("postType", this.isShowingDriveOffers); // TODO: change name?
+        bundle.putBoolean("postType", postType); // TODO: change name?
         Fragment posts = new RecentPostsFragment();
         posts.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.post_fragment_placeholder, posts, "PostsList").commit();

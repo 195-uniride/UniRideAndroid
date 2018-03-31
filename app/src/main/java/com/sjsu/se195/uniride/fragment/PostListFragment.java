@@ -64,6 +64,7 @@ public abstract class PostListFragment extends Fragment {
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         postType = getArguments().getBoolean("postType");
+        System.out.println("PostListFragment line67 PostType = " + postType);
         View rootView;
 
         rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);

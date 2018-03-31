@@ -49,8 +49,10 @@ public class Carpool extends DriverOfferPost{
     }
 
     public void addRider(RideRequestPost rider) throws OverPassengerLimitException {
-        if (riderPosts.size() >= driverPost.getPassengerCount()){
-            throw new OverPassengerLimitException("Over passenger limit. The carpool already has " + riderPosts.size() + " passengers.");
+        System.out.println("in addRider: " + rider.uid);
+        if (riderPosts.size() >= driverPost.getPassengerCount()) {
+            throw new OverPassengerLimitException("Over passenger limit. The carpool already has " + riderPosts.size() +
+            " passengers and there are only " + driverPost.getPassengerCount() + " seats.");
         }
         riderPosts.add(rider);
     }
@@ -80,7 +82,6 @@ public class Carpool extends DriverOfferPost{
         HashMap<String, Object> result = new HashMap<>();
         result.put("carpoolId", carpoolId);
         result.put("driverPost", driverPost);
-        result.put("riderPosts", this.riderToMap());
         result.put("actualStartTime", actualStartTime);
         result.put("actualCompletionTime", actualCompletionTime);
         result.put("carpoolState", carpoolState);
@@ -88,9 +89,10 @@ public class Carpool extends DriverOfferPost{
         return result;
     }
 
-    private Map<String, RideRequestPost> riderToMap(){
+    public Map<String, RideRequestPost> riderToMap(){
         HashMap<String, RideRequestPost> result = new HashMap<>();
         for(RideRequestPost r : this.riderPosts){
+            System.out.println("in Carpool:riderToMap, rider ID = " + r.uid);
             result.put(r.uid, r);
         }
         return result;
