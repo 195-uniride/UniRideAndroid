@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by akshat on 2/4/18.
  */
 
-public class Carpool extends DriverOfferPost{
+public class Carpool extends DriverOfferPost {
     //TODO: generate list of carpool waypoints from driverpost and riderposts (sources and destinations)
 
     private DriverOfferPost driverPost;
@@ -32,7 +32,7 @@ public class Carpool extends DriverOfferPost{
         riderPosts = new ArrayList<RideRequestPost>();
     }
 
-    public Carpool(DriverOfferPost i_driverPost){
+    public Carpool(DriverOfferPost i_driverPost) {
         super(i_driverPost.source, i_driverPost.destination, i_driverPost.passengerCount, i_driverPost.departure_time,
                 i_driverPost.arrival_time, i_driverPost.tripDate);
         this.driverPost = i_driverPost;
@@ -100,7 +100,7 @@ public class Carpool extends DriverOfferPost{
 
     // State-changing methods:
 
-    public void startTrip(){
+    public void startTrip() {
         //TODO: confirm carpool ready to start. driver presence, at least one rider, any additional steps.
         actualStartTime = Calendar.getInstance().getTime();
         carpoolState = CarpoolState.ONGOING;
@@ -114,7 +114,7 @@ public class Carpool extends DriverOfferPost{
     // Other methods:
 
     // Needed for saving to Firebase:
-    public Map<String, Object> toMap(){
+    public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("carpoolId", carpoolId);
         result.put("driverPost", driverPost);

@@ -279,7 +279,7 @@ public abstract class PostListFragment extends Fragment {
         Query searchQuery = getAllPostsBySearchType(isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate); // TODO: add date field.
 
         if (isLookingForDriver) {
-            findDriveOfferSearchResults(searchQuery);
+            findDriveOfferSearchResults(userPost, searchQuery);
         }
         else {
             findRideRequestSearchResults(userPost, searchQuery);
@@ -336,8 +336,27 @@ public abstract class PostListFragment extends Fragment {
         });
     }
 
-    private void findDriveOfferSearchResults(Query searchQuery) { //
-        // TODO....
+    private void findDriveOfferSearchResults(final Post userPost, Query searchQuery) {
+        searchQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    // Handle each post:
+                    DriverOfferPost postToCheck = dataSnapshot.getValue(DriverOfferPost.class);
+
+                    if (isTripTimeWithinTimeLimit(userPost, postToCheck)) {
+                        mSearchResultsPosts.add(postToCheck);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        });
     }
 
     /*
