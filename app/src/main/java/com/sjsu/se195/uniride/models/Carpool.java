@@ -1,5 +1,7 @@
 package com.sjsu.se195.uniride.models;
 
+import com.sjsu.se195.uniride.Mapper;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +26,7 @@ public class Carpool extends DriverOfferPost {
     }
     private CarpoolState carpoolState;
     private Location currentLocation; //TODO: add setter. only if carpool ONGOING
+    private int totalTripTime = -1; // in seconds
 
     // Constructors:
     //TODO: used by parties with passengers only.
@@ -93,9 +96,17 @@ public class Carpool extends DriverOfferPost {
     }
 
     public int getTotalTripTime() {
+        if (totalTripTime == -1) { // if totalTripTime is unset or in an invalid state:
+            totalTripTime = calculateTotalTripTime();
+        }
 
+        return totalTripTime;
+    }
 
-        return 0; // TODO.
+    private int calculateTotalTripTime() {
+        Mapper mapper = new Mapper(this);
+
+        return mapper.getTotalTripTime();
     }
 
     // State-changing methods:

@@ -54,10 +54,6 @@ public class  MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
-        // TESTING: TODO: Remove...
-        Mapper mapper = new Mapper();
-        mapper.test();
     }
 
     @Override

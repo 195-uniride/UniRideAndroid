@@ -1,15 +1,21 @@
 package com.sjsu.se195.uniride;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sjsu.se195.uniride.models.Carpool;
+import com.sjsu.se195.uniride.models.RideRequestPost;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -32,82 +38,52 @@ import javax.xml.xpath.XPathFactory;
 
 public class Mapper {
 
+    // Member variables:
 
-    // TODO: DELETE - TESTING ONLY:
-    public void test() {
-        LatLng driverSource = new LatLng(37.3195396, -122.0450548); // 21250 Stevens Creek Blvd, Cupertino, CA 95014, USA
-        LatLng destination = new LatLng(37.3351874, -121.8810715); // 1 Washington Sq, San Jose, CA 95192, USA
+    private Document mDocument;
 
-        ArrayList<LatLng> riderSources = new ArrayList<>();
-        riderSources.add(new LatLng(37.3487380, -121.8866706)); // 470 N 10th St, San Jose, CA 95112, USA
+    // Constructors:
 
-        String urlString = getUrlString(driverSource, destination, riderSources);
-
-        System.out.println("Test URL = " + urlString);
-        // http://maps.googleapis.com/maps/api/directions/xml?origin=37.3195396,-122.0450548&destination=37.3351874,-121.8810715&waypoints=optimize:true|37.348738,-121.8866706&sensor=false&units=metric&mode=driving
-
-        // TODO: System.out.println("Duration = " + getDurationValue(getDocument(urlString)));
-
+    public Mapper(Carpool carpool) {
         try {
+            LatLng driverSource = this.getLocationFromAddress(carpool.getDriverPost().source);
+            LatLng destination = this.getLocationFromAddress(carpool.getDriverPost().destination);
+
+            ArrayList<LatLng> riderSources = new ArrayList<>();
+            for (RideRequestPost riderPost : carpool.getRiderPosts()) {
+                riderSources.add(this.getLocationFromAddress(riderPost.source));
+            }
+
+            String urlString = getCarpoolUrlString(driverSource, destination, riderSources);
+
+            System.out.println("Test URL = " + urlString);
+
             URL url = new URL(urlString);
+
             DocumentFetcher documentFetcher = new DocumentFetcher();
-            Document document = documentFetcher.execute(url).get();
 
-            System.out.println("Document = " + document.toString());
-
-            System.out.println("Duration (int) = " + getTotalTripDurationValue(document));
-
-            System.out.println("Duration (text) = " + getDurationText(document));
+            mDocument = documentFetcher.execute(url).get();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        }
-
-
-        // Try 2:
-//        try {
-//            Document doc = (Document) new GMapV2Direction().execute(driverSource, destination).get();
-//
-//            System.out.println("Document = " + doc);
-//
-//            System.out.println("Duration = " + getDurationValue(doc));
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-
-    }
-
-    private class DocumentFetcher extends AsyncTask<URL, Void, Document> {
-
-        @Override
-        protected Document doInBackground(URL... urls) {
-            return getDocument(urls[0]);
-        }
-
-        private Document getDocument(URL url) {
-            Document document = null;
-
-            try {
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setDoInput(true);
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                document = builder.parse(in);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return document;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public String getUrlString(LatLng driverSource, LatLng destination, List<LatLng> riderSources) {
+    // Information methods:
+
+    // returns the
+    public int getTotalTripTime() {
+        return getCarpoolTotalTripDurationValue(mDocument);
+    }
+
+    // Helper methods:
+
+    private String getCarpoolUrlString(LatLng driverSource, LatLng destination, List<LatLng> riderSources) {
         if (riderSources.isEmpty()) {
             System.out.println("ERROR: Mapper:riderSources.isEmpty()");
         }
@@ -131,14 +107,14 @@ public class Mapper {
 
         urlString += "&sensor=false&units=metric&mode=driving";
 
-        System.out.println("Mapper: Created URL String = " + urlString);
+        // TODO: add depart time & traffic estimate parameters...
 
         return urlString;
     }
 
 
 
-    public int getTotalTripDurationValue (Document doc) {
+    private int getCarpoolTotalTripDurationValue (Document doc) {
         int duration = 0;
 
         try {
@@ -185,22 +161,58 @@ public class Mapper {
         return duration;
     }
 
-    public String getDurationText (Document doc) {
-        NodeList nl1 = doc.getElementsByTagName("duration");
-        Node node1 = nl1.item(0);
-        NodeList nl2 = node1.getChildNodes();
-        Node node2 = nl2.item(getNodeIndex(nl2, "text"));
-        Log.i("DurationText", node2.getTextContent());
-        return node2.getTextContent();
+//    //This method returns the latitude and longitude of an address
+//    private LatLng getLocationFromAddress(Context context, String strAddress) throws IOException {
+//        Geocoder coder = new Geocoder(context);
+//
+//        List<Address> addressesFound = coder.getFromLocationName(strAddress, 1);
+//
+//        Address address = addressesFound.get(0);
+//
+//        return new LatLng(address.getLatitude(), address.getLongitude());
+//    }
+
+    //This method returns the latitude and longitude of an address
+    private LatLng getLocationFromAddress(String strAddress) throws IOException {
+//        Geocoder coder = new Geocoder(context);
+//
+//        List<Address> addressesFound = coder.getFromLocationName(strAddress, 1);
+//
+//        Address address = addressesFound.get(0);
+//
+//        return new LatLng(address.getLatitude(), address.getLongitude());
+        return null;
     }
 
-    private int getNodeIndex(NodeList nl, String nodename) {
-        for(int i = 0 ; i < nl.getLength() ; i++) {
-            if(nl.item(i).getNodeName().equals(nodename))
-                return i;
-        }
-        return -1;
-    }
-
+    // TODO: DELETE - TESTING ONLY:
+//    public void test() {
+//        LatLng driverSource = new LatLng(37.3195396, -122.0450548); // 21250 Stevens Creek Blvd, Cupertino, CA 95014, USA
+//        LatLng destination = new LatLng(37.3351874, -121.8810715); // 1 Washington Sq, San Jose, CA 95192, USA
+//
+//        ArrayList<LatLng> riderSources = new ArrayList<>();
+//        riderSources.add(new LatLng(37.3487380, -121.8866706)); // 470 N 10th St, San Jose, CA 95112, USA
+//
+//        String urlString = getCarpoolUrlString(driverSource, destination, riderSources);
+//
+//        System.out.println("Test URL = " + urlString);
+//        // http://maps.googleapis.com/maps/api/directions/xml?origin=37.3195396,-122.0450548&destination=37.3351874,-121.8810715&waypoints=optimize:true|37.348738,-121.8866706&sensor=false&units=metric&mode=driving
+//
+//        try {
+//            URL url = new URL(urlString);
+//            DocumentFetcher documentFetcher = new DocumentFetcher();
+//            Document document = documentFetcher.execute(url).get();
+//
+//            System.out.println("Document = " + document.toString());
+//
+//            System.out.println("Duration (int) = " + getTotalTripDurationValue(document));
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
+
