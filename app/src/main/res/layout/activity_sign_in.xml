@@ -56,7 +56,8 @@
             android:layout_alignStart="@+id/signup2"
             android:layout_below="@+id/field_password"
             android:drawableLeft="@drawable/ic_navigation_check_24"
-            android:text="@string/sign_in" />
+            android:text="@string/sign_in"
+            android:background="@drawable/button_login"/>
 
         <TextView
             android:id="@+id/have_an_account"
@@ -76,6 +77,7 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:drawableLeft="@drawable/ic_keyboard_arrow_right_white_24dp"/>
+            android:drawableLeft="@drawable/ic_keyboard_arrow_right_white_24dp"
+            android:background="@drawable/button_login"/>
 
 </RelativeLayout>
