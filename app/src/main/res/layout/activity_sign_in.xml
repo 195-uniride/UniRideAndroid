@@ -8,55 +8,55 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.sjsu.se195.uniride.SignInActivity"
-    android:background="@color/colorAccent">
+    android:background="@drawable/gradient">
 
         <ImageView
             android:id="@+id/uniride_logo"
             android:layout_width="match_parent"
             android:layout_height="200px"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="75dp"
             android:adjustViewBounds="false"
             android:src="@drawable/uniride_logo" />
 
         <EditText
             android:id="@+id/field_email"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:ellipsize="end"
-            android:gravity="center_horizontal"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:layout_marginBottom="20dp"
-            android:layout_below="@id/uniride_logo"
-            style="@style/post_text_field"/>
+            android:drawableLeft="@drawable/ic_user_outline"
+            android:layout_below="@id/uniride_logo" />
 
         <EditText
             android:id="@+id/field_password"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:ellipsize="end"
-            android:gravity="center_horizontal"
             android:hint="@string/hint_password"
             android:inputType="textPassword"
             android:maxLines="1"
             android:layout_marginBottom="25dp"
-            android:layout_below="@id/field_email"
-            style="@style/post_text_field"/>
+            android:drawableLeft="@drawable/ic_user_password"
+            android:layout_below="@id/field_email"/>
 
         <Button
             android:id="@+id/button_sign_in"
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="@string/sign_in"
-            android:layout_below="@id/field_password"
+            android:layout_alignLeft="@+id/signup2"
+            android:layout_alignStart="@+id/signup2"
+            android:layout_below="@+id/field_password"
             android:drawableLeft="@drawable/ic_navigation_check_24"
-            android:layout_centerHorizontal="true"/>
+            android:text="@string/sign_in" />
 
         <TextView
             android:id="@+id/have_an_account"
@@ -70,7 +70,7 @@
 
         <Button
             android:id="@+id/signup2"
-            android:layout_width="100dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:text="@string/sign_up"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
