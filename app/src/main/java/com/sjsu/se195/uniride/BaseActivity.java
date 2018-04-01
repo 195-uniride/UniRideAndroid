@@ -1,5 +1,6 @@
 package com.sjsu.se195.uniride;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class BaseActivity extends AppCompatActivity {
 
+    private NavBar navBar;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -32,6 +34,12 @@ public class BaseActivity extends AppCompatActivity {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    public void setNavBar(Activity activity){
+        this.navBar = NavBar.getInstance();
+        navBar.initializeTab(activity);
+        navBar.tabListener(activity);
     }
 
     public String getUid() {

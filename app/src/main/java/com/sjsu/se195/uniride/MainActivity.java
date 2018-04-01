@@ -18,15 +18,25 @@ package com.sjsu.se195.uniride;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import devlight.io.library.ntb.NavigationTabBar;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
+
+import java.util.ArrayList;
 
 public class  MainActivity extends BaseActivity {
 
@@ -54,6 +64,7 @@ public class  MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        setNavBar(this);
     }
 
     @Override

@@ -51,6 +51,7 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
+    compile 'devlight.io:navigationtabbar:1.2.5'
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->

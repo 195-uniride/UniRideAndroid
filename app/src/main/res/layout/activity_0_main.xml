@@ -3,36 +3,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorAccent"
     tools:context=".MainActivity">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:text="UniRide"
+        android:textColor="@color/maroon"
+        android:layout_centerHorizontal="true"
+        android:textSize="30dp"/>
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_centerVertical="true"
-        android:orientation="horizontal"
-        android:padding="@dimen/fab_margin"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:padding="30dp"
         android:clipToPadding="false">
 
-        <ImageButton
-            android:id="@+id/driver_mode_button"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="40dp"
-            android:background="@drawable/button_main_usertype"
-            android:elevation="8dp"
-            android:src="@drawable/ic_directions_car_white_48dp" />
+        <TextView
+            android:layout_width="200dp"
+            android:textAlignment="center"
+            android:layout_height="wrap_content"
+            android:text="Hello there!&#x0A;Who are you this fine evening?"
+            android:maxLines="2"
+            android:lines="2"
+            android:textColor="@color/brown"
+            android:layout_marginBottom="30dp"/>
 
-        <ImageButton
+        <Button
+            android:id="@+id/driver_mode_button"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:layout_marginBottom="30dp"
+            android:text="I'm a Driver"
+            android:drawableLeft="@drawable/ic_directions_car_white_24dp" />
+
+        <Button
             android:id="@+id/rider_mode_button"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="40dp"
-            android:background="@drawable/button_main_usertype"
-            android:elevation="8dp"
-            android:src="@drawable/ic_search_white_48dp" />
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:text="I'm a Passenger"
+            android:drawableLeft="@drawable/ic_person_pin_white_24dp" />
 
     </LinearLayout>
+
+    <include layout="@layout/include_navbar"/>
 
 </RelativeLayout>
