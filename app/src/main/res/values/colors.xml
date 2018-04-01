@@ -25,4 +25,10 @@
     <color name="gradient6"> #56342e</color>
     <color name="gradient7"> #8c9f58</color>
 
+    //Gradient Background
+    <color name="endColor"> #355C7D </color>
+    <color name="startColor"> #6C5B7B </color>
+    <color name="centerColor"> #F8B195</color>
+
+
 </resources>
