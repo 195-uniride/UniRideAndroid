@@ -13,4 +13,11 @@
         android:title="View Organizations"
         android:visible="true"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/edit_profile"
+        android:title="Edit Profile"
+        android:visible="true"
+        app:showAsAction="never" />
+
 </menu>

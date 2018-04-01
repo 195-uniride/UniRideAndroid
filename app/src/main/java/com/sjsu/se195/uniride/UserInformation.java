@@ -6,13 +6,14 @@ package com.sjsu.se195.uniride;
 
 public class UserInformation {
 
-    public String first;
-    public String last;
+//    public String first;
+//    public String last;
     public String email;
 
-    public UserInformation(String first, String last, String email){
-        this.first = first;
-        this.last = last;
+//    public UserInformation(String first, String last, String email){
+    public UserInformation(String email){
+//        this.first = first;
+//        this.last = last;
         this.email = email;
     }
 }

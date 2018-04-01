@@ -36,14 +36,15 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:26.0.0'
     compile 'com.android.support:cardview-v7:26.0.0'
     compile 'com.android.support:design:26.0.0'
-    compile 'com.google.android.gms:play-services-maps:11.2.0'
-    compile 'com.google.android.gms:play-services-places:11.2.0'
+    //noinspection GradleCompatible
+    compile 'com.google.android.gms:play-services-maps:11.8.0'
+    compile 'com.google.android.gms:play-services-places:11.8.0'
 
     compile 'com.firebaseui:firebase-ui-database:1.2.0'
 
 
-    compile 'com.google.firebase:firebase-auth:11.2.0'
-    compile 'com.google.firebase:firebase-database:11.2.0'
+    compile 'com.google.firebase:firebase-auth:11.8.0'
+    compile 'com.google.firebase:firebase-database:11.8.0'
 
     compile 'com.synnapps:carouselview:0.1.4'
 
