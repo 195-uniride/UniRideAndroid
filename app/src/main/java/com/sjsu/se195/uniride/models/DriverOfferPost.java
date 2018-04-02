@@ -41,4 +41,5 @@ public class DriverOfferPost extends Post {
         result.put("passengerCount", passengerCount);
         return result;
     }
+
 }

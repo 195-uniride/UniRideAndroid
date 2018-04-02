@@ -289,6 +289,12 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
 
                     mPost = post;
                 }
+
+                // TESTING: TODO Remove....
+                System.out.println("==== STARTING SEARCH ====");
+                System.out.println("=== Searching with mPost = " + mPost + "; with mPost.source = " + mPost.source);
+                new PostSearcher(FirebaseDatabase.getInstance().getReference()).findSearchResults(mPost);
+
                 // [END_EXCLUDE]
             }
 

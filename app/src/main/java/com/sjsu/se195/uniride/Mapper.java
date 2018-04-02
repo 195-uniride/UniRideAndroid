@@ -44,19 +44,32 @@ public class Mapper {
 
     // Constructors:
 
+    public Mapper() {
+
+    }
+
     public Mapper(Carpool carpool) {
         try {
-            LatLng driverSource = this.getLocationFromAddress(carpool.getDriverPost().source);
-            LatLng destination = this.getLocationFromAddress(carpool.getDriverPost().destination);
+//            LatLng driverSource = this.getLocationFromAddress(carpool.getDriverPost().source);
+//            LatLng destination = this.getLocationFromAddress(carpool.getDriverPost().destination);
+//
+//            ArrayList<LatLng> riderSources = new ArrayList<>();
+//            for (RideRequestPost riderPost : carpool.getRiderPosts()) {
+//                riderSources.add(this.getLocationFromAddress(riderPost.source));
+//            }
 
-            ArrayList<LatLng> riderSources = new ArrayList<>();
+            String driverSource = carpool.getDriverPost().source.replaceAll(" ", "+");
+            String destination = carpool.getDriverPost().destination.replaceAll(" ", "+");
+
+            ArrayList<String> riderSources = new ArrayList<>();
             for (RideRequestPost riderPost : carpool.getRiderPosts()) {
-                riderSources.add(this.getLocationFromAddress(riderPost.source));
+                System.out.println("Mapper: for all riderPosts: riderPost.source = " + riderPost.source);
+                riderSources.add(riderPost.source.replaceAll(" ", "+"));
             }
 
             String urlString = getCarpoolUrlString(driverSource, destination, riderSources);
 
-            System.out.println("Test URL = " + urlString);
+            System.out.println("URL = " + urlString);
 
             URL url = new URL(urlString);
 
@@ -68,8 +81,6 @@ public class Mapper {
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -83,22 +94,22 @@ public class Mapper {
 
     // Helper methods:
 
-    private String getCarpoolUrlString(LatLng driverSource, LatLng destination, List<LatLng> riderSources) {
+    private String getCarpoolUrlString(String driverSource, String destination, List<String> riderSources) {
         if (riderSources.isEmpty()) {
             System.out.println("ERROR: Mapper:riderSources.isEmpty()");
         }
 
         String urlString = "http://maps.googleapis.com/maps/api/directions/xml?"
-                + "origin=" + driverSource.latitude + "," + driverSource.longitude
-                + "&destination=" + destination.latitude + "," + destination.longitude
+                + "origin=" + driverSource // driverSource.latitude + "," + driverSource.longitude
+                + "&destination=" + destination // destination.latitude + "," + destination.longitude
                 + "&waypoints=optimize:true|"; // Use waypoints for pickup points.
         // NOTE: optimize:true means will reorder the waypoints to create the fastest route.
 
-        Iterator<LatLng> iterator = riderSources.iterator();
+        Iterator<String> iterator = riderSources.iterator();
 
         while (iterator.hasNext()) {
-            LatLng riderSource = iterator.next();
-            urlString += riderSource.latitude + "," + riderSource.longitude;
+            String riderSource = iterator.next();
+            urlString += riderSource; // riderSource.latitude + "," + riderSource.longitude;
 
             if (iterator.hasNext()) {
                 urlString += "|"; // Add "|" between multiple waypoint stops.
@@ -173,28 +184,29 @@ public class Mapper {
 //    }
 
     //This method returns the latitude and longitude of an address
-    private LatLng getLocationFromAddress(String strAddress) throws IOException {
-//        Geocoder coder = new Geocoder(context);
-//
-//        List<Address> addressesFound = coder.getFromLocationName(strAddress, 1);
-//
-//        Address address = addressesFound.get(0);
-//
-//        return new LatLng(address.getLatitude(), address.getLongitude());
-        return null;
-    }
+//    private LatLng getLocationFromAddress(String strAddress) throws IOException {
+////        Geocoder coder = new Geocoder(context);
+////
+////        List<Address> addressesFound = coder.getFromLocationName(strAddress, 1);
+////
+////        Address address = addressesFound.get(0);
+////
+////        return new LatLng(address.getLatitude(), address.getLongitude());
+//        return null;
+//    }
 
-    // TODO: DELETE - TESTING ONLY:
+//    // TODO: DELETE - TESTING ONLY:
 //    public void test() {
-//        LatLng driverSource = new LatLng(37.3195396, -122.0450548); // 21250 Stevens Creek Blvd, Cupertino, CA 95014, USA
-//        LatLng destination = new LatLng(37.3351874, -121.8810715); // 1 Washington Sq, San Jose, CA 95192, USA
+//        String driverSource = "21250 Stevens Creek Blvd, Cupertino, CA 95014, USA".replaceAll(" ", "+");
+//        // String driverSource = driverSource1.replaceAll(" ", "+");// "21250+Stevens+Creek+Blvd,+Cupertino,+CA+95014,+USA";// new LatLng(37.3195396, -122.0450548); //
+//        String destination = "1+Washington+Sq,+San+Jose,+CA+95192,+USA"; // new LatLng(37.3351874, -121.8810715); //
 //
-//        ArrayList<LatLng> riderSources = new ArrayList<>();
-//        riderSources.add(new LatLng(37.3487380, -121.8866706)); // 470 N 10th St, San Jose, CA 95112, USA
+//        ArrayList<String> riderSources = new ArrayList<>();
+//        riderSources.add("470+N+10th+St,+San+Jose,+CA+95112,+USA"); // new LatLng(37.3487380, -121.8866706)); //
 //
 //        String urlString = getCarpoolUrlString(driverSource, destination, riderSources);
 //
-//        System.out.println("Test URL = " + urlString);
+//        System.out.println("TEST URL = " + urlString);
 //        // http://maps.googleapis.com/maps/api/directions/xml?origin=37.3195396,-122.0450548&destination=37.3351874,-121.8810715&waypoints=optimize:true|37.348738,-121.8866706&sensor=false&units=metric&mode=driving
 //
 //        try {
@@ -204,7 +216,7 @@ public class Mapper {
 //
 //            System.out.println("Document = " + document.toString());
 //
-//            System.out.println("Duration (int) = " + getTotalTripDurationValue(document));
+//            System.out.println("Duration (int) = " + getCarpoolTotalTripDurationValue(document));
 //        } catch (MalformedURLException e) {
 //            e.printStackTrace();
 //        } catch (InterruptedException e) {

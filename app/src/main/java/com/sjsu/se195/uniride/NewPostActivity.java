@@ -438,7 +438,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
                         //TODO: Get info about the selected place
                         Log.i(TAG, "Place: " + place.getName());
                         source_place = place.getAddress().toString();
-                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        // NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        location_latlng = getLocationFromAddress(NewPostActivity.this, source_place);
+
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                         mapFragment.getMapAsync(NewPostActivity.this);
                     }
@@ -695,6 +697,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
     private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint,
                                          int dep_time, int arr_time, int t_day, String organizationId){
         // Create new post at /user-posts/$userid/$postid and at
+        System.out.println("--> in writeNewRideRequestPost.");
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
 
@@ -711,8 +714,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         childUpdates.put("/organization-posts/" + organizationId + "/rideRequests/" + key, postValues);
         mDatabase.updateChildren(childUpdates);
 
-        childUpdates2.put("/posts/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
-        childUpdates2.put("/user-posts/" + userId + "/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
+//        childUpdates2.put("/posts/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
+//        childUpdates2.put("/user-posts/" + userId + "/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
         mDatabase.updateChildren(childUpdates2);
     }
     // [END write_fan_out]

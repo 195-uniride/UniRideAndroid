@@ -12,7 +12,7 @@ import java.util.Map;
 public class RideRequestPost extends Post {
     private LatLng pickuppoint;
 
-    public RideRequestPost(){}
+    public RideRequestPost() {}
 
     //Constructer
     public RideRequestPost(String uid, String author, String source, String destination
@@ -44,4 +44,5 @@ public class RideRequestPost extends Post {
         result.put("stars", stars);
         return result;
     }
+
 }

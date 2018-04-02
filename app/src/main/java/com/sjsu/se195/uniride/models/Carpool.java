@@ -90,7 +90,11 @@ public class Carpool extends DriverOfferPost {
 
     public boolean areAllTripTimeLimitsSatisfied() {
 
+        System.out.println("getTotalTripTime() = " + getTotalTripTime()); // TODO remove....
 
+        System.out.println(); // TODO remove....
+        System.out.println("------ DONE -------"); // TODO remove....
+        System.out.println(); // TODO remove....
 
         return false; // TODO.
     }
@@ -104,6 +108,16 @@ public class Carpool extends DriverOfferPost {
     }
 
     private int calculateTotalTripTime() {
+        System.out.println("Calculating Total Trip Time...");
+
+        System.out.println("...for Carpool: driver = " + getDriverPost() + "....");
+
+        for (RideRequestPost riderPost : getRiderPosts()) {
+            System.out.println("...and rider = " + riderPost + "; with riderPost.source = " + riderPost.source + "....");
+        }
+
+        System.out.println("...now starting Mapper....");
+
         Mapper mapper = new Mapper(this);
 
         return mapper.getTotalTripTime();
