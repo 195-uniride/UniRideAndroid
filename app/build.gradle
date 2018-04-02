@@ -53,6 +53,7 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:0.5'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
     compile 'devlight.io:navigationtabbar:1.2.5'
+    compile 'com.yalantis:phoenix:1.2.3'
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->

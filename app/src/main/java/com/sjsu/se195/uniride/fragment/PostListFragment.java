@@ -28,6 +28,7 @@ import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.viewholder.PostViewHolder;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,7 @@ public abstract class PostListFragment extends Fragment {
     private static final String TAG = "PostListFragment";
 
     private User currentUser;
+    private PullToRefreshView mPullToRefreshView;
 
     // [START define_database_reference]
     protected DatabaseReference mDatabase;
@@ -63,6 +65,20 @@ public abstract class PostListFragment extends Fragment {
 
         mRecycler = rootView.findViewById(R.id.messages_list);
         mRecycler.setHasFixedSize(true);
+
+        mPullToRefreshView = (PullToRefreshView) rootView.findViewById(R.id.pull_to_refresh);
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullToRefreshView.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
+
         return rootView;
     }
 

@@ -5,7 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".MainSubcategoryActivity"
     android:background="@color/colorPrimary">
-
+    <com.yalantis.phoenix.PullToRefreshView
+        android:id="@+id/pull_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messages_list"
         android:layout_width="match_parent"
@@ -15,5 +18,6 @@
         android:padding="5dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_post" />
+    </com.yalantis.phoenix.PullToRefreshView>
 
 </FrameLayout>
