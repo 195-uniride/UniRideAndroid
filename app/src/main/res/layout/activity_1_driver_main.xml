@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:paddingBottom="2dp">
 
         <Button
             android:id="@+id/new_drive_offer_post"
@@ -30,6 +31,7 @@
             android:minHeight="30dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="left"
             android:dropDownWidth="match_parent"
             android:padding="10dp"
@@ -43,8 +45,7 @@
         <FrameLayout
             android:id="@+id/post_fragment_placeholder"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@id/new_drive_offer_post"
+            android:layout_height="match_parent"
             tools:layout="@layout/fragment_all_posts" />
 
     </LinearLayout>
