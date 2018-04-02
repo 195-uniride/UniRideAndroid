@@ -10,32 +10,28 @@
 
     <TextView
         android:id="@+id/post_source"
-        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="italic"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginTop="5dp"
         android:maxLines="3"
         tools:text="@string/lorem" />
 
     <TextView
         android:id="@+id/post_addresses_to"
-        style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-thin"
-        android:layout_marginTop="5dp"
-        tools:text="To"/>
+        android:layout_marginTop="2dp"
+        tools:text="To"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/post_destination"
-        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginTop="5dp"
+        android:textStyle="italic"
+        android:layout_marginTop="2dp"
         android:maxLines="3"
         tools:text="@string/lorem" />
 

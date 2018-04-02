@@ -12,7 +12,7 @@
         android:id="@+id/post_author_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_account_circle_40" />
+        android:src="@drawable/ic_person_white_24dp" />
 
     <TextView
         android:id="@+id/post_author"
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/primaryWhite"
         android:gravity="center_vertical"
         tools:text="Jane Doe" />
 

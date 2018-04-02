@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainSubcategoryActivity">
+    tools:context=".MainSubcategoryActivity"
+    android:background="@color/colorPrimary">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messages_list"

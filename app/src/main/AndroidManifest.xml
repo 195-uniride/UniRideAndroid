@@ -34,7 +34,8 @@
         <activity
             android:name=".NewPostActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainSubcategoryActivity" />
+        <activity android:name=".MainSubcategoryActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".NewOrganizationActivity" />
         <activity
             android:name=".PostDetailActivity"
