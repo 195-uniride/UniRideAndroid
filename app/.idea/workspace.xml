@@ -10,313 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5af54db8-ca2a-4c24-9b6a-359e638ee314" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_animated_vector_drawable_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_appcompat_v7_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_cardview_v7_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_constraint_constraint_layout_1_0_2.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_constraint_constraint_layout_solver_1_0_2_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_design_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_multidex_1_0_1.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_recyclerview_v7_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_annotations_26_0_0_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_compat_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_core_ui_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_core_utils_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_fragment_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_media_compat_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_v4_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_support_vector_drawable_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_espresso_espresso_core_2_2_2.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_espresso_espresso_idling_resource_2_2_2.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_exposed_instrumentation_api_publish_0_5.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_rules_0_5.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_test_runner_0_5.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_android_support_transition_26_0_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_firebaseui_firebase_ui_database_1_2_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_base_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_base_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_basement_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_basement_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_maps_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_maps_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_places_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_places_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_tasks_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_android_gms_play_services_tasks_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_code_findbugs_jsr305_2_0_1_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_impl_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_impl_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_analytics_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_auth_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_auth_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_common_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_common_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_core_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_database_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_database_connection_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_database_connection_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_database_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_iid_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_google_firebase_firebase_iid_license_11_8_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_squareup_javawriter_2_1_1_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/com_synnapps_carouselview_0_1_4.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/javax_annotation_javax_annotation_api_1_2_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/javax_inject_javax_inject_1_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/junit_junit_4_12_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/org_hamcrest_hamcrest_core_1_3_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/org_hamcrest_hamcrest_integration_1_3_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/org_hamcrest_hamcrest_library_1_3_jar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/uk_co_chrisjenx_calligraphy_2_3_0.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app.iml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/google-services.json" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradlew" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/gradlew.bat" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/proguard-rules.pro" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/androidTest/java/com/sjsu/se195/uniride/ApplicationTest.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/androidTest/java/com/sjsu/se195/uniride/NewPostTest.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/assets/fonts/OpenSans-Regular.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/assets/fonts/Slabo27px-Regular.ttf" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/ic_user_outline-web.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/AddUserInformation.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/BaseActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/CarpoolDetailActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/CustomApplication.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/GMapV2Direction.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/MainActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/MainSubcategoryActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/NavBar.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/NewOrganizationActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/NewPostActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/OrganizationDetailActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/PostDetailActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/ShowOrganizationsActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/SignInActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/SignUpActivity.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/UserInformation.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/DatePickerFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/MyOrganizationsFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/MyPostsForDateFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/MyPostsFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/MyTopPostsFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/OrganizationListFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/PostListFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/RecentOrganizationsFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/RecentPostsFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/TimePickerFragment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/Carpool.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/Comment.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/DriverOfferPost.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/Location.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/Organization.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/Post.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/RideRequestPost.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/models/User.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/viewholder/OrganizationViewHolder.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/viewholder/PostViewHolder.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/anim/alpha_anim.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/buildings.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/firebase_lockup_400.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_access_time_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_access_time_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_account_balance_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_action_account_circle_40.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_close_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_date_range_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_date_range_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_directions_car_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_home_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_image_edit.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_keyboard_arrow_down_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_keyboard_arrow_right_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_map_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_navigation_check_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_person_pin_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_person_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_place_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_toggle_star_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_toggle_star_outline_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_user_outline.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/ic_user_password.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/sun.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-hdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/buildings.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/firebase_lockup_400.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_access_time_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_access_time_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_account_balance_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_action_account_circle_40.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_close_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_date_range_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_date_range_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_directions_car_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_home_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_image_edit.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_keyboard_arrow_down_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_keyboard_arrow_right_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_map_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_navigation_check_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_person_pin_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_person_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_place_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_toggle_star_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_toggle_star_outline_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_user_outline.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/ic_user_password.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/pin.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/sun.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-mdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/buildings.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/firebase_lockup_400.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_access_time_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_access_time_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_account_balance_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_action_account_circle_40.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_close_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_date_range_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_date_range_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_directions_car_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_home_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_image_edit.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_keyboard_arrow_down_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_keyboard_arrow_right_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_map_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_navigation_check_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_person_pin_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_person_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_place_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_toggle_star_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_toggle_star_outline_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_user_outline.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/ic_user_password.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/sun.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xhdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/buildings.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/firebase_lockup_400.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_access_time_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_access_time_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_account_balance_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_action_account_circle_40.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_close_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_date_range_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_date_range_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_directions_car_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_home_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_image_edit.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_keyboard_arrow_down_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_keyboard_arrow_right_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_map_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_navigation_check_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_person_pin_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_person_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_place_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_toggle_star_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_toggle_star_outline_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_user_outline.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/ic_user_password.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/sun.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxhdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/buildings.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_access_time_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_access_time_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_account_balance_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_action_account_circle_40.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_close_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_date_range_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_date_range_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_directions_car_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_home_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_image_edit.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_keyboard_arrow_down_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_keyboard_arrow_right_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_map_white_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_navigation_check_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_person_pin_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_person_white_24dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_place_black_48dp.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_toggle_star_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/ic_toggle_star_outline_24.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/sun.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable-xxxhdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/button_login.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/button_main_usertype.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/button_subcategory_new_post.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/custom_button.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/custom_popup.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/custom_spinner.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/edittext_roundbox.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/extra_icon.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/drawable/gradient.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_0_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_1_driver_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_1_rider_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_2_drive_offer_post.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_2_ride_request_post.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_3_post_detail.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_add_user_information.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_carpool_detail.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_new_organization.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_organization_detail.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_show_organizations.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_sign_in.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_sign_up.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/content_carpool_detail.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_all_organizations.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_all_posts.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_my_posts_for_date.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_navbar.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_new_post.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_organization_classification.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_organization_description.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_organization_name.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_organization_website.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_post_addresses.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_post_author.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_post_date_time.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/include_post_map.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/item_comment.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/item_organization.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/item_post.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/post_date_carousel.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/post_destination_carousel.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/post_passengercount_carousel.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/post_pickuppoint_carousel.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/post_source_carousel.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/layout/post_time_carousel.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/menu/menu_main.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/menu/menu_organizations.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-hdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-hdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-mdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-mdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xhdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xxhdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xxxhdpi/uniride_logo.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values-v21/styles.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values-w820dp/dimens.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/arrays.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/colors.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/dimens.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/drawables.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/values/styles.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/main/uniride_logo-web.png" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/src/screen.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_1_rider_main.xml" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_1_rider_main.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -344,15 +39,15 @@
     <favorites_list name="UniRideAndroid" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="activity_1_driver_main.xml" pinned="false" current-in-tab="false">
+    <leaf>
+      <file leaf-file-name="activity_1_driver_main.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_1_driver_main.xml">
           <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+            <state relative-caret-position="1176">
+              <caret line="61" column="17" lean-forward="false" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -364,14 +59,17 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1056">
-              <caret line="44" column="60" lean-forward="false" selection-start-line="44" selection-start-column="60" selection-end-line="44" selection-end-column="60" />
-              <folding />
+            <state relative-caret-position="-143">
+              <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding>
+                <element signature="e#1225#1259#0" expanded="true" />
+                <element signature="e#1865#1895#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SignInActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SignInActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/SignInActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="312">
@@ -409,7 +107,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
+            <state relative-caret-position="865">
               <caret line="45" column="25" lean-forward="false" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
               <folding />
             </state>
@@ -2366,14 +2064,16 @@
         <option value="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/fragment/MyPostsForDateFragment.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/NewPostActivity.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/res/layout/activity_1_rider_main.xml" />
+        <option value="$PROJECT_DIR$/src/main/res/layout/activity_1_driver_main.xml" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="980" />
+    <option name="x" value="39" />
     <option name="y" value="25" />
-    <option name="width" value="932" />
-    <option name="height" value="1055" />
+    <option name="width" value="1882" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -2391,31 +2091,26 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane" />
+      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
             <path>
-              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="UniRideAndroid" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
             </path>
             <path>
-              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="UniRideAndroid" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="manifests" type="f94875db:AndroidManifestsGroupNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
             </path>
             <path>
-              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="UniRideAndroid" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-            </path>
-            <path>
-              <item name="app" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="uniride" type="cbb59c9e:AndroidPsiDirectoryNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
           </expand>
           <select />
@@ -2428,7 +2123,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="device.picker.selection" value="I_made_this_yo_API_23" />
     <property name="android.profiler.active" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1522712563005" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1522713906493" />
     <property name="sync.plugin.last.upgrade.timestamp" value="1522712077633" />
   </component>
   <component name="RecentsManager">
@@ -2776,6 +2471,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="39" y="25" width="1882" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990867" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990867" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -2784,10 +2480,11 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5353881" sideWeight="0.50995576" order="16" side_tool="true" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990867" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32990867" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.9119718" sideWeight="0.49778762" order="20" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.8196347" sideWeight="0.49004424" order="17" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.9119718" sideWeight="0.49778762" order="20" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.81924886" sideWeight="0.49004424" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -2806,7 +2503,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="21" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -2821,13 +2517,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/NewPostActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="573">
-          <caret line="598" column="48" lean-forward="true" selection-start-line="593" selection-start-column="7" selection-end-line="598" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/BaseActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-105">
@@ -2882,14 +2571,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="472">
           <caret line="596" column="25" lean-forward="false" selection-start-line="596" selection-start-column="25" selection-end-line="596" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/BaseActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="96">
-          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -3048,14 +2729,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/values/colors.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="768">
-          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_sign_in.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
@@ -3174,17 +2847,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_1_rider_main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1056">
-          <caret line="44" column="60" lean-forward="false" selection-start-line="44" selection-start-column="60" selection-end-line="44" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -3193,13 +2855,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_1_driver_main.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/colors.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="49" column="0" lean-forward="false" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
+        <state relative-caret-position="768">
+          <caret line="32" column="0" lean-forward="false" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -3209,8 +2868,24 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
+        <state relative-caret-position="865">
           <caret line="45" column="25" lean-forward="false" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/values/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="3" column="56" lean-forward="false" selection-start-line="3" selection-start-column="56" selection-end-line="3" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/sjsu/se195/uniride/BaseActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -3222,6 +2897,31 @@
           <folding>
             <marker date="1522655937169" expanded="true" signature="4257:4281" ph="//..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_1_rider_main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-143">
+          <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding>
+            <element signature="e#1225#1259#0" expanded="true" />
+            <element signature="e#1865#1895#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_1_driver_main.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1176">
+          <caret line="61" column="17" lean-forward="false" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
