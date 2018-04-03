@@ -21,10 +21,8 @@
         android:id="@+id/post_addresses_to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
         android:layout_marginTop="2dp"
-        tools:text="To"
-        android:textStyle="bold"/>
+        tools:text="to"/>
 
     <TextView
         android:id="@+id/post_destination"

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorAccent"
+    android:background="@drawable/home_page"
     tools:context=".MainActivity">
     <TextView
         android:layout_width="wrap_content"
@@ -34,17 +34,17 @@
             android:lines="2"
             android:textColor="@color/brown"
             android:layout_marginBottom="30dp"/>
-
         <Button
             android:id="@+id/driver_mode_button"
+            android:elevation="10dp"
             android:layout_width="180dp"
             android:layout_height="40dp"
             android:layout_marginBottom="30dp"
             android:text="I'm a Driver"
             android:drawableLeft="@drawable/ic_directions_car_white_24dp" />
-
         <Button
             android:id="@+id/rider_mode_button"
+            android:elevation="10dp"
             android:layout_width="180dp"
             android:layout_height="40dp"
             android:text="I'm a Passenger"

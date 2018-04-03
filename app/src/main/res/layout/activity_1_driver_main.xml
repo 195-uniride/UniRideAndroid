@@ -54,7 +54,7 @@
             android:id="@+id/post_fragment_placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_all_posts"></FrameLayout>
+            tools:layout="@layout/fragment_all_posts"/>
 
     </LinearLayout>
     </ScrollView>
