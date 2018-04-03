@@ -61,11 +61,15 @@ public class Mapper {
             String driverSource = carpool.getDriverPost().source.replaceAll(" ", "+");
             String destination = carpool.getDriverPost().destination.replaceAll(" ", "+");
 
+            System.out.println("MAPPING Carpool from source @ " + carpool.getDriverPost().source + "...");
+
             ArrayList<String> riderSources = new ArrayList<>();
             for (RideRequestPost riderPost : carpool.getRiderPosts()) {
-                System.out.println("Mapper: for all riderPosts: riderPost.source = " + riderPost.source);
+                System.out.println("...to pickup rider @ " + riderPost.source + "...");
                 riderSources.add(riderPost.source.replaceAll(" ", "+"));
             }
+
+            System.out.println("...to destination @ " + carpool.getDriverPost().destination + ".");
 
             String urlString = getCarpoolUrlString(driverSource, destination, riderSources);
 

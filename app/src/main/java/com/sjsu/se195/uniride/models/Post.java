@@ -57,5 +57,24 @@ public class Post {
     }*/
     // [END post_to_map]
 
+    // Getters and Setters:
+
+    public int getDepartureTime() {
+        return departure_time;
+    }
+
+    public void setDepartureTime(int departureTime) {
+        this.departure_time = departureTime;
+    }
+
+    public int getArrivalTime() {
+        return arrival_time;
+    }
+
+    public void setArrivalTime(int arrivalTime) {
+        this.arrival_time = arrivalTime;
+    }
+
+
 }
 // [END post_class]

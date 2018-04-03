@@ -2,6 +2,8 @@ package com.sjsu.se195.uniride.models;
 
 import com.sjsu.se195.uniride.Mapper;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -92,9 +94,14 @@ public class Carpool extends DriverOfferPost {
 
         System.out.println("getTotalTripTime() = " + getTotalTripTime()); // TODO remove....
 
+        System.out.println("getMinimumArrivalTime() = " + getMinimumArrivalTime()); // TODO remove....
+
         System.out.println(); // TODO remove....
         System.out.println("------ DONE -------"); // TODO remove....
         System.out.println(); // TODO remove....
+
+        // Calculate: getMinimumArrivalTime - getTotalTripTime => time need to leave by.
+        // can then check if departure times are within this.
 
         return false; // TODO.
     }
@@ -105,6 +112,37 @@ public class Carpool extends DriverOfferPost {
         }
 
         return totalTripTime;
+    }
+
+    public int getMinimumArrivalTime() {
+        int min = driverPost.getArrivalTime();
+
+        for (RideRequestPost riderPosts : getRiderPosts()) {
+            min = Math.min(min, riderPosts.getArrivalTime());
+        }
+
+        return min;
+    }
+
+    public Date getDesiredArrivalDateTime() {
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd-HHmm"); // Note: capital 'H' means military time.
+        // example: "20180230-2219" Parses as Fri Mar 02 22:19:00 UTC 2018
+
+        String dateTimeString =  "" + getDriverPost().tripDate; // Note: in format: yyyMMdd
+
+        dateTimeString += "-" + this.getMinimumArrivalTime(); // Use the earliest arrival time to satisfy all participants.
+
+        System.out.print(dateTimeString + " Parses as ");
+
+        Date dateTime = null;
+        try {
+            dateTime = ft.parse(dateTimeString);
+            System.out.println(dateTime);
+        } catch (ParseException e) {
+            System.out.println("ERROR: Unparseable using " + ft);
+        }
+
+        return dateTime;
     }
 
     private int calculateTotalTripTime() {

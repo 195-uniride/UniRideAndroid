@@ -56,20 +56,9 @@ public class PostSearcher {
 
         // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
         // TODO: fix trip date:
-        Query searchQuery = getAllPostsBySearchType(userPost, isLookingForDriver);//TODO: .orderByChild("tripDate").equalTo(userPost.tripDate); // TODO: add date field.
+        Query searchQuery = getAllPostsBySearchType(userPost, isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate);
 
         findPostSearchResults(userPost, searchQuery, isLookingForDriver);
-
-        // step 3: filter posts by general area:
-
-//        matchedPosts = filterPostsByGeneralArea(matchedPosts);
-
-        // step 4: filter posts based on
-        //  whether each participant can reach the destination on time or not:
-
-//        matchedPosts = filterPostsByTimePossibility(matchedPosts);
-
-        // return the matches:
 
         // list is set asynchronously.
     }
@@ -79,11 +68,11 @@ public class PostSearcher {
     private Query getAllPostsBySearchType(Post userPost, boolean isLookingForDriver) {
         if (isLookingForDriver) {
             //return getAllDriveOfferPosts();
-            // TODO: return mDatabase.child("organization-posts").child(post.organizationId).child("driveOffers");
-            return mDatabase.child("posts").child("driveOffers"); // TEMP: TODO: NEED TO SPECIFY POST ID, or will just return a list of id's and can't get a RR.class in the lookup.
+            // TODO: return mDatabase.child("organization-posts").child(userPost.organizationId).child("driveOffers");
+            return mDatabase.child("posts").child("driveOffers"); // TEMP
         }
         else {
-            // TODO: return mDatabase.child("organization-posts").child(post.organizationId).child("driveOffers");
+            // TODO: return mDatabase.child("organization-posts").child(userPost.organizationId).child("driveOffers");
             return mDatabase.child("posts").child("rideRequests"); // TEMP
         }
     }
@@ -95,13 +84,13 @@ public class PostSearcher {
             @Override
             public void onDataChange(DataSnapshot postListSnapshot) {
 
-                System.out.println("Line102:postLISTSnapshot = " + postListSnapshot);
+                // System.out.println("Line102:postLISTSnapshot = " + postListSnapshot);
 
                 int postCount = 0;
 
                 for (DataSnapshot postSnapshot: postListSnapshot.getChildren()) {
 
-                    System.out.println("Line108:postSnapshot = " + postSnapshot);
+                    // System.out.println("Line108:postSnapshot = " + postSnapshot);
 
                     // Handle each post:
                     Post postToCheck;
@@ -111,9 +100,9 @@ public class PostSearcher {
                     else {
                         postToCheck = (RideRequestPost) postSnapshot.getValue(RideRequestPost.class);
 
-                        System.out.println("Rider-postToCheck: uid = " + postToCheck.uid);
-                        System.out.println("Rider-postToCheck: source = " + postToCheck.source);
-                        System.out.println("Rider-postToCheck: author = " + postToCheck.author);
+                        // System.out.println("Rider-postToCheck: uid = " + postToCheck.uid);
+                        // System.out.println("Rider-postToCheck: source = " + postToCheck.source);
+                        // System.out.println("Rider-postToCheck: author = " + postToCheck.author);
                     }
 
                     System.out.println("postToCheck = " + postToCheck);
