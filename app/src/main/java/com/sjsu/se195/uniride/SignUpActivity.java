@@ -46,7 +46,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         EmailEditText = (EditText) findViewById(R.id.create_email);
         PasswordEditText = (EditText) findViewById(R.id.create_password);
 
-        mSignUpButton = findViewById(R.id.register_button);
+        mSignUpButton = findViewById(R.id.save_information);
 
         mSignUpButton.setOnClickListener(this);
     }
@@ -120,7 +120,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.register_button:
+            case R.id.save_information:
                 SignUp();
                 break;
 

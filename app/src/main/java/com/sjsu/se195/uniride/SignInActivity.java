@@ -139,7 +139,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (i == R.id.button_sign_in) {
             signIn();
         } else if (i == R.id.signup2){
-                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
+                startActivity(new Intent(SignInActivity.this,  SignUpActivity.class));
         }
     }
 }
