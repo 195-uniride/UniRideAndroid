@@ -1,15 +1,27 @@
 package com.sjsu.se195.uniride;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.ArcShape;
+import android.graphics.drawable.shapes.Shape;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -46,7 +58,6 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
     private boolean isShowingDriveOffers;
     private ViewPager mViewPager;
     private FragmentPagerAdapter mPagerAdapter;
-    private Button btnSubmit;
 
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -56,7 +67,6 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
 
         if (isShowingDriveOffers) {
             setContentView(R.layout.activity_1_driver_main);
-
             findViewById(R.id.new_drive_offer_post).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,32 +88,26 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
             });
         }
 
+        findViewById(R.id.driver_feed_back_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         // After contentView has been set, setup the spinner:
         orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
         addListenerOnSpinnerItemSelection();
 
-
-
-        /*mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
-            private final Fragment[] mFragments = new Fragment[] {
-                    new RecentPostsFragment()
-            };
-
-            @Override
-            public Fragment getItem(int position) {
-                return mFragments[position];
-            }
-            @Override
-            public int getCount() {
-                return mFragments.length;
-            }
-        };
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mPagerAdapter);*/
-
     }
 
+    public Drawable getArch(){
+        Shape arcShape = new ArcShape(0, 180);
+        ShapeDrawable arcDrawable = new ShapeDrawable(arcShape);
+        arcDrawable.getPaint().setColor(getResources().getColor(R.color.colorPrimary));
+        arcDrawable.getPaint().setStyle(Paint.Style.FILL);
+        return arcDrawable;
+    }
 
     private void loadPosts() {
         Bundle bundle = new Bundle();

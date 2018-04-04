@@ -6,16 +6,15 @@
 
             <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="2px" android:color="@color/teal"/>
-                    <solid android:color="@color/colorPrimaryLight"/>
+                    <solid android:color="@color/colorPrimary"/>
                     <corners android:radius="30dip" />
                 </shape>
             </item>
 
             <item>
                 <bitmap
-                    android:gravity="center_vertical|right"
-                    android:src="@drawable/ic_keyboard_arrow_down_white_24dp"/>
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_account_balance_white_24dp"/>
             </item>
 
         </layer-list>

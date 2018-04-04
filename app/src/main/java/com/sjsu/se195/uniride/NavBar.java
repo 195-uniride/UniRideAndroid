@@ -122,7 +122,7 @@ public class NavBar{
             public void onStartTabSelected(NavigationTabBar.Model model, int index) {
                 NavBar.this.INDEX = index;
                 System.out.println(index);
-                mHandler.postDelayed(mDelay, 200);
+                mHandler.postDelayed(mDelay, 250);
             }
 
             @Override

@@ -3,28 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:cardBackgroundColor="@color/primaryWhite"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardElevation="5dp">
+    <ImageView
+        android:id="@+id/card_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:background="@color/colorPrimaryLight">
+        android:padding="15dp">
 
         <include
             android:id="@+id/post_author_layout"
             layout="@layout/include_post_author"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true" />
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:id="@+id/star_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/post_author_layout"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/post_author_layout"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -47,12 +55,10 @@
         </LinearLayout>
 
         <include layout="@layout/include_post_addresses"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/post_author_layout"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp" />
+            android:layout_toEndOf="@id/post_author_layout"
+            android:layout_toStartOf="@id/star_layout" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

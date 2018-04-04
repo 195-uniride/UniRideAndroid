@@ -18,6 +18,8 @@
     <string name="heading_my_top_posts">My Top Posts</string>
     <string name="driver_post_button_title">Offer New Carpool</string>
     <string name="rider_post_button_title">Request New Carpool</string>
+    <string name="driver_feed_title">Ride Requests</string>
+    <string name="rider_feed_title">Drive Offers</string>
     <string name="post_label_from">From</string>
     <string name="post_label_to">To</string>
     <string name="post_label_passengerCount">Maximum Passengers</string>
@@ -30,6 +32,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_carpool_detail">CarpoolDetailActivity</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

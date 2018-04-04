@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-
     android:gravity="center"
     android:layout_centerHorizontal="true">
 
@@ -12,13 +11,11 @@
         android:id="@+id/post_source"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
-        android:ellipsize="end"
         android:maxLines="3"
         tools:text="@string/lorem" />
 
     <TextView
-        android:id="@+id/post_addresses_to"
+        android:id="@+id/post_card_address_to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -28,7 +25,6 @@
         android:id="@+id/post_destination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
         android:layout_marginTop="2dp"
         android:maxLines="3"
         tools:text="@string/lorem" />

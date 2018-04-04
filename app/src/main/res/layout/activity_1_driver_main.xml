@@ -3,58 +3,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/feed_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/button_driver_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:paddingBottom="2dp">
-
         <LinearLayout
+            android:id="@+id/button_driver_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="125dp"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:background="@color/colorPrimaryDark">
-            <Button
-                android:id="@+id/new_drive_offer_post"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:text="@string/driver_post_button_title"/>
-
-            <Spinner
-                android:id="@+id/chosen_organization"
+            android:gravity="center_horizontal">
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="30dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="left"
-                android:dropDownWidth="match_parent"
-                android:padding="10dp"
-                android:background="@drawable/custom_spinner"
-                android:prompt="@string/organizations_prompt"
-                android:popupBackground="@drawable/custom_popup" />
+                android:layout_marginTop="3dp"
+                android:padding="5dp"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/driver_feed_back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_arrow_back_white_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/driver_feed_title"
+                    android:textColor="@color/gradient1"
+                    android:textSize="20dp"
+                    android:layout_centerInParent="true"/>
+                <Spinner
+                    android:id="@+id/chosen_organization"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="10dp"
+                    android:background="@drawable/custom_spinner"
+                    android:prompt="@string/organizations_prompt"
+                    android:spinnerMode="dialog" />
+            </RelativeLayout>
+            <Button
+                android:id="@+id/new_drive_offer_post"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:elevation="10dp"
+                android:text="@string/driver_post_button_title"/>
         </LinearLayout>
         <!--TODO: change dialog background color
         android:spinnerMode="dialog"-->
-
-
         <!-- TODO: add "class" instead of "name" -->
         <FrameLayout
             android:id="@+id/post_fragment_placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_all_posts"/>
+            tools:layout="@layout/fragment_all_posts"
+            android:clipToPadding="false"/>
 
     </LinearLayout>
     </ScrollView>

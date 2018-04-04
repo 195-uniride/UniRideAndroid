@@ -7,13 +7,15 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <!-- Colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColor">@color/primary_text</item>
-        <item name="android:actionMenuTextColor">@color/colorAccent</item>
+        <!--<item name="android:textColor">@color/primaryWhite</item>-->
+        <!-- Custom Button -->
         <item name="android:buttonStyle">@style/customButton</item>
+        <!-- Enabling activity transition animations. -->
+        <item name="android:windowActivityTransitions">true</item>
     </style>
 
     <style name="customButton" parent="android:style/Widget.Button">
