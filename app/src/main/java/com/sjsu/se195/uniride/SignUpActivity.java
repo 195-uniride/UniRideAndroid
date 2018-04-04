@@ -32,6 +32,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
+    private EditText FirstEditText, LastEditText;
     private EditText EmailEditText, PasswordEditText;
     private Button mSignUpButton;
 
@@ -43,6 +44,8 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
+        FirstEditText = (EditText) findViewById(R.id.first_name);
+        LastEditText = (EditText) findViewById(R.id.last_name);
         EmailEditText = (EditText) findViewById(R.id.create_email);
         PasswordEditText = (EditText) findViewById(R.id.create_password);
 
@@ -101,19 +104,22 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void onAuthSuccess(FirebaseUser user) {
+        String first = FirstEditText.getText().toString();
+        String last = LastEditText.getText().toString();
+
         //Save user information to database
-        writeNewUser(user.getUid(),user.getEmail());
+        writeNewUser(user.getUid(),user.getEmail(), first, last);
 
         //Go to MainActivity
-        Intent intent = new Intent(SignUpActivity.this, AddUserInformation.class);
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
         intent.putExtra("callingActivity", "SignUpActivity");
         startActivity(intent);
         finish();
     }
 
     //Writes user's email in users table
-    private void writeNewUser(String userId, String email) {
-        User user = new User(email);
+    private void writeNewUser(String userId, String email, String first, String last) {
+        User user = new User(email, first, last);
 
         mDatabase.child("users").child(userId).setValue(user);
     }
