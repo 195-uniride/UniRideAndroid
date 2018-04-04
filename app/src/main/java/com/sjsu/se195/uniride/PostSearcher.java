@@ -26,10 +26,14 @@ public class PostSearcher {
 
     public ArrayList<Post> mSearchResultsPosts;
 
+    public ArrayList<Carpool> mPotentialCarpools;
+
     // Constructor:
 
     public PostSearcher(DatabaseReference databaseReference) {
         mDatabase = databaseReference;
+        mSearchResultsPosts = new ArrayList<>();
+        mPotentialCarpools = new ArrayList<>();
     }
 
     // ==== SEARCH ALGORITHM:
@@ -94,6 +98,7 @@ public class PostSearcher {
 
                     // Handle each post:
                     Post postToCheck;
+
                     if (isLookingForDriver) {
                         postToCheck = (DriverOfferPost) postSnapshot.getValue(DriverOfferPost.class);
                     }
@@ -105,15 +110,45 @@ public class PostSearcher {
                         // System.out.println("Rider-postToCheck: author = " + postToCheck.author);
                     }
 
-                    System.out.println("postToCheck = " + postToCheck);
+                    System.out.println("Search: ---- Looking at postToCheck: " + postToCheck +
+                            " with key = " + postSnapshot.getKey() + " ----");
 
                     if (isTripTimeWithinTimeLimit(userPost, postToCheck)) {
+                        System.out.println("Search: post IS a match: " + postToCheck +
+                                " with key = " + postSnapshot.getKey() + " ----");
+                        // Add to list of matching posts:
                         mSearchResultsPosts.add(postToCheck);
                     }
+                    else {
+                        System.out.println("Search: post NOT a match: " + postToCheck +
+                                " with key = " + postSnapshot.getKey() + " ----");
+                    }
                     postCount++;
-                }
-                System.out.println("Search: postCount = " + postCount);
 
+                    System.out.println("---- ... ----");
+                }
+
+                System.out.println("--- DONE SEARCHING ---");
+
+                System.out.println("Search: Looked through " + postCount + " post(s).");
+
+                System.out.println("Search: Found " + mSearchResultsPosts.size() + " matching post(s).");
+
+                for (Post post : mSearchResultsPosts) {
+                    System.out.println("Search: found match: post = " + post);
+                }
+
+
+                for (Carpool carpool : mPotentialCarpools) {
+                    System.out.println("Search: created a potential carpool = " + carpool + "...");
+                    System.out.println("...from source @ " + carpool.getDriverPost().source + "...");
+
+                    for (RideRequestPost riderPost : carpool.getRiderPosts()) {
+                        System.out.println("...to pickup rider @ " + riderPost.source + "...");
+                    }
+
+                    System.out.println("...to destination @ " + carpool.getDriverPost().destination + "...");
+                }
 
             }
 
@@ -158,7 +193,20 @@ public class PostSearcher {
 
             return isAddingNewRiderPossible(potentialCarpool, (RideRequestPost) newPostToCheck);
         }
-        // Case 2: newPostToCheck is a Drive Offer Post:
+        // Case 2: newPostToCheck is already a Carpool:
+        else if (newPostToCheck instanceof Carpool) {
+            System.out.println("newPostToCheck instanceof Carpool");
+            // Duplicate carpool object because don't want to edit existing carpool object:
+            potentialCarpool = new Carpool((Carpool) newPostToCheck); // Use Copy Constructor to duplicate.
+
+            if (!(existingPost instanceof RideRequestPost)) { // if existingPost NOT a Ride Request:
+                System.out.println("ERROR: Search:isTripTimeWithinTimeLimit with newPostToCheck=Carpool && existingPost NOT R.R.");
+                return false;
+            }
+
+            return isAddingNewRiderPossible(potentialCarpool, (RideRequestPost) existingPost);
+        }
+        // Case 3: newPostToCheck is a Drive Offer Post:
         else if (newPostToCheck instanceof DriverOfferPost) {
             System.out.println("newPostToCheck instanceof DriverOfferPost");
 
@@ -173,20 +221,31 @@ public class PostSearcher {
         }
         // Error Case:
         else {
-            System.out.println("Search:isTripTimeWithinTimeLimit fell through to false.");
+            System.out.println("ERROR: Search:isTripTimeWithinTimeLimit: newPostToCheck was not a Rider, Driver, or Carpool Post.");
             return false;
         }
     }
 
     private boolean isAddingNewRiderPossible(Carpool potentialCarpool, RideRequestPost potentialNewRider) {
-        System.out.println("isAddingNewRiderPossible");
+        System.out.println("checking isAddingNewRiderPossible...");
         try {
             potentialCarpool.addRider(potentialNewRider);
 
             // this method will calculate the distance of the trip and
             //  make sure for each participant that arrival and destination time are met:
-            return potentialCarpool.areAllTripTimeLimitsSatisfied();
+            if (potentialCarpool.areAllTripTimeLimitsSatisfied()) {
+                System.out.println("...CAN add rider because potentialCarpool.areAllTripTimeLimitsSatisfied() = TRUE.");
+
+                mPotentialCarpools.add(potentialCarpool); // Add to a list to use later.
+
+                return true;
+            }
+            else {
+                System.out.println("...CAN'T add rider because potentialCarpool.areAllTripTimeLimitsSatisfied() = FALSE.");
+                return false;
+            }
         } catch (Carpool.OverPassengerLimitException e) {
+            System.out.println("...CAN'T add rider because over passenger limit: MESSAGE = " + e.getMessage());
             return false; // If over passenger limit, then consider this NOT a match.
         }
     }
