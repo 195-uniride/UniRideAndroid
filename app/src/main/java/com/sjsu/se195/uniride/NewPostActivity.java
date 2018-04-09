@@ -238,7 +238,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
             // May throw an IOException
             //coder.getFromLocationName(strAddress, 5)
             address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
+            if (address.isEmpty()) {
                 return null;
             }
             Address location = address.get(0);

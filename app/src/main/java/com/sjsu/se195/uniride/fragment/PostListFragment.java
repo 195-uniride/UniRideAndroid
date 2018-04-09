@@ -48,9 +48,10 @@ public abstract class PostListFragment extends Fragment {
     // [END define_database_reference]
 
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
-    private RecyclerView mRecycler;
+    protected RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     protected boolean postType; //true = driverpost ; false = riderequest
+    private String username;
 
     public PostListFragment() {}
 
@@ -94,6 +95,7 @@ public abstract class PostListFragment extends Fragment {
 
         // Set up Layout Manager, reverse layout
         mManager = new LinearLayoutManager(getActivity());
+        mManager.setOrientation(LinearLayoutManager.VERTICAL);
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
         mRecycler.setLayoutManager(mManager);
@@ -208,7 +210,6 @@ public abstract class PostListFragment extends Fragment {
         //getUid()
     }
 
-    String username;
     private void loadPosts() {
         System.out.println("About to load posts....."); // TODO: investigate why fragment reload not calling again...
         // Set up FirebaseRecyclerAdapter with the Query

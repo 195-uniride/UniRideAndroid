@@ -19,6 +19,10 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.sjsu.se195.uniride.fragment.MyOrganizationsFragment;
+import com.sjsu.se195.uniride.fragment.MyPostsFragment;
+import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
+
 public class ProfilePageActivity extends BaseActivity {
 
     /**
@@ -43,7 +47,28 @@ public class ProfilePageActivity extends BaseActivity {
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()){
+            private final Fragment[] mFragments = new Fragment[] {
+                    new MyOrganizationsFragment(),
+                    new MyPostsFragment()
+            };
+            /*private final String[] mFragmentNames = new String[] {
+                    getString(R.string.heading_recent_organizations),
+                    getString(R.string.heading_my_organizations)
+            };*/
+            @Override
+            public Fragment getItem(int position) {
+                return mFragments[position];
+            }
+            @Override
+            public int getCount() {
+                return mFragments.length;
+            }
+            /*@Override
+            public CharSequence getPageTitle(int position) {
+                return mFragmentNames[position];
+            }*/
+        };
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -71,7 +96,6 @@ public class ProfilePageActivity extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -129,6 +153,7 @@ public class ProfilePageActivity extends BaseActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
             return PlaceholderFragment.newInstance(position + 1);
         }
 
