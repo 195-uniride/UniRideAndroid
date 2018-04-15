@@ -1,5 +1,7 @@
 package com.sjsu.se195.uniride;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -7,6 +9,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
@@ -14,12 +17,20 @@ import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by timhdavis on 4/1/18.
+ *
+ * Classes that implement PostSearchResultsListener
+ *  and add themselves as a listener to an object of this class type
+ *  can use onSearchResultsFound to get search results.
  */
 
+
 public class PostSearcher {
+
+    private List<PostSearchResultsListener> listeners = new ArrayList<>();
 
     private static final String TAG = "PostSearcher";
     private DatabaseReference mDatabase;
@@ -34,6 +45,11 @@ public class PostSearcher {
         mDatabase = databaseReference;
         mSearchResultsPosts = new ArrayList<>();
         mPotentialCarpools = new ArrayList<>();
+    }
+
+    // Listener Pattern:
+    public void addListener(PostSearchResultsListener listenerToAdd) {
+        listeners.add(listenerToAdd);
     }
 
     // ==== SEARCH ALGORITHM:
@@ -59,7 +75,6 @@ public class PostSearcher {
         System.out.println("Search:isLookingForDriver = " + isLookingForDriver);
 
         // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
-        // TODO: fix trip date:
         Query searchQuery = getAllPostsBySearchType(userPost, isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate);
 
         findPostSearchResults(userPost, searchQuery, isLookingForDriver);
@@ -149,6 +164,10 @@ public class PostSearcher {
 
                     System.out.println("...to destination @ " + carpool.getDriverPost().destination + "...");
                 }
+
+                // Show Results:
+
+                notifyDoneSearching();
 
             }
 
@@ -249,5 +268,17 @@ public class PostSearcher {
             return false; // If over passenger limit, then consider this NOT a match.
         }
     }
+
+
+    private void notifyDoneSearching() {
+        for (PostSearchResultsListener listener : listeners) {
+            listener.onSearchResultsFound(mSearchResultsPosts, mPotentialCarpools);
+        }
+    }
+
+//    // TODO:
+//    private void loadPosts() { // TODO: Do this in a Listener??? And make the Activity do this OnSearchFinished...
+//
+//    }
 
 }

@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -47,6 +48,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
@@ -59,7 +62,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback{
+public class PostDetailActivity extends MainActivity
+        implements View.OnClickListener, OnMapReadyCallback {
 
     private static final String TAG = "PostDetailActivity";
 
@@ -81,6 +85,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private Button mCommentButton;
     private FloatingActionButton mShowMapButton;
     private FloatingActionButton mCreateCarpoolButton;
+    private FloatingActionButton mFindMatchingPostsButton;
     private RecyclerView mCommentsRecycler;
     View my_view;
 
@@ -154,8 +159,13 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         my_view = findViewById(R.id.for_map_layout);
+
         mCreateCarpoolButton = (FloatingActionButton) findViewById(R.id.fab_create_carpool);
+
+        mFindMatchingPostsButton = (FloatingActionButton) findViewById(R.id.fab_find_matching_posts);
+
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+
         if(my_view.getVisibility()==View.VISIBLE){
             mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
         }
@@ -233,8 +243,23 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
             public void onClick(View view) {
                 Intent intent = new Intent(PostDetailActivity.this, CarpoolDetailActivity.class);
                 intent.putExtra("isRiderPost", postType);
-                // intent.putExtra("post", (Parcelable) mPost); // TODO: jackass insists
+                // intent.putExtra("post", (Parcelable) mPost);
                 intent.putExtra("postId", mPostKey); // for: FirebaseDatabase.getInstance().getReference().child("posts").child("rideRequests").child(mPostKey);
+
+                startActivity(intent);
+            }
+        });
+
+        mFindMatchingPostsButton.setEnabled(false);
+        mFindMatchingPostsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                System.out.println("..... SENDING POST FOR SEARCHING .....");
+                System.out.println("..... Sending mPost = " + mPost + "; with mPost.source = " + mPost.source);
+
+                Intent intent = new Intent(PostDetailActivity.this, SearchResultsActivity.class);
+                intent.putExtra("post", mPost); // TODO fix
 
                 startActivity(intent);
             }
@@ -290,10 +315,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                     mPost = post;
                 }
 
-                // TESTING: TODO Remove....
-                System.out.println("==== STARTING SEARCH ====");
-                System.out.println("=== Searching with mPost = " + mPost + "; with mPost.source = " + mPost.source);
-                new PostSearcher(FirebaseDatabase.getInstance().getReference()).findSearchResults(mPost);
+                // Once Post is loaded:
+                mFindMatchingPostsButton.setEnabled(true);
 
                 // [END_EXCLUDE]
             }
@@ -367,6 +390,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                     }
                 });
     }
+
+
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 

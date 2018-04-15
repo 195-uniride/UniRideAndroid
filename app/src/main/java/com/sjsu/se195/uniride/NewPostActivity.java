@@ -637,6 +637,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
 
                             mPostOrganizationId = user.defaultOrganizationId; // TODO: Let user choose which org to post under.
 
+                            System.out.println("Saving a new Post with orgId = " + user.defaultOrganizationId);
+
                             // Write new post
                             if(postType) {
                                 writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount, departureTime, arrivalTime, tripDate, mPostOrganizationId);

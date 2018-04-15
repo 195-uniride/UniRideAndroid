@@ -236,4 +236,7 @@ public class Carpool extends DriverOfferPost {
         result.put("currentLocation", currentLocation); //TODO: firebase nested object saving ??
         return result;
     }
+
+    // TODO: Add Parcelable implementation:
+    // ...
 }
