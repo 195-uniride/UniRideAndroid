@@ -11,6 +11,7 @@
     tools:context="com.sjsu.se195.uniride.SignUpActivity"
     android:background="@drawable/gradient">
 
+
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="89dp"
@@ -80,6 +81,19 @@
         android:ellipsize="end"
         android:hint="@string/hint_password"
         android:inputType="textPassword"
+        android:maxLines="1"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/create_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_password"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_user_outline"
+        android:ellipsize="end"
+        android:hint="@string/info_phone"
+        android:inputType="phone"
         android:maxLines="1"
         android:padding="10dp" />
 

@@ -23,26 +23,17 @@ public class User {
     }
 
     // Sets email and sets all other user attributes to empty string ("").
-    public User(String email, String first, String last, String imageURL) {
+    public User(String email, String first, String last, String phone, String imageURL) {
         this.email = email;
 
         // set the other fields as empty strings:
         this.username = "";
         this.firstName = first;
         this.lastName = last;
-//        this.phoneNumber = "";
+        this.phoneNumber = phone;
         this.defaultOrganizationId = "";
         this.imageURL = imageURL;
 
-    }
-
-    public User(String username, String firstName, String lastName, String email, String phoneNumber, String defaultOrganizationId) {
-        this.email = email;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.defaultOrganizationId = defaultOrganizationId;
     }
 
 

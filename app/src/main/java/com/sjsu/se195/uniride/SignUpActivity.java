@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,11 +49,12 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
 
     private EditText FirstEditText, LastEditText;
     private EditText EmailEditText, PasswordEditText;
+    private EditText phoneEditText;
     private Button mSignUpButton;
 
     private ImageView profileImage;
     private Uri filePath;
-    private final int PICK_IMAGE_REQUEST = 71;
+    private final int PICK_IMAGE_REQUEST = 1;
 
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -74,6 +76,7 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         LastEditText = (EditText) findViewById(R.id.last_name);
         EmailEditText = (EditText) findViewById(R.id.create_email);
         PasswordEditText = (EditText) findViewById(R.id.create_password);
+        phoneEditText = (EditText) findViewById(R.id.phone_number);
 
         mSignUpButton = findViewById(R.id.save_information);
 
@@ -89,8 +92,6 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         if (mAuth.getCurrentUser() != null) {
             onAuthSuccess(mAuth.getCurrentUser());
         }
-
-
     }
 
     private void SignUp() {
@@ -138,33 +139,14 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private void onAuthSuccess(FirebaseUser user) {
         String first = FirstEditText.getText().toString();
         String last = LastEditText.getText().toString();
-
+        String phone = phoneEditText.getText().toString();
 
         if (filePath != null) {
             StorageReference ref = storageReference.child("profileImages/" + UUID.randomUUID().toString());
             ref.putFile(filePath);
-
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Toast.makeText(SignUpActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Toast.makeText(SignUpActivity.this, "Failed" +e.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                }
-//            });
-
-
-            writeNewUser(user.getUid(),user.getEmail(), first, last, filePath.toString());
-
+            String imageURL = UUID.randomUUID().toString();
+            writeNewUser(user.getUid(),user.getEmail(), first, last, phone, imageURL);
         }
-
-        //Save user information to database
-       // writeNewUser(user.getUid(),user.getEmail(), first, last);
-
 
         //Go to MainActivity
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
@@ -174,23 +156,29 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     }
 
     //Writes user's email in users table
-    private void writeNewUser(String userId, String email, String first, String last, String filepath) {
-        User user = new User(email, first, last, filepath);
+    private void writeNewUser(String userId, String email, String first, String last, String phone, String filepath) {
+        User user = new User(email, first, last, phone, filepath);
 
         mDatabase.child("users").child(userId).setValue(user);
     }
 
+//    private void getUsername(String email){
+//
+//    }
+
     private void uploadProfileImage(){
+
+        //When ImageView profileImage is pressed, user can choose image from their device gallery
         profileImage.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent();
-                intent.setType("image/*");
+                intent.setType("image/*"); //Intent type is set to image
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult((Intent.createChooser(intent, "Select Picture")), PICK_IMAGE_REQUEST);
-                //Toast.makeText(SignUpActivity.this, "Image Uploaded", Toast.LENGTH_SHORT).show();
+
+                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), PICK_IMAGE_REQUEST);
             }
         });
 
@@ -223,3 +211,4 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
         }
     }
 }
+
