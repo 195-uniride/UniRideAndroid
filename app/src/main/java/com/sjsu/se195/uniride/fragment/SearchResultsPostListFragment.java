@@ -28,6 +28,7 @@ import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
+import com.sjsu.se195.uniride.viewholder.OnItemClickListener;
 import com.sjsu.se195.uniride.viewholder.PostListRecyclerAdapter;
 import com.sjsu.se195.uniride.viewholder.PostViewHolder;
 
@@ -35,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SearchResultsPostListFragment extends Fragment {
+public class SearchResultsPostListFragment extends Fragment implements OnItemClickListener {
 
     private static final String TAG = "PostListFragment";
 
@@ -47,7 +48,7 @@ public class SearchResultsPostListFragment extends Fragment {
 
     // private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
     private RecyclerView mRecycler;
-    private RecyclerView.Adapter mAdapter;
+    private PostListRecyclerAdapter mAdapter;
     private LinearLayoutManager mManager;
     protected boolean postType; //true = driverpost ; false = riderequest
 
@@ -73,6 +74,7 @@ public class SearchResultsPostListFragment extends Fragment {
         // [END create_database_reference]
 
         mRecycler = rootView.findViewById(R.id.messages_list);
+
         mRecycler.setHasFixedSize(true);
         return rootView;
     }
@@ -165,6 +167,9 @@ public class SearchResultsPostListFragment extends Fragment {
         mAdapter = new PostListRecyclerAdapter(mPostList);
 
         mRecycler.setAdapter(mAdapter);
+
+        mAdapter.setClickListener(this);
+
     }
 
 
@@ -173,4 +178,18 @@ public class SearchResultsPostListFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View view, int position) {
+        // Get post clicked from position:
+        Post postClicked = mPostList.get(position);
+
+        System.out.println("postClicked = " + postClicked + " from " + postClicked.source);
+
+        // Launch PostDetailActivity
+        // TODO:
+//        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+//        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
+//        intent.putExtra("postType", postType);
+//        startActivity(intent);
+    }
 }
