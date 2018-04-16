@@ -68,7 +68,7 @@ public class PostDetailActivity extends MainActivity
     private static final String TAG = "PostDetailActivity";
 
     public static final String EXTRA_POST_KEY = "post_key";
-    private boolean postType;
+    private boolean postType; // True = RideRequestPost, False = DirverOfferPost
 
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
@@ -113,30 +113,15 @@ public class PostDetailActivity extends MainActivity
         postType = getIntent().getExtras().getBoolean("postType");
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        if (mPostKey == null) {
-            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+        if (mPostKey == null || mPostKey.equals("")) {
+            mPost = getIntent().getParcelableExtra("post");
+
+            if (mPost == null) {
+                throw new IllegalArgumentException("PostDetailActivity: Must pass EXTRA_POST_KEY or Post Object");
+            }
         }
 
-        ///---
-        getIntent().getExtras().get("");
-        ///----
 
-        // Initialize Database
-        if(postType){
-            mPostReference = FirebaseDatabase.getInstance().getReference()
-                    .child("posts").child("rideRequests").child(mPostKey);
-            mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                    .child("post-comments").child(mPostKey);
-        }else{
-            mPostReference = FirebaseDatabase.getInstance().getReference()
-                    .child("posts").child("driveOffers").child(mPostKey);
-            mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                    .child("post-comments").child(mPostKey);
-        }
-
-        System.out.println(mPostReference.toString());
-        /*mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("post-comments").child(mPostKey);*/
         alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
@@ -269,6 +254,37 @@ public class PostDetailActivity extends MainActivity
     @Override
     public void onStart() {
         super.onStart();
+
+        if (mPost == null) { // If post was not loaded directly from Intent.
+            loadPostFromFirebase();
+        }
+        else {
+            setupViewsForPost(mPost);
+
+            // Once Post is loaded:
+            mFindMatchingPostsButton.setEnabled(true);
+        }
+
+        // TODO: comment section if sent Post object...
+    }
+
+
+    private void loadPostFromFirebase() {
+
+        // Initialize Database
+        if(postType){
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("rideRequests").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }else{
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("driveOffers").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+
+
         // Add value event listener to the post
         // [START post_value_event_listener]
         ValueEventListener postListener = new ValueEventListener() {
@@ -279,38 +295,14 @@ public class PostDetailActivity extends MainActivity
                 if(postType){
                     RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
-                    mAuthorView.setText(post.author);
-                    mSourceView.setText(post.source);
-                    mDestinationView.setText(post.destination);
-                    source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-                    dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-                    source_marker = new MarkerOptions()
-                            .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-                            .title("Source")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-                    destination_marker = new MarkerOptions()
-                            .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-                            .title("Destination")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+                    setupViewsForPost(post);
 
                     mPost = post;
                 }
                 else{
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
-                    mAuthorView.setText(post.author);
-                    mSourceView.setText(post.source);
-                    mDestinationView.setText(post.destination);
-                    source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-                    dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-                    source_marker = new MarkerOptions()
-                            .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-                            .title("Source")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-                    destination_marker = new MarkerOptions()
-                            .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-                            .title("Destination")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+                    setupViewsForPost(post);
 
                     mPost = post;
                 }
@@ -352,7 +344,26 @@ public class PostDetailActivity extends MainActivity
         }
 
         // Clean up comments listener
-        mAdapter.cleanupListener();
+        if (mAdapter != null) {
+            mAdapter.cleanupListener();
+        }
+
+    }
+
+    private void setupViewsForPost(Post post) {
+        mAuthorView.setText(post.author);
+        mSourceView.setText(post.source);
+        mDestinationView.setText(post.destination);
+        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+        source_marker = new MarkerOptions()
+                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+                .title("Source")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        destination_marker = new MarkerOptions()
+                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+                .title("Destination")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
     }
 
     @Override
