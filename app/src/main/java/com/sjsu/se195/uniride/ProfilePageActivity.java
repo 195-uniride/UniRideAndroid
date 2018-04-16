@@ -19,9 +19,18 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.MyDriverPostsFragment;
 import com.sjsu.se195.uniride.fragment.MyOrganizationsFragment;
 import com.sjsu.se195.uniride.fragment.MyPostsFragment;
+import com.sjsu.se195.uniride.fragment.MyRiderPostsFragment;
 import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
+import com.sjsu.se195.uniride.fragment.UserInformationFragment;
+import com.sjsu.se195.uniride.models.User;
 
 public class ProfilePageActivity extends BaseActivity {
 
@@ -39,35 +48,43 @@ public class ProfilePageActivity extends BaseActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private User user;
+    private DatabaseReference mDatabase;
+    private String ABOUT_TAB_TITLE;
+    final Bundle bundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
 
+        String uID = getUid(); //TODO: should instead get value from intent to show different users.
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        bundle.putString("uID", uID);
+        this.getUser(uID);
+
+        setNavBar(this);
+    }
+
+    private void setFragment(){
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()){
             private final Fragment[] mFragments = new Fragment[] {
-                    new MyOrganizationsFragment(),
-                    new MyPostsFragment()
+                    new UserInformationFragment(),
+                    new MyDriverPostsFragment(),
+                    new MyRiderPostsFragment(),
+                    new MyOrganizationsFragment()
             };
-            /*private final String[] mFragmentNames = new String[] {
-                    getString(R.string.heading_recent_organizations),
-                    getString(R.string.heading_my_organizations)
-            };*/
             @Override
             public Fragment getItem(int position) {
+                mFragments[position].setArguments(ProfilePageActivity.this.bundle);
                 return mFragments[position];
             }
             @Override
             public int getCount() {
                 return mFragments.length;
             }
-            /*@Override
-            public CharSequence getPageTitle(int position) {
-                return mFragmentNames[position];
-            }*/
         };
 
         // Set up the ViewPager with the sections adapter.
@@ -78,8 +95,6 @@ public class ProfilePageActivity extends BaseActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        setNavBar(this);
     }
 
 
@@ -102,6 +117,30 @@ public class ProfilePageActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+
+            return PlaceholderFragment.newInstance(position + 1);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 5;
+        }
     }
 
     /**
@@ -139,28 +178,27 @@ public class ProfilePageActivity extends BaseActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public void getUser(String uid) {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+        // System.out.println("Starting to set user....");
 
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+        mDatabase.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Need to get the user object before loading posts because the query to find posts requires user.
 
-            return PlaceholderFragment.newInstance(position + 1);
-        }
+                // Get User object and use the values to update the UI
+                user = dataSnapshot.getValue(User.class);
+                bundle.putString("userName", user.firstName);
+                ProfilePageActivity.this.setFragment();
+            }
 
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        //getUid()
     }
 }

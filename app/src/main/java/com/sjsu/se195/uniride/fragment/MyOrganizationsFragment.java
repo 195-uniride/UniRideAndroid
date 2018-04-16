@@ -15,6 +15,6 @@ public class MyOrganizationsFragment extends OrganizationListFragment {
     public Query getQuery(DatabaseReference databaseReference) {
         // All my organizations
         return databaseReference.child("user-organizations")
-                .child(getUid());
+                .child(super.uID);
     }
 }

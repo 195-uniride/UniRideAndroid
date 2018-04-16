@@ -94,4 +94,3 @@ public class  ShowOrganizationsActivity extends BaseActivity {
     }
 
 }
-
