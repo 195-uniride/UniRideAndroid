@@ -31,7 +31,7 @@ public class PostListRecyclerAdapter extends RecyclerView.Adapter<PostListRecycl
     @Override
     public SearchPostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_post, parent, false);
+                .inflate(R.layout.item_matched_post, parent, false);
 
         return new SearchPostViewHolder(itemView);
     }
@@ -60,42 +60,35 @@ public class PostListRecyclerAdapter extends RecyclerView.Adapter<PostListRecycl
 
     public class SearchPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView sourceView;
-        public TextView authorView;
-        public ImageView starView;
-        public TextView numStarsView;
-        public TextView destinationView;
+        private TextView sourceView;
+        private TextView authorView;
+        private TextView destinationView;
+        private TextView passengerCountTextView;
+        private TextView estimatedTravelTimeTextView;
+        private TextView estimatedTravelDistanceTextView;
 
         public SearchPostViewHolder(View itemView) {
             super(itemView);
 
             sourceView = (TextView) itemView.findViewById(R.id.post_source);
             authorView = (TextView) itemView.findViewById(R.id.post_author);
-            starView = (ImageView) itemView.findViewById(R.id.star);
-            numStarsView = (TextView) itemView.findViewById(R.id.post_num_stars);
             destinationView = (TextView) itemView.findViewById(R.id.post_destination);
 
+            passengerCountTextView = itemView.findViewById(R.id.post_passenger_count);
+            estimatedTravelTimeTextView = itemView.findViewById(R.id.carpool_estimated_trip_time);
+            estimatedTravelDistanceTextView = itemView.findViewById(R.id.carpool_estimated_trip_distance);
+
             itemView.setOnClickListener(this);
-        }
-
-        public void bindToPost(Post post, View.OnClickListener starClickListener) {
-            sourceView.setText(post.source);
-            authorView.setText(post.author);
-            numStarsView.setText(String.valueOf(post.starCount));
-            destinationView.setText(post.destination);
-
-            starView.setOnClickListener(starClickListener);
         }
 
         public void bindToPost(Post post) {
             sourceView.setText(post.source);
             authorView.setText(post.author);
-            numStarsView.setText(String.valueOf(post.starCount));
             destinationView.setText(post.destination);
-        }
 
-        public void bindStarClickListenerToPost(View.OnClickListener starClickListener) {
-            starView.setOnClickListener(starClickListener);
+            passengerCountTextView.setText("X / Y Passengers");
+            estimatedTravelTimeTextView.setText("X01 minutes");
+            estimatedTravelDistanceTextView.setText("Z23 miles");
         }
 
         @Override

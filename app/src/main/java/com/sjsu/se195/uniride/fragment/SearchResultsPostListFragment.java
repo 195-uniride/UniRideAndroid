@@ -96,7 +96,6 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
         System.out.println("postClicked = " + postClicked + " from " + postClicked.source);
 
         // Launch PostDetailActivity
-        // TODO:
         Intent intent = new Intent(getActivity(), PostDetailActivity.class);
         intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, "");
         intent.putExtra("postType", (postClicked instanceof RideRequestPost));

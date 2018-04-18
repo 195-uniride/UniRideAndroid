@@ -20,9 +20,9 @@
             <FrameLayout
                 android:id="@+id/post_fragment_placeholder"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                tools:layout="@layout/fragment_all_posts" />
+                tools:layout="@layout/fragment_all_posts"/>
 
         </LinearLayout>
     </ScrollView>
