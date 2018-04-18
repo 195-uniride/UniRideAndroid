@@ -53,7 +53,8 @@ public class SearchResultsActivity extends BaseActivity implements PostSearchRes
 
         System.out.println("....Sending bundle with searchResults = " + searchResults);
         // Add bundle arguments:
-        bundle.putParcelableArrayList("searchResults", searchResults); //putBoolean("postType", this.isShowingDriveOffers);
+        bundle.putParcelableArrayList("searchResults", searchResults);
+        bundle.putParcelableArrayList("potentialCarpoolResults", potentialCarpools);
 
         Fragment searchResultsFragment = new SearchResultsPostListFragment();
         searchResultsFragment.setArguments(bundle);

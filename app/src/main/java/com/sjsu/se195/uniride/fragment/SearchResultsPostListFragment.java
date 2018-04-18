@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.viewholder.OnItemClickListener;
 import com.sjsu.se195.uniride.viewholder.PostListRecyclerAdapter;
+import com.sjsu.se195.uniride.viewholder.PotentialCarpoolListRecyclerAdapter;
 
 import java.util.ArrayList;
 
@@ -23,10 +25,11 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
     private static final String TAG = "SearchResultsPostListFragment";
 
     private RecyclerView mRecycler;
-    private PostListRecyclerAdapter mAdapter;
+    private PotentialCarpoolListRecyclerAdapter mAdapter;
     private LinearLayoutManager mManager;
 
     private ArrayList<Post> mPostList;
+    private ArrayList<Carpool> mPotentialCarpools;
 
     public SearchResultsPostListFragment() {}
 
@@ -37,6 +40,8 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
 
         // Get list of Post objects to display:
         mPostList = getArguments().getParcelableArrayList("searchResults");
+
+        mPotentialCarpools = getArguments().getParcelableArrayList("potentialCarpoolResults");
 
         System.out.println("in SearchResultsPostListFragment: just got mPostList = " + mPostList);
 
@@ -80,7 +85,11 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
     private void loadPosts() {
         System.out.println("About to load posts.....");
 
-        mAdapter = new PostListRecyclerAdapter(mPostList);
+        // With Posts:
+        // mAdapter = new PostListRecyclerAdapter(mPostList);
+
+        // With Potential Carpool objects:
+        mAdapter = new PotentialCarpoolListRecyclerAdapter(mPotentialCarpools);
 
         mRecycler.setAdapter(mAdapter);
 

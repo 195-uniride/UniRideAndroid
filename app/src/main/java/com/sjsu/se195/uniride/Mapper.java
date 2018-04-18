@@ -50,14 +50,6 @@ public class Mapper {
 
     public Mapper(Carpool carpool) {
         try {
-//            LatLng driverSource = this.getLocationFromAddress(carpool.getDriverPost().source);
-//            LatLng destination = this.getLocationFromAddress(carpool.getDriverPost().destination);
-//
-//            ArrayList<LatLng> riderSources = new ArrayList<>();
-//            for (RideRequestPost riderPost : carpool.getRiderPosts()) {
-//                riderSources.add(this.getLocationFromAddress(riderPost.source));
-//            }
-
             String driverSource = carpool.getDriverPost().source.replaceAll(" ", "+");
             String destination = carpool.getDriverPost().destination.replaceAll(" ", "+");
 
@@ -91,8 +83,13 @@ public class Mapper {
 
     // Information methods:
 
-    // returns the
+    // returns the trip time (in seconds) of all legs of the carpool:
     public int getTotalTripTime() {
+        return getCarpoolTotalTripDurationValue(mDocument);
+    }
+
+    // returns the trip distance (in meters) of all legs of the carpool:
+    public int getTotalTripDistance() {
         return getCarpoolTotalTripDurationValue(mDocument);
     }
 
@@ -174,6 +171,54 @@ public class Mapper {
         }
 
         return duration;
+    }
+
+
+    private int getCarpoolTotalTripDistanceValue (Document doc) {
+        int distance = 0;
+
+        try {
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+            /*
+                XML format:
+                <route>
+                ...
+                    <leg>
+                        ...
+                        <distance>
+                            <value>22915</value>
+                            <text>22.9 km</text>
+                        </distance>
+                    </leg>
+                    <leg>
+                        ...
+                    </leg>
+                </route>
+             */
+
+            // Go to a list of "leg" tags, wit each leg tag having a "distance" tag with a "value" tag within it:
+            NodeList nodeList = (NodeList) xPath.evaluate("//leg/distance/value", doc, XPathConstants.NODESET);
+
+            // System.out.println("nodeList.getLength() = " + nodeList.getLength());
+
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                // System.out.println("Leg/Duration/Value: Node Name[" + i + "] = " + node.getNodeName());
+                // OUTPUT = Leg/Duration/Value: Node Name[0] = value
+                // System.out.println("Leg/Duration/Value: Node Value[" + i + "] = " + node.getTextContent());
+                // OUTPUT = Leg/Duration/Value: Node Value[0] = 1455
+
+                int legDistance = Integer.parseInt(node.getTextContent());
+
+                distance += legDistance;
+            }
+
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+
+        return distance;
     }
 
 //    //This method returns the latitude and longitude of an address

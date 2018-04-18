@@ -29,6 +29,9 @@ public class Carpool extends DriverOfferPost {
     private CarpoolState carpoolState;
     private Location currentLocation; //TODO: add setter. only if carpool ONGOING
     private int totalTripTime = -1; // in seconds; -1 represents an unset or invalid state.
+    private int totalTripDistance = -1; // in meters; -1 represents an unset or invalid state.
+
+    private Mapper carpoolMapper = null;
 
     // Constructors:
     //TODO: used by parties with passengers only.
@@ -63,6 +66,14 @@ public class Carpool extends DriverOfferPost {
 
     // Getters and Setters:
 
+    public int getNumberSeatsTaken() {
+        return (riderPosts == null)? 0 : riderPosts.size(); // if no riders set, return passenger count (all seats available).
+    }
+
+    public int getNumberSeatsAvailable() {
+        return (passengerCount - getNumberSeatsTaken()); // if no riders set, return passenger count (all seats available).
+    }
+
     public List<RideRequestPost> getRiderPosts() {
         return riderPosts;
     }
@@ -96,7 +107,7 @@ public class Carpool extends DriverOfferPost {
 
     public boolean areAllTripTimeLimitsSatisfied() {
 
-        System.out.println("getTotalTripTime() = " + getTotalTripTime()); // TODO remove....
+        System.out.println("getTotalTripTime() = " + getEstimatedTotalTripTimeInSeconds()); // TODO remove....
 
         System.out.println("getEarliestArrivalTimeOfParticipants() = " + getEarliestArrivalTimeOfParticipants()); // TODO remove....
 
@@ -107,12 +118,9 @@ public class Carpool extends DriverOfferPost {
         // Calculate: getEarliestArrivalTimeOfParticipants - getTotalTripTime => time need to leave by.
         // can then check if departure times are within this.
 
-        // Convert totalTripTime to minutes: (NOTE: OK to floor by int division)
-        int totalTripTimeInMinutes = getTotalTripTime() / 60; // time in seconds * (1 min / 60 sec) = time in minutes.
-
         // Need to leave before (earliest arrival time - total trip time):
 
-        int timeNeedToLeaveBefore = getEarliestArrivalTimeOfParticipants() - totalTripTimeInMinutes;
+        int timeNeedToLeaveBefore = getEarliestArrivalTimeOfParticipants() - getEstimatedTotalTripTimeInMinutes();
 
         System.out.println("timeNeedToLeaveBefore = " + timeNeedToLeaveBefore); // TODO remove....
 
@@ -134,9 +142,9 @@ public class Carpool extends DriverOfferPost {
     }
 
     /*
-        Returns the expected total trip time of the carpool.
+        Returns the estimated total trip time (in seconds) of the carpool.
      */
-    public int getTotalTripTime() {
+    public int getEstimatedTotalTripTimeInSeconds() {
         // Only calculate the total trip time if necessary:
         if (totalTripTime == -1) { // if totalTripTime is unset or in an invalid state:
             totalTripTime = calculateTotalTripTime();
@@ -144,6 +152,37 @@ public class Carpool extends DriverOfferPost {
 
         return totalTripTime;
     }
+
+    /*
+        Returns the estimated total trip time (in minutes) of the carpool.
+     */
+    public int getEstimatedTotalTripTimeInMinutes() {
+        // Convert totalTripTime to minutes: (NOTE: OK to floor by int division)
+        return (getEstimatedTotalTripTimeInSeconds() / 60); // time in seconds * (1 min / 60 sec) = time in minutes.
+    }
+
+
+    /*
+        Returns the estimated total trip distance (in meters) of the carpool.
+     */
+    public int getEstimatedTotalTripDistanceInMeters() {
+        // Only calculate the total distance time if necessary:
+        if (totalTripDistance == -1) { // if totalTripDistance is unset or in an invalid state:
+            totalTripDistance = calculateTotalTripDistance();
+        }
+
+        return totalTripDistance;
+    }
+
+    /*
+        Returns the estimated total trip distance (in km) of the carpool.
+     */
+    public double getEstimatedTotalTripDistanceInKilometers() {
+        // Convert totalTripDistance to km:
+        return (0.001 * getEstimatedTotalTripTimeInSeconds()); // distance in meters * (1 km / 1000 meters) = distance in km.
+    }
+
+
 
     /*
         Returns the arrival time (in format HHmm, i.e. 1325 for 1:25pm) of the
@@ -202,11 +241,34 @@ public class Carpool extends DriverOfferPost {
             System.out.println("...and rider = " + riderPost + "; with riderPost.source = " + riderPost.source + "....");
         }
 
-        System.out.println("...now starting Mapper....");
+        return getCarpoolMapper().getTotalTripTime();
+    }
 
-        Mapper mapper = new Mapper(this);
+    /*
+        Returns the calculated expected total trip distance of the carpool.
+         Distance is calculated by using a Mapper to perform a
+         Google Maps API request with the carpool's trip details.
+     */
+    private int calculateTotalTripDistance() {
+        System.out.println("Calculating Total Trip Distance...");
 
-        return mapper.getTotalTripTime();
+        System.out.println("...for Carpool: driver = " + getDriverPost() + "....");
+
+        for (RideRequestPost riderPost : getRiderPosts()) {
+            System.out.println("...and rider = " + riderPost + "; with riderPost.source = " + riderPost.source + "....");
+        }
+
+        return getCarpoolMapper().getTotalTripDistance();
+    }
+
+
+    private Mapper getCarpoolMapper() {
+        if (carpoolMapper == null) {
+            System.out.println("...now starting Mapper....");
+            carpoolMapper = new Mapper(this);
+        }
+
+        return carpoolMapper;
     }
 
     // State-changing methods:
@@ -239,4 +301,7 @@ public class Carpool extends DriverOfferPost {
 
     // TODO: Add Parcelable implementation:
     // ...
+
+
+
 }
