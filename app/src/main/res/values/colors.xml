@@ -12,10 +12,12 @@
 
     //UniRide Theme
     <color name="red">#FFFF4444</color>
-    <color name="gradient0"> #355C7D </color>
-    <color name="gradient1"> #6C5B7B </color>
-    <color name="gradient2"> #C06C84</color>
-    <color name="gradient3"> #F67280</color>
-    <color name="gradient4"> #F8B195</color>
+    <color name="gradient0">#355C7D</color>
+    <color name="gradient1">#6C5B7B</color>
+    <color name="gradient2">#C06C84</color>
+    <color name="gradient3">#F67280</color>
+    <color name="gradient4">#F8B195</color>
+
+    <color name="black_overlay">#66000000</color>
 
 </resources>

@@ -20,7 +20,7 @@ public class Carpool extends DriverOfferPost {
 
     private DriverOfferPost driverPost;
     private String carpoolId;
-    private ArrayList<RideRequestPost> riderPosts;
+    private List<RideRequestPost> riderPosts;
     private Date actualStartTime; //TODO: change to time.zonedDateTime
     private Date actualCompletionTime;
     private enum CarpoolState{
@@ -49,6 +49,16 @@ public class Carpool extends DriverOfferPost {
         //TODO: get plannedStartTime from driver post (when driver has time)
     }
 
+
+    public List<RideRequestPost> getRiderPosts() {
+      return riderPosts;
+    }
+
+    public DriverOfferPost getDriverPost() {
+      return driverPost;
+    }
+
+    
     // Copy Constructor for duplicating a carpool object (clone):
     public Carpool(Carpool carpoolToCopy) {
         this(carpoolToCopy.getDriverPost()); // Call the Constructor with the Drive Offer Post.
@@ -102,6 +112,7 @@ public class Carpool extends DriverOfferPost {
             super(message);
         }
     }
+
 
     // Information methods:
 
@@ -291,7 +302,6 @@ public class Carpool extends DriverOfferPost {
         HashMap<String, Object> result = new HashMap<>();
         result.put("carpoolId", carpoolId);
         result.put("driverPost", driverPost);
-        result.put("riderPosts", riderPosts);
         result.put("actualStartTime", actualStartTime);
         result.put("actualCompletionTime", actualCompletionTime);
         result.put("carpoolState", carpoolState);
@@ -299,9 +309,21 @@ public class Carpool extends DriverOfferPost {
         return result;
     }
 
+    public Map<String, RideRequestPost> riderToMap(){
+        HashMap<String, RideRequestPost> result = new HashMap<>();
+        for(RideRequestPost r : this.riderPosts){
+            System.out.println("in Carpool:riderToMap, rider ID = " + r.uid);
+            result.put(r.uid, r);
+        }
+        return result;
+    }
+
+    public Map<String, String> userToMap(String role){
+        HashMap<String, String> result = new HashMap<>();
+        result.put("userRole", role);
+        return result;
+    }
     // TODO: Add Parcelable implementation:
     // ...
-
-
 
 }

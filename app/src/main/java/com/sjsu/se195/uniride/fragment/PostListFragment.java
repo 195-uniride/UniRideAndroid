@@ -9,8 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,7 +24,9 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.CarpoolDetailActivity;
 import com.sjsu.se195.uniride.MainSubcategoryActivity;
+import com.sjsu.se195.uniride.NewCarpoolActivity;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.Carpool;
@@ -46,7 +52,10 @@ public abstract class PostListFragment extends Fragment {
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
-    protected boolean postType; //true = driverpost ; false = riderequest
+    protected boolean postType; //false = driverpost ; true = riderequest
+
+    private DriverOfferPost mDriverPost;
+    private RideRequestPost mRideRequestPost;
 
     public PostListFragment() {}
 
@@ -55,6 +64,7 @@ public abstract class PostListFragment extends Fragment {
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         postType = getArguments().getBoolean("postType");
+        System.out.println("PostListFragment line67 PostType = " + postType);
         View rootView;
 
         rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
@@ -79,7 +89,6 @@ public abstract class PostListFragment extends Fragment {
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
         mRecycler.setLayoutManager(mManager);
-
         // Get User Object and Set up FirebaseRecyclerAdapter with the Query:
         setCurrentUserAndLoadPosts();
 
@@ -206,12 +215,19 @@ public abstract class PostListFragment extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-                        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
-                        intent.putExtra("postType", postType);
-                        startActivity(intent);
+                        if (getActivity() instanceof NewCarpoolActivity) {
+                            System.out.println("current activity is newcarpoolactivity");
+                            //setPostsAndCreateCarpool(postRef);
+                            //Call the method in NewCarpoolActivity
+                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
+                        }
+                        else {
+                            // Launch PostDetailActivity
+                            Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+                            intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
+                            intent.putExtra("postType", postType);
+                            startActivity(intent);
+                        }
                     }
                 });
 
