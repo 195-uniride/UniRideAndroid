@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.sjsu.se195.uniride"
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -45,6 +45,7 @@ dependencies {
 
     compile 'com.google.firebase:firebase-auth:11.8.0'
     compile 'com.google.firebase:firebase-database:11.8.0'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
 
     compile 'com.synnapps:carouselview:0.1.4'
 
@@ -52,6 +53,8 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test:runner:0.5'
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
+    compile 'devlight.io:navigationtabbar:1.2.5'
+    compile 'com.yalantis:phoenix:1.2.3'
 }
 configurations.all {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->

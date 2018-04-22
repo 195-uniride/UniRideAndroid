@@ -22,14 +22,14 @@ public class User {
     }
 
     // Sets email and sets all other user attributes to empty string ("").
-    public User(String email) {
+    public User(String email, String first, String last) {
         this.email = email;
 
         // set the other fields as empty strings:
         this.username = "";
-        this.firstName = "";
-        this.lastName = "";
-        this.phoneNumber = "";
+        this.firstName = first;
+        this.lastName = last;
+//        this.phoneNumber = "";
         this.defaultOrganizationId = "";
     }
 

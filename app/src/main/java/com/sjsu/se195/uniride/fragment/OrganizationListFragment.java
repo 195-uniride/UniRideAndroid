@@ -68,14 +68,14 @@ public abstract class OrganizationListFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query organizationsQuery = getQuery(mDatabase);
-        Log.d(TAG, "organization query: " + organizationsQuery);
+        //Log.d(TAG, "organization query: " + organizationsQuery);
 
         mAdapter = new FirebaseRecyclerAdapter<Organization, OrganizationViewHolder>(Organization.class, R.layout.item_organization,
                 OrganizationViewHolder.class, organizationsQuery) {
 
             @Override
             protected void populateViewHolder(final OrganizationViewHolder viewHolder, final Organization model, final int position) {
-                Log.d(TAG, "<1> organization model: " + model.name);//TODO: investigate why My Organization organizations are null here...
+                //Log.d(TAG, "<1> organization model: " + model.name);//TODO: investigate why My Organization organizations are null here...
 
                 final DatabaseReference organizationRef = getRef(position); //TODO: investigate: this is fine (viewing the item works).
 
@@ -92,7 +92,7 @@ public abstract class OrganizationListFragment extends Fragment {
                 });
 
                 // Bind Organization to ViewHolder
-                Log.d(TAG, "<2> organization model: " + model.name);//TODO: investigate why My Organization organizations are null here...
+                //Log.d(TAG, "<2> organization model: " + model.name);//TODO: investigate why My Organization organizations are null here...
                 viewHolder.bindToOrganization(model);
             }
         };

@@ -124,7 +124,7 @@ public class PostDetailActivity extends MainActivity
 
         alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
         // Initialize Views
-        mAuthorView = (TextView) findViewById(R.id.post_author);
+        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
         mSourceView = (TextView) findViewById(R.id.post_source);
         mDestinationView = (TextView) findViewById(R.id.post_destination);
         mCommentField = (EditText) findViewById(R.id.field_comment_text);

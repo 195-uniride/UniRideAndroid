@@ -5,23 +5,22 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:layout_centerHorizontal="true"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_marginTop="10dp">
 
     <ImageView
         android:id="@+id/post_author_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_account_circle_40" />
+        android:src="@drawable/ic_user_outline" />
 
     <TextView
-        android:id="@+id/post_author"
-        style="@style/Base.TextAppearance.AppCompat.Small"
+        android:id="@+id/post_cardview_author_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:textColor="@color/colorPrimaryDark"
         android:gravity="center_vertical"
-        tools:text="Jane Doe" />
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:maxLength="30" />
 
 </LinearLayout>

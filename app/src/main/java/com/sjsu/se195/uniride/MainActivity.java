@@ -16,26 +16,56 @@
 
 package com.sjsu.se195.uniride;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+import devlight.io.library.ntb.NavigationTabBar;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class  MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_0_main);
+
+        System.out.println("About to start service.");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
@@ -54,10 +84,22 @@ public class  MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        setNavBar(this);
 
-//        // TESTING: TODO: Remove...
-//        Mapper mapper = new Mapper();
-//        mapper.test();
+        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+        mUser.getIdToken(true)
+                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                    public void onComplete(@NonNull Task<GetTokenResult> task) {
+                        if (task.isSuccessful()) {
+                            String idToken = task.getResult().getToken();
+                            pushTokenToFirebase(idToken);
+                            // Send token to your backend via HTTPS
+                            // ...
+                        } else {
+                            // Handle error -> task.getException();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -87,5 +129,22 @@ public class  MainActivity extends BaseActivity {
         }
     }
 
+    //This method will push this Firebasetoken online so that
+    //  the cloud functions may use it.
+    public void pushTokenToFirebase(String token){
+        Map<String, Object> childUpdates = new HashMap<>();
+        String instance_id = FirebaseInstanceId.getInstance().getId();
+        String instance_token = FirebaseInstanceId.getInstance().getToken();
+
+        System.out.println(getUid());
+        System.out.println(FirebaseInstanceId.getInstance().getId());
+        System.out.println(token);
+        System.out.println(instance_token);
+
+        childUpdates.put("/users/"+getUid()+"/tokens/", token);
+        childUpdates.put("/users/"+getUid()+"/firebase_instance_id/", instance_id);
+        childUpdates.put("/users/"+getUid()+"/firebase_instance_token/", instance_token);
+        mDatabase.updateChildren(childUpdates);
+    }
 
 }
