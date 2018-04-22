@@ -71,7 +71,7 @@ public class PostListRecyclerAdapter extends RecyclerView.Adapter<PostListRecycl
             super(itemView);
 
             sourceView = (TextView) itemView.findViewById(R.id.post_source);
-            authorView = (TextView) itemView.findViewById(R.id.post_author);
+            authorView = (TextView) itemView.findViewById(R.id.post_cardview_author_name);
             destinationView = (TextView) itemView.findViewById(R.id.post_destination);
 
             passengerCountTextView = itemView.findViewById(R.id.post_passenger_count);
