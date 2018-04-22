@@ -48,16 +48,6 @@ public class Carpool extends DriverOfferPost {
         riderPosts = new ArrayList<RideRequestPost>();
         //TODO: get plannedStartTime from driver post (when driver has time)
     }
-
-
-    public List<RideRequestPost> getRiderPosts() {
-      return riderPosts;
-    }
-
-    public DriverOfferPost getDriverPost() {
-      return driverPost;
-    }
-
     
     // Copy Constructor for duplicating a carpool object (clone):
     public Carpool(Carpool carpoolToCopy) {
