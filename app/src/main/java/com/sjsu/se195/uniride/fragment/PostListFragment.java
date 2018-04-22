@@ -252,8 +252,8 @@ public abstract class PostListFragment extends Fragment {
                 });
                 String uid = model.uid;
                 mUserReference = mDatabase.child("users").child(uid);
-                String username= getPostUser();
-                if(username==null){
+                String username = getPostUser();
+                if(username == null) {
                     username = "#" + uid.substring(uid.length()-5);
                 }
                 // Determine if the current user has liked this post and set UI accordingly
@@ -284,21 +284,26 @@ public abstract class PostListFragment extends Fragment {
                     }
                 });
             }
-            private String getPostUser(){
+            private String getPostUser() {
                 ValueEventListener userListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         postUser = dataSnapshot.getValue(User.class);
-                        boolean name = false;
-                        if(null != postUser.firstName){
-                            username = postUser.firstName;
-                            name = true;
+                        boolean hasName = false;
+
+                        if (postUser != null) {
+                            if (postUser.firstName != null) {
+                                username = postUser.firstName;
+                                hasName = true;
+                            }
+
+                            if(postUser.lastName != null) {
+                                username = username + " " + postUser.lastName;
+                                hasName = true;
+                            }
                         }
-                        if(null != postUser.lastName){
-                            username = username + " " + postUser.lastName;
-                            name = true;
-                        }
-                        if(!name){
+
+                        if(!hasName){
                             username = null;
                         }
                     }
