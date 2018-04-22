@@ -201,9 +201,13 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
                 String theFirst = mFirstNameField.getText().toString();
                 String theLast = mLastNameField.getText().toString();
                 String thePhoneNumber = mPhoneNumberField.getText().toString();
-                String organizationName = orgSpinner.getSelectedItem().toString();
 
-                String organizationId = OrganizationNameIdMap.get(organizationName);
+                String organizationId = "";
+                if (orgSpinner.getSelectedItem() != null) {
+                    String organizationName = orgSpinner.getSelectedItem().toString();
+
+                    organizationId = OrganizationNameIdMap.get(organizationName);
+                }
 
                 updateInformation(theFirst, theLast, thePhoneNumber, organizationId);
                 // falls through.

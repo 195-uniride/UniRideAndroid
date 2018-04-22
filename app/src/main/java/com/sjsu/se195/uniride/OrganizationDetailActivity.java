@@ -5,6 +5,7 @@ package com.sjsu.se195.uniride;
  */
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -141,7 +142,11 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         // Finish this Activity, back to the stream
         setEditingEnabled(true);
-        finish();
+
+        // Go back to Main Activity when done:
+        Intent intent = new Intent(OrganizationDetailActivity.this, MainActivity.class);
+        startActivity(intent);
+        // finish(); // Don't use.
     }
 
     private void setEditingEnabled(boolean enabled) {

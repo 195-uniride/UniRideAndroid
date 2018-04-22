@@ -68,7 +68,9 @@ public class  MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+      
         setNavBar(this);
+
     }
 
     @Override

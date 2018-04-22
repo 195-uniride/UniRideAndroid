@@ -36,8 +36,11 @@
         <activity
             android:name=".NewPostActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+      
         <activity android:name=".MainSubcategoryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+      
+        <activity android:name=".SearchResultsActivity" />
         <activity android:name=".NewOrganizationActivity" />
         <activity
             android:name=".PostDetailActivity"
@@ -56,8 +59,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CarpoolDetailActivity"
+
+        <activity
+            android:name=".CarpoolDetailActivity"
             android:label="@string/title_activity_carpool_detail"/>
+        <activity
+            android:name=".NewCarpoolActivity"
+            android:label="@string/title_activity_new_carpool"></activity>
+
     </application>
 
 </manifest>
