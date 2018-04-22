@@ -2,39 +2,72 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/feed_background">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
+    <LinearLayout
+        android:id="@+id/button_rider_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="2dp">
+
         <LinearLayout
+            android:id="@+id/button_driver_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="4dp"
+            android:layout_height="125dp"
             android:orientation="vertical"
-            android:weightSum="2">
-
-            <Button
-                android:id="@+id/new_ride_request_post"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_subcategory_new_post"
-                android:letterSpacing="0.1"
-                android:text="@string/rider_post_button_title"
-                android:textAllCaps="false"
-                android:textColor="@color/primaryWhite"
-                android:textSize="18dp"
-                android:fontFeatureSettings="smcp"/>
-
-            <Spinner
-                android:id="@+id/chosen_organization"
+            android:gravity="center_horizontal">
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:dropDownWidth="match_parent"
-                android:prompt="@string/organizations_prompt"
-                android:spinnerMode="dialog" />
+                android:layout_marginTop="3dp"
+                android:padding="5dp"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:id="@+id/driver_feed_back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_arrow_back_white_24dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rider_feed_title"
+                    android:textColor="@color/gradient3"
+                    android:textSize="20dp"
+                    android:layout_centerInParent="true"/>
+                <Spinner
+                    android:id="@+id/chosen_organization"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:padding="10dp"
+                    android:background="@drawable/custom_spinner"
+                    android:prompt="@string/organizations_prompt"
+                    android:spinnerMode="dialog" />
+            </RelativeLayout>
+            <Button
+                android:id="@+id/new_ride_request_post"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:elevation="10dp"
+                android:text="@string/rider_post_button_title"/>
+        </LinearLayout>
+        <!--TODO: change dialog background color
+        android:spinnerMode="dialog"-->
+
+
+        <!-- TODO: add "class" instead of "name" -->
 
             <FrameLayout
                 android:id="@+id/post_fragment_placeholder"

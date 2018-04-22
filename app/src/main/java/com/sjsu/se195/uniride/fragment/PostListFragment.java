@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -35,6 +36,7 @@ import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.viewholder.PostViewHolder;
+import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,9 +46,12 @@ public abstract class PostListFragment extends Fragment {
     private static final String TAG = "PostListFragment";
 
     private User currentUser;
+    private User postUser;
+    private PullToRefreshView mPullToRefreshView;
 
     // [START define_database_reference]
     protected DatabaseReference mDatabase;
+    protected DatabaseReference mUserReference;
     // [END define_database_reference]
 
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
@@ -74,6 +79,20 @@ public abstract class PostListFragment extends Fragment {
 
         mRecycler = rootView.findViewById(R.id.messages_list);
         mRecycler.setHasFixedSize(true);
+
+        mPullToRefreshView = (PullToRefreshView) rootView.findViewById(R.id.pull_to_refresh);
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullToRefreshView.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
+
         return rootView;
     }
 
@@ -199,6 +218,7 @@ public abstract class PostListFragment extends Fragment {
         //getUid()
     }
 
+    String username;
     private void loadPosts() {
         System.out.println("About to load posts....."); // TODO: investigate why fragment reload not calling again...
         // Set up FirebaseRecyclerAdapter with the Query
@@ -230,16 +250,20 @@ public abstract class PostListFragment extends Fragment {
                         }
                     }
                 });
-
+                String uid = model.uid;
+                mUserReference = mDatabase.child("users").child(uid);
+                String username= getPostUser();
+                if(username==null){
+                    username = "#" + uid.substring(uid.length()-5);
+                }
                 // Determine if the current user has liked this post and set UI accordingly
                 if (model.stars.containsKey(getUid())) {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
                 } else {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
                 }
-
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(model, new View.OnClickListener() {
+                viewHolder.bindToPost(username, postType, model, new View.OnClickListener() {
                     @Override
                     public void onClick(View starView) {
                         // Need to write to both places the post is stored
@@ -260,11 +284,36 @@ public abstract class PostListFragment extends Fragment {
                     }
                 });
             }
+            private String getPostUser(){
+                ValueEventListener userListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        postUser = dataSnapshot.getValue(User.class);
+                        boolean name = false;
+                        if(null != postUser.firstName){
+                            username = postUser.firstName;
+                            name = true;
+                        }
+                        if(null != postUser.lastName){
+                            username = username + " " + postUser.lastName;
+                            name = true;
+                        }
+                        if(!name){
+                            username = null;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                    }
+                };
+                mUserReference.addListenerForSingleValueEvent(userListener);
+                return username;
+            }
         };
         mRecycler.setAdapter(mAdapter);
     }
-
-
     public User getCurrentUser() {
         return currentUser;
     }

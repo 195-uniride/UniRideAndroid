@@ -16,30 +16,24 @@ public class User {
     public String lastName;
     public String phoneNumber;
     public String defaultOrganizationId;
+    public String imageURL;
 
     public User() {
         //empty constructor for firebase
     }
 
     // Sets email and sets all other user attributes to empty string ("").
-    public User(String email) {
+    public User(String email, String first, String last, String phone, String imageURL) {
         this.email = email;
 
         // set the other fields as empty strings:
         this.username = "";
-        this.firstName = "";
-        this.lastName = "";
-        this.phoneNumber = "";
+        this.firstName = first;
+        this.lastName = last;
+        this.phoneNumber = phone;
         this.defaultOrganizationId = "";
-    }
+        this.imageURL = imageURL;
 
-    public User(String username, String firstName, String lastName, String email, String phoneNumber, String defaultOrganizationId) {
-        this.email = email;
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.defaultOrganizationId = defaultOrganizationId;
     }
 
 
