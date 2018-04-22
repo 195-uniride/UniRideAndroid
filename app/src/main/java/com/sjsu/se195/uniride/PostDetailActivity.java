@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -47,6 +48,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
@@ -59,12 +62,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback{
+public class PostDetailActivity extends MainActivity
+        implements View.OnClickListener, OnMapReadyCallback {
 
     private static final String TAG = "PostDetailActivity";
 
     public static final String EXTRA_POST_KEY = "post_key";
-    private boolean postType;
+    private boolean postType; // True = RideRequestPost, False = DirverOfferPost
 
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
@@ -81,6 +85,7 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private Button mCommentButton;
     private FloatingActionButton mShowMapButton;
     private FloatingActionButton mCreateCarpoolButton;
+    private FloatingActionButton mFindMatchingPostsButton;
     private RecyclerView mCommentsRecycler;
     View my_view;
 
@@ -108,30 +113,15 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         postType = getIntent().getExtras().getBoolean("postType");
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        if (mPostKey == null) {
-            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+        if (mPostKey == null || mPostKey.equals("")) {
+            mPost = getIntent().getParcelableExtra("post");
+
+            if (mPost == null) {
+                throw new IllegalArgumentException("PostDetailActivity: Must pass EXTRA_POST_KEY or Post Object");
+            }
         }
 
-        ///---
-        getIntent().getExtras().get("");
-        ///----
 
-        // Initialize Database
-        if(postType){
-            mPostReference = FirebaseDatabase.getInstance().getReference()
-                    .child("posts").child("rideRequests").child(mPostKey);
-            mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                    .child("post-comments").child(mPostKey);
-        }else{
-            mPostReference = FirebaseDatabase.getInstance().getReference()
-                    .child("posts").child("driveOffers").child(mPostKey);
-            mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                    .child("post-comments").child(mPostKey);
-        }
-
-        System.out.println(mPostReference.toString());
-        /*mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("post-comments").child(mPostKey);*/
         alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
@@ -154,8 +144,13 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         my_view = findViewById(R.id.for_map_layout);
+
         mCreateCarpoolButton = (FloatingActionButton) findViewById(R.id.fab_create_carpool);
+
+        mFindMatchingPostsButton = (FloatingActionButton) findViewById(R.id.fab_find_matching_posts);
+
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+
         if(my_view.getVisibility()==View.VISIBLE){
             mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
         }
@@ -231,10 +226,26 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         mCreateCarpoolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PostDetailActivity.this, CarpoolDetailActivity.class);
-                intent.putExtra("isRiderPost", postType);
-                // intent.putExtra("post", (Parcelable) mPost); // TODO: jackass insists
+                Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
+                intent.putExtra("postType", postType);
+
                 intent.putExtra("postId", mPostKey); // for: FirebaseDatabase.getInstance().getReference().child("posts").child("rideRequests").child(mPostKey);
+
+                System.out.println("Starting NewCarpoolActivity...");
+                startActivity(intent);
+            }
+        });
+
+        mFindMatchingPostsButton.setEnabled(false);
+        mFindMatchingPostsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                System.out.println("..... SENDING POST FOR SEARCHING .....");
+                System.out.println("..... Sending mPost = " + mPost + "; with mPost.source = " + mPost.source);
+
+                Intent intent = new Intent(PostDetailActivity.this, SearchResultsActivity.class);
+                intent.putExtra("post", mPost); // TODO fix
 
                 startActivity(intent);
             }
@@ -244,6 +255,37 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     @Override
     public void onStart() {
         super.onStart();
+
+        if (mPost == null) { // If post was not loaded directly from Intent.
+            loadPostFromFirebase();
+        }
+        else {
+            setupViewsForPost(mPost);
+
+            // Once Post is loaded:
+            mFindMatchingPostsButton.setEnabled(true);
+        }
+
+        // TODO: comment section if sent Post object...
+    }
+
+
+    private void loadPostFromFirebase() {
+
+        // Initialize Database
+        if(postType){
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("rideRequests").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }else{
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("driveOffers").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+
+
         // Add value event listener to the post
         // [START post_value_event_listener]
         ValueEventListener postListener = new ValueEventListener() {
@@ -254,41 +296,21 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                 if(postType){
                     RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
-                    mAuthorView.setText(post.author);
-                    mSourceView.setText(post.source);
-                    mDestinationView.setText(post.destination);
-                    source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-                    dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-                    source_marker = new MarkerOptions()
-                            .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-                            .title("Source")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-                    destination_marker = new MarkerOptions()
-                            .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-                            .title("Destination")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+                    setupViewsForPost(post);
 
                     mPost = post;
                 }
                 else{
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
-                    mAuthorView.setText(post.author);
-                    mSourceView.setText(post.source);
-                    mDestinationView.setText(post.destination);
-                    source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-                    dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-                    source_marker = new MarkerOptions()
-                            .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-                            .title("Source")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-                    destination_marker = new MarkerOptions()
-                            .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-                            .title("Destination")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+                    setupViewsForPost(post);
 
                     mPost = post;
                 }
+
+                // Once Post is loaded:
+                mFindMatchingPostsButton.setEnabled(true);
+
                 // [END_EXCLUDE]
             }
 
@@ -323,7 +345,26 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         }
 
         // Clean up comments listener
-        mAdapter.cleanupListener();
+        if (mAdapter != null) {
+            mAdapter.cleanupListener();
+        }
+
+    }
+
+    private void setupViewsForPost(Post post) {
+        mAuthorView.setText(post.author);
+        mSourceView.setText(post.source);
+        mDestinationView.setText(post.destination);
+        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+        source_marker = new MarkerOptions()
+                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+                .title("Source")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        destination_marker = new MarkerOptions()
+                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+                .title("Destination")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
     }
 
     @Override
@@ -361,6 +402,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                     }
                 });
     }
+
+
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 

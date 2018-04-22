@@ -36,6 +36,7 @@
             android:name=".NewPostActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainSubcategoryActivity" />
+        <activity android:name=".SearchResultsActivity" />
         <activity android:name=".NewOrganizationActivity" />
         <activity
             android:name=".PostDetailActivity"
@@ -57,8 +58,10 @@
         </activity>
         <activity
             android:name=".CarpoolDetailActivity"
-            android:label="@string/title_activity_carpool_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_carpool_detail"/>
+        <activity
+            android:name=".NewCarpoolActivity"
+            android:label="@string/title_activity_new_carpool"></activity>
     </application>
 
 </manifest>
