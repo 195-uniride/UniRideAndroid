@@ -1,5 +1,8 @@
 package com.sjsu.se195.uniride.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
@@ -12,7 +15,7 @@ import java.util.Map;
 public class RideRequestPost extends Post {
     private LatLng pickuppoint;
 
-    public RideRequestPost(){}
+    public RideRequestPost() {}
 
     //Constructer
     public RideRequestPost(String uid, String author, String source, String destination
@@ -44,4 +47,49 @@ public class RideRequestPost extends Post {
         result.put("stars", stars);
         return result;
     }
+
+
+    // Parcelable methods:
+
+    // Constructor for loading from a Parcel:
+    public RideRequestPost(Parcel in) {
+
+        super(in);
+
+        this.pickuppoint = in.readParcelable(LatLng.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+
+        super.writeToParcel(out, flags);
+
+        out.writeParcelable(pickuppoint, flags);
+    }
+
+    // After implementing the `Parcelable` interface, we need to create the
+    // `Parcelable.Creator<MyParcelable> CREATOR` constant for our class;
+    // Notice how it has our class specified as its type.
+    public static final Parcelable.Creator<RideRequestPost> CREATOR
+            = new Parcelable.Creator<RideRequestPost>() {
+
+        // This simply calls our new constructor (typically private) and
+        // passes along the unmarshalled `Parcel`, and then returns the new object!
+        @Override
+        public RideRequestPost createFromParcel(Parcel in) {
+            return new RideRequestPost(in);
+        }
+
+        // We just need to copy this and change the type to match our class.
+        @Override
+        public RideRequestPost[] newArray(int size) {
+            return new RideRequestPost[size];
+        }
+    };
+
 }

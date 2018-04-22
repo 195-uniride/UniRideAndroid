@@ -215,7 +215,6 @@ public abstract class PostListFragment extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         if (getActivity() instanceof NewCarpoolActivity) {
                             System.out.println("current activity is newcarpoolactivity");
                             //setPostsAndCreateCarpool(postRef);
@@ -229,8 +228,6 @@ public abstract class PostListFragment extends Fragment {
                             intent.putExtra("postType", postType);
                             startActivity(intent);
                         }
-
-
                     }
                 });
 
@@ -272,140 +269,7 @@ public abstract class PostListFragment extends Fragment {
         return currentUser;
     }
 
-    // ~~~~~~~~~~~~~~~~~~~~ SEARCHING: ~~~~~~~~~~~~~~~~~~~~
-    // TODO: move to own fragment? SearchFragment (?)
 
-    // ==== SEARCH ALGORITHM:
-    // parameters:
-    // - userPost: the post that we are checking every other post against.
-    // - user: the owner of the user post
-    public ArrayList<Post> getSearchResults(Post userPost, User user) {
-
-        ArrayList<Post> matchedPosts = new ArrayList<Post>();
-
-        // step 1: filter posts by type (drive offer or rider request): (in getAllPostsBySearchType)
-        boolean isLookingForDriver = true;
-
-        if (userPost instanceof DriverOfferPost) {
-            isLookingForDriver = false;
-        }
-        else { // if (userPost instanceof RideRequestPost) {
-            isLookingForDriver = true;
-        }
-
-
-        // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
-/*
- TO ADD ONCE tripDate IS ADDED TO FIREBASE:
-
-        Query searchQuery = getAllPostsBySearchType(isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate); // TODO: add date field.
-
-        if (isLookingForDriver) {
-            findDriveOffers(searchQuery);
-        }
-        else {
-            findRideRequests(searchQuery);
-        }
-*/
-
-
-        // step 3: filter posts by general area:
-
-//        matchedPosts = filterPostsByGeneralArea(matchedPosts);
-
-        // step 4: filter posts based on
-        //  whether each participant can reach the destination on time or not:
-
-//        matchedPosts = filterPostsByTimePossibility(matchedPosts);
-
-        // return the matches:
-
-        return matchedPosts;
-    }
-
-    private Query getAllPostsBySearchType(boolean isLookingForDriver) {
-        if (isLookingForDriver) {
-            return getAllDriveOfferPosts();
-        }
-        else {
-            return getAllRideRequestPosts();
-        }
-    }
-
-
-    private void findRideRequests(Query searchQuery) {
-        searchQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    // Handle each post:
-                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class); // can use parameter & getClass?
-
-                    // TODO: determine if each post is a possible post (if som add to some global list?)
-                    //....
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-    }
-
-    private void findDriveOffers(Query searchQuery) {
-        // TODO....
-    }
-
-    // ==== Steps:
-
-
-    // step 1: filter posts by type (drive offer or rider request):
-    private ArrayList<Post> getAllDriveOffers() {
-        ArrayList<Post> driveOfferPosts = new ArrayList<Post>();
-
-        // search Firebase: organization-posts/[user's org]/driveOffers
-
-
-
-        //TODO: research how to return ArrayList from Firebase query....
-        return driveOfferPosts;
-    }
-
-    private ArrayList<Post> getAllRideRequests() {
-        ArrayList<Post> rideRequestPosts = new ArrayList<Post>();
-
-        //....TODO:
-        return rideRequestPosts;
-    }
-
-    /*
-
-    // step 2: filter posts by date:
-
-    private ArrayList<Post> filterPostsByDate(ArrayList<Post> posts, Date filterDate) {
-
-        // search firebase: organization-posts/[user's org]/driveOffers WHERE post.date = filterDate
-    }
-
-    // step 3: filter posts by general area:
-    private ArrayList<Post> filterPostsByGeneralArea(ArrayList<Post> posts) {
-
-        //....
-    }
-
-    // step 4: filter posts based on
-    //  whether each participant can reach the destination on time or not:
-    private ArrayList<Post> filterPostsByTimePossibility(ArrayList<Post> posts) {
-
-        //....
-    }
-
-    */
-
-    // ~~~~~~~~~~~~~~~~~~~~ SEARCHING end. ~~~~~~~~~~~~~~~~
 
     protected Query getAllDriveOfferPosts() {
         return mDatabase.child("organization-posts").child(getUserDefaultOrganizationId())
