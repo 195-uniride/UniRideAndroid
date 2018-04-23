@@ -250,7 +250,9 @@ public abstract class PostListFragment extends Fragment {
                         }
                     }
                 });
+
                 String uid = model.uid;
+
                 mUserReference = mDatabase.child("users").child(uid);
                 String username = getPostUser();
                 if(username == null) {

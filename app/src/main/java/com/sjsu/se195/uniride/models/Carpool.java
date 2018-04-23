@@ -48,7 +48,16 @@ public class Carpool extends DriverOfferPost {
         this.driverPost = i_driverPost;
         carpoolState = CarpoolState.PLANNED;
         riderPosts = new ArrayList<RideRequestPost>();
-        //TODO: get plannedStartTime from driver post (when driver has time)
+
+        this.uid = driverPost.uid;
+        this.author = driverPost.author;
+        this.source = driverPost.source;
+        this.destination = driverPost.destination;
+        // this.departure_time = departure_time;
+        // this.arrival_time = arrival_time;
+        this.tripDate = driverPost.tripDate;
+
+        this.organizationId = driverPost.organizationId;
 
         postType = PostType.CARPOOL;
     }
@@ -313,6 +322,19 @@ public class Carpool extends DriverOfferPost {
         result.put("actualCompletionTime", actualCompletionTime);
         result.put("carpoolState", carpoolState);
         result.put("currentLocation", currentLocation); //TODO: firebase nested object saving ??
+
+        // also need to save driver fields:
+        result.put("uid", uid);
+        result.put("author", author);
+        result.put("source", source);
+        result.put("destination", destination);
+        result.put("departureTime", departure_time);
+        result.put("arrivalTime", arrival_time);
+        result.put("tripDate", tripDate);
+        result.put("starCount", starCount);
+        result.put("stars", stars);
+        result.put("passengerCount", passengerCount);
+
         return result;
     }
 
