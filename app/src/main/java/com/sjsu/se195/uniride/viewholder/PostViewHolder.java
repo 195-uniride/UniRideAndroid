@@ -44,6 +44,16 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         String t ="to";
         to.setText(t);
 
+        if (post instanceof RideRequestPost) {
+            System.out.println("PostViewHolder:bindToPost: Post bound is a RideRequestPost");
+        }
+        else if (post instanceof DriverOfferPost) {
+            System.out.println("PostViewHolder:bindToPost: Post bound is a DriverOfferPost");
+        }
+        else {
+            System.out.println("PostViewHolder:bindToPost: else: Post bound is of type: " + post.getClass());
+        }
+
         if(postType){
             background.setImageResource(R.drawable.driver_card);
         }

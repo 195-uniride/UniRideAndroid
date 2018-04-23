@@ -193,6 +193,9 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       String key = mDatabase.child("posts").child("carpools").push().getKey();
       carpoolID = key;
 
+      carpool.setCarpoolId(key);
+      carpool.postId = key;
+
       Map<String, Object> carpoolValues = carpool.toMap();
 
       Map<String, Object> childUpdates = new HashMap<>();
