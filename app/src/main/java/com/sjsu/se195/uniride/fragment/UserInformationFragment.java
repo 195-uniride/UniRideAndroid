@@ -1,6 +1,7 @@
 package com.sjsu.se195.uniride.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -9,9 +10,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.sjsu.se195.uniride.AddUserInformation;
 import com.sjsu.se195.uniride.R;
 
 /**
@@ -21,7 +25,8 @@ public class UserInformationFragment extends Fragment {
 
     private String ABOUT_TAB_TITLE;
     private TextView mTabTitle;
-    private LinearLayout linearLayout;
+    private ImageButton mEditProfile;
+
     public UserInformationFragment() {
         // Required empty public constructor
     }
@@ -33,26 +38,31 @@ public class UserInformationFragment extends Fragment {
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
         String firstName = getArguments().getString("userName");
+        String uID = getArguments().getString("uID");
         ABOUT_TAB_TITLE = "About " + firstName;
-
         View rootView = inflater.inflate(R.layout.fragment_user_information, container, false);
-        linearLayout = rootView.findViewById(R.id.fragment_all_posts_linearlayout);
-        createTitle(ABOUT_TAB_TITLE);
 
+        mTabTitle = (TextView) rootView.findViewById(R.id.user_info_title);
+        mTabTitle.setText(ABOUT_TAB_TITLE);
+
+        if(uID == getUid()){
+            mEditProfile = rootView.findViewById(R.id.profile_user_information_edit);
+            mEditProfile.setVisibility(View.VISIBLE);
+            mEditProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), AddUserInformation.class));
+                    getActivity().finish();
+                }
+            });
+        }
+
+        //createTitle(ABOUT_TAB_TITLE);
         return rootView;
     }
 
-    private void createTitle(String title){
-        mTabTitle = new TextView(getActivity());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(5, 5, 5, 5);
-        layoutParams.gravity = Gravity.CENTER;
-        mTabTitle.setLayoutParams(layoutParams);
-        mTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-        mTabTitle.setPadding(10, 10, 10, 10);
-        mTabTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.maroon));
-        mTabTitle.setText(title);
-        linearLayout.addView(mTabTitle, 0);
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
 }

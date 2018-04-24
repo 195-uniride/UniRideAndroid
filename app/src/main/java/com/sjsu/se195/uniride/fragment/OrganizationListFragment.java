@@ -51,6 +51,7 @@ public abstract class OrganizationListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_all_organizations, container, false);
 
+
         if(getActivity() instanceof ProfilePageActivity){
             this.uID = getArguments().getString("uID");
             String firstname = getArguments().getString("userName");

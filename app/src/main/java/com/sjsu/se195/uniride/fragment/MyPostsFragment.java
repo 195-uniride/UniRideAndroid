@@ -83,12 +83,10 @@ public abstract class MyPostsFragment extends PostListFragment {
     private void createTitle(String title){
         mTabTitle = new TextView(getActivity());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(5, 5, 5, 5);
         layoutParams.gravity = Gravity.CENTER;
         mTabTitle.setLayoutParams(layoutParams);
-        mTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+        mTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         mTabTitle.setPadding(10, 10, 10, 10);
-        mTabTitle.setTextColor(ContextCompat.getColor(getContext(), R.color.maroon));
         mTabTitle.setText(title);
         linearLayout.addView(mTabTitle, 0);
     }

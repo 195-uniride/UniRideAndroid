@@ -1,5 +1,6 @@
 package com.sjsu.se195.uniride;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,8 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +34,8 @@ import com.sjsu.se195.uniride.fragment.MyRiderPostsFragment;
 import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
 import com.sjsu.se195.uniride.fragment.UserInformationFragment;
 import com.sjsu.se195.uniride.models.User;
+
+import org.w3c.dom.Text;
 
 public class ProfilePageActivity extends BaseActivity {
 
@@ -52,19 +57,33 @@ public class ProfilePageActivity extends BaseActivity {
     private DatabaseReference mDatabase;
     private String ABOUT_TAB_TITLE;
     final Bundle bundle = new Bundle();
+    private TextView userNameView;
+    private ImageButton mSignOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
-
+        this.userNameView = (TextView) this.findViewById(R.id.profile_page_user_name);
         String uID = getUid(); //TODO: should instead get value from intent to show different users.
+
+        if(uID == getUid()){
+            mSignOut = (ImageButton) this.findViewById(R.id.profile_page_sign_out);
+            mSignOut.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(ProfilePageActivity.this, SignInActivity.class));
+                    finish();
+                }
+            });
+        }
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mDatabase = FirebaseDatabase.getInstance().getReference();
         bundle.putString("uID", uID);
         this.getUser(uID);
-
         setNavBar(this);
     }
 
@@ -189,6 +208,8 @@ public class ProfilePageActivity extends BaseActivity {
 
                 // Get User object and use the values to update the UI
                 user = dataSnapshot.getValue(User.class);
+                String userName = user.firstName + " " + user.lastName;
+                ProfilePageActivity.this.userNameView.setText(userName);
                 bundle.putString("userName", user.firstName);
                 ProfilePageActivity.this.setFragment();
             }
