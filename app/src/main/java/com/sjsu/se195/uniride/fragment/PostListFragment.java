@@ -57,15 +57,8 @@ public abstract class PostListFragment extends Fragment {
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
     protected RecyclerView mRecycler;
     private LinearLayoutManager mManager;
-<<<<<<< HEAD
-    protected boolean postType; //false = driverpost ; true = riderequest
-
-    private DriverOfferPost mDriverPost;
-    private RideRequestPost mRideRequestPost;
-=======
     protected boolean postType; //true = driverpost ; false = riderequest
     private String username;
->>>>>>> a9a51fbc223cf171c6847a1462d288170d54f359
 
     public PostListFragment() {}
 
