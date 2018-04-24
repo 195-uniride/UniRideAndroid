@@ -241,6 +241,11 @@ public abstract class PostListFragment extends Fragment {
                             Intent intent = new Intent(getActivity(), PostDetailActivity.class);
                             intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
                             intent.putExtra("postType", postType);
+
+                            if (model.postType != null) {
+                                intent.putExtra("typeOfPost", model.postType.name());
+                            }
+
                             startActivity(intent);
                         }
                     }

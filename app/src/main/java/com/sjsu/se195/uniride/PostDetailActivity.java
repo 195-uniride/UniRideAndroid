@@ -77,6 +77,7 @@ public class PostDetailActivity extends MainActivity
     private CommentAdapter mAdapter;
 
     private Post mPost;
+    private Post.PostType mPostType = Post.PostType.UNKNOWN;
 
     private TextView mAuthorView;
     private TextView mSourceView;
@@ -111,6 +112,25 @@ public class PostDetailActivity extends MainActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_3_post_detail);
         postType = getIntent().getExtras().getBoolean("postType");
+
+        // Get type of post (RIDER, DRIVER, CARPOOL) from intent:
+        try {
+            mPostType = Post.PostType.valueOf(getIntent().getStringExtra("typeOfPost"));
+        }
+        catch (NullPointerException ex) { // If this post does not have this postType attribute, set to UNKNOWN:
+            mPostType = Post.PostType.UNKNOWN;
+        }
+
+        if (mPostType == Post.PostType.UNKNOWN) {
+            if (postType) {
+                mPostType = Post.PostType.RIDER;
+            } else {
+                mPostType = Post.PostType.DRIVER;
+            }
+        }
+
+        System.out.println("Setting Post to Type: " + mPostType);
+
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
         if (mPostKey == null || mPostKey.equals("")) {
@@ -273,17 +293,29 @@ public class PostDetailActivity extends MainActivity
     private void loadPostFromFirebase() {
 
         // Initialize Database
-        if(postType){
+        if(mPostType == Post.PostType.RIDER) {
             mPostReference = FirebaseDatabase.getInstance().getReference()
                     .child("posts").child("rideRequests").child(mPostKey);
             mCommentsReference = FirebaseDatabase.getInstance().getReference()
                     .child("post-comments").child(mPostKey);
-        }else{
+        }
+        else if(mPostType == Post.PostType.DRIVER) {
             mPostReference = FirebaseDatabase.getInstance().getReference()
                     .child("posts").child("driveOffers").child(mPostKey);
             mCommentsReference = FirebaseDatabase.getInstance().getReference()
                     .child("post-comments").child(mPostKey);
         }
+        else if(mPostType == Post.PostType.CARPOOL) {
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("carpools").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+        else {
+            Log.e(PostDetailActivity.TAG, "ERROR: mPostType = " + mPostType);
+        }
+
+
 
 
         // Add value event listener to the post
@@ -293,16 +325,27 @@ public class PostDetailActivity extends MainActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 System.out.println(dataSnapshot.toString());
-                if(postType){
+
+                if(mPostType == Post.PostType.RIDER) {
                     RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
                     setupViewsForPost(post);
 
                     mPost = post;
                 }
-                else{
+                else if(mPostType == Post.PostType.DRIVER) {
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
+                    setupViewsForPost(post);
+
+                    mPost = post;
+                }
+                else if(mPostType == Post.PostType.CARPOOL) {
+                    Carpool post = dataSnapshot.getValue(Carpool.class);
+                    // [START_EXCLUDE]
+
+                    System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
+
                     setupViewsForPost(post);
 
                     mPost = post;
@@ -352,19 +395,22 @@ public class PostDetailActivity extends MainActivity
     }
 
     private void setupViewsForPost(Post post) {
-        mAuthorView.setText(post.author);
+        if (post.author != null) {
+            mAuthorView.setText(post.author);
+        }
         mSourceView.setText(post.source);
         mDestinationView.setText(post.destination);
-        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-        source_marker = new MarkerOptions()
-                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-                .title("Source")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-        destination_marker = new MarkerOptions()
-                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-                .title("Destination")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        // TODO: Fix:
+//        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+//        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+//        source_marker = new MarkerOptions()
+//                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+//                .title("Source")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+//        destination_marker = new MarkerOptions()
+//                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+//                .title("Destination")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
     }
 
     @Override
