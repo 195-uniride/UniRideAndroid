@@ -1,10 +1,12 @@
 package com.sjsu.se195.uniride.viewholder;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
@@ -41,6 +43,20 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         destinationView.setText(trimAddress(post.destination));
         String t ="to";
         to.setText(t);
+
+        System.out.println("PostViewHolder:bindToPost: post.postType = " + post.postType);
+
+        if (post.postType == Post.PostType.RIDER) {
+            //...
+        }
+        else if (post.postType == Post.PostType.DRIVER) {
+            //...
+        }
+        else if (post.postType == Post.PostType.CARPOOL) {
+            sourceView.setText("CARPOOL: " + sourceView.getText()); // DEBUG ONLY.
+
+            // TODO: add R.drawable.carpool_card??? view elements for # passengers, waypoints, trip time, etc.
+        }
 
         if(postType){
             background.setImageResource(R.drawable.driver_card);

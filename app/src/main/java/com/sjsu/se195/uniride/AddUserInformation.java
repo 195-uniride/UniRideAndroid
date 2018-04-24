@@ -49,7 +49,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
     private EditText mFirstNameField;
     private EditText mLastNameField;
-    private EditText mDateOfBirthField;
     private EditText mPhoneNumberField;
     //DateOfBirth and PhoneNumber might have to be saved differently
 
@@ -67,7 +66,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
 
         mFirstNameField = (EditText)findViewById(R.id.first_name);
         mLastNameField = (EditText) findViewById(R.id.last_name);
-        mDateOfBirthField = (EditText) findViewById(R.id.date_of_birth);
         mPhoneNumberField = (EditText) findViewById(R.id.phone_number);
 
         orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
@@ -86,7 +84,7 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         // fillOrganizations();
     }
 
-    private void updateInformation(String first, String last, String dob, String phone, String defaultOrganizationId) {
+    private void updateInformation(String first, String last, String phone, String defaultOrganizationId) {
         // TODO: continue WIP:
         // TODO: get user, update fields by doing user.updateEmail(newEmail), etc., then do ref.updateChildren after user.toMap
         HashMap<String, Object> userInformation = new HashMap<>();
@@ -202,13 +200,16 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
             case R.id.save_information:
                 String theFirst = mFirstNameField.getText().toString();
                 String theLast = mLastNameField.getText().toString();
-                String theDateOfBirth = mDateOfBirthField.getText().toString();
                 String thePhoneNumber = mPhoneNumberField.getText().toString();
-                String organizationName = orgSpinner.getSelectedItem().toString();
 
-                String organizationId = OrganizationNameIdMap.get(organizationName);
+                String organizationId = "";
+                if (orgSpinner.getSelectedItem() != null) {
+                    String organizationName = orgSpinner.getSelectedItem().toString();
 
-                updateInformation(theFirst, theLast, theDateOfBirth, thePhoneNumber, organizationId);
+                    organizationId = OrganizationNameIdMap.get(organizationName);
+                }
+
+                updateInformation(theFirst, theLast, thePhoneNumber, organizationId);
                 // falls through.
 
             case R.id.skip_this:

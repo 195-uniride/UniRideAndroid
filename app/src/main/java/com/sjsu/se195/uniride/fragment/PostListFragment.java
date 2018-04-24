@@ -9,9 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import android.widget.ImageView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,9 +25,12 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.CarpoolDetailActivity;
 import com.sjsu.se195.uniride.MainSubcategoryActivity;
+import com.sjsu.se195.uniride.NewCarpoolActivity;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
@@ -60,6 +67,7 @@ public abstract class PostListFragment extends Fragment {
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         postType = getArguments().getBoolean("postType");
+        System.out.println("PostListFragment line67 PostType = " + postType);
         View rootView;
 
         rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
@@ -96,7 +104,6 @@ public abstract class PostListFragment extends Fragment {
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
         mRecycler.setLayoutManager(mManager);
-
         // Get User Object and Set up FirebaseRecyclerAdapter with the Query:
         setCurrentUserAndLoadPosts();
 
@@ -223,17 +230,27 @@ public abstract class PostListFragment extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-                        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
-                        intent.putExtra("postType", postType);
-                        startActivity(intent);
+                        if (getActivity() instanceof NewCarpoolActivity) {
+                            System.out.println("current activity is newcarpoolactivity");
+                            //setPostsAndCreateCarpool(postRef);
+                            //Call the method in NewCarpoolActivity
+                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
+                        }
+                        else {
+                            // Launch PostDetailActivity
+                            Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+                            intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
+                            intent.putExtra("postType", postType);
+                            startActivity(intent);
+                        }
                     }
                 });
+
                 String uid = model.uid;
+
                 mUserReference = mDatabase.child("users").child(uid);
-                String username= getPostUser();
-                if(username==null){
+                String username = getPostUser();
+                if(username == null) {
                     username = "#" + uid.substring(uid.length()-5);
                 }
                 // Determine if the current user has liked this post and set UI accordingly
@@ -264,21 +281,26 @@ public abstract class PostListFragment extends Fragment {
                     }
                 });
             }
-            private String getPostUser(){
+            private String getPostUser() {
                 ValueEventListener userListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         postUser = dataSnapshot.getValue(User.class);
-                        boolean name = false;
-                        if(null != postUser.firstName){
-                            username = postUser.firstName;
-                            name = true;
+                        boolean hasName = false;
+
+                        if (postUser != null) {
+                            if (postUser.firstName != null) {
+                                username = postUser.firstName;
+                                hasName = true;
+                            }
+
+                            if(postUser.lastName != null) {
+                                username = username + " " + postUser.lastName;
+                                hasName = true;
+                            }
                         }
-                        if(null != postUser.lastName){
-                            username = username + " " + postUser.lastName;
-                            name = true;
-                        }
-                        if(!name){
+
+                        if(!hasName){
                             username = null;
                         }
                     }
@@ -298,140 +320,7 @@ public abstract class PostListFragment extends Fragment {
         return currentUser;
     }
 
-    // ~~~~~~~~~~~~~~~~~~~~ SEARCHING: ~~~~~~~~~~~~~~~~~~~~
-    // TODO: move to own fragment? SearchFragment (?)
 
-    // ==== SEARCH ALGORITHM:
-    // parameters:
-    // - userPost: the post that we are checking every other post against.
-    // - user: the owner of the user post
-    public ArrayList<Post> getSearchResults(Post userPost, User user) {
-
-        ArrayList<Post> matchedPosts = new ArrayList<Post>();
-
-        // step 1: filter posts by type (drive offer or rider request): (in getAllPostsBySearchType)
-        boolean isLookingForDriver = true;
-
-        if (userPost instanceof DriverOfferPost) {
-            isLookingForDriver = false;
-        }
-        else { // if (userPost instanceof RideRequestPost) {
-            isLookingForDriver = true;
-        }
-
-
-        // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
-/*
- TO ADD ONCE tripDate IS ADDED TO FIREBASE:
-
-        Query searchQuery = getAllPostsBySearchType(isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate); // TODO: add date field.
-
-        if (isLookingForDriver) {
-            findDriveOffers(searchQuery);
-        }
-        else {
-            findRideRequests(searchQuery);
-        }
-*/
-
-
-        // step 3: filter posts by general area:
-
-//        matchedPosts = filterPostsByGeneralArea(matchedPosts);
-
-        // step 4: filter posts based on
-        //  whether each participant can reach the destination on time or not:
-
-//        matchedPosts = filterPostsByTimePossibility(matchedPosts);
-
-        // return the matches:
-
-        return matchedPosts;
-    }
-
-    private Query getAllPostsBySearchType(boolean isLookingForDriver) {
-        if (isLookingForDriver) {
-            return getAllDriveOfferPosts();
-        }
-        else {
-            return getAllRideRequestPosts();
-        }
-    }
-
-
-    private void findRideRequests(Query searchQuery) {
-        searchQuery.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    // Handle each post:
-                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class); // can use parameter & getClass?
-
-                    // TODO: determine if each post is a possible post (if som add to some global list?)
-                    //....
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-    }
-
-    private void findDriveOffers(Query searchQuery) {
-        // TODO....
-    }
-
-    // ==== Steps:
-
-
-    // step 1: filter posts by type (drive offer or rider request):
-    private ArrayList<Post> getAllDriveOffers() {
-        ArrayList<Post> driveOfferPosts = new ArrayList<Post>();
-
-        // search Firebase: organization-posts/[user's org]/driveOffers
-
-
-
-        //TODO: research how to return ArrayList from Firebase query....
-        return driveOfferPosts;
-    }
-
-    private ArrayList<Post> getAllRideRequests() {
-        ArrayList<Post> rideRequestPosts = new ArrayList<Post>();
-
-        //....TODO:
-        return rideRequestPosts;
-    }
-
-    /*
-
-    // step 2: filter posts by date:
-
-    private ArrayList<Post> filterPostsByDate(ArrayList<Post> posts, Date filterDate) {
-
-        // search firebase: organization-posts/[user's org]/driveOffers WHERE post.date = filterDate
-    }
-
-    // step 3: filter posts by general area:
-    private ArrayList<Post> filterPostsByGeneralArea(ArrayList<Post> posts) {
-
-        //....
-    }
-
-    // step 4: filter posts based on
-    //  whether each participant can reach the destination on time or not:
-    private ArrayList<Post> filterPostsByTimePossibility(ArrayList<Post> posts) {
-
-        //....
-    }
-
-    */
-
-    // ~~~~~~~~~~~~~~~~~~~~ SEARCHING end. ~~~~~~~~~~~~~~~~
 
     protected Query getAllDriveOfferPosts() {
         return mDatabase.child("organization-posts").child(getUserDefaultOrganizationId())

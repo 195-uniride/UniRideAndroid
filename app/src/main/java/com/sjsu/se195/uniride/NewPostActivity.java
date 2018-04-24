@@ -438,7 +438,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
                         //TODO: Get info about the selected place
                         Log.i(TAG, "Place: " + place.getName());
                         source_place = place.getAddress().toString();
-                        NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        // NewPostActivity.this.location_latlng = NewPostActivity.this.getLocationFromAddress(NewPostActivity.this, NewPostActivity.this.source_place);
+                        location_latlng = getLocationFromAddress(NewPostActivity.this, source_place);
+
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                         mapFragment.getMapAsync(NewPostActivity.this);
                     }
@@ -635,6 +637,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
 
                             mPostOrganizationId = user.defaultOrganizationId; // TODO: Let user choose which org to post under.
 
+                            System.out.println("Saving a new Post with orgId = " + user.defaultOrganizationId);
+
                             // Write new post
                             if(postType) {
                                 writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount, departureTime, arrivalTime, tripDate, mPostOrganizationId);
@@ -681,6 +685,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         String key = mDatabase.child("posts").child("driveOffers").push().getKey();
 
         DriverOfferPost driverPost = new DriverOfferPost(userId, username, source, destination, count, dep_time, arr_time, t_day);
+        driverPost.organizationId = organizationId;
+        driverPost.postId = key;
+
         Map<String, Object> postValues = driverPost.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
@@ -695,10 +702,14 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
     private void writeNewRideRequestPost(String userId, String username, String source, String destination, LatLng pickupPoint,
                                          int dep_time, int arr_time, int t_day, String organizationId){
         // Create new post at /user-posts/$userid/$postid and at
+        System.out.println("--> in writeNewRideRequestPost.");
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
 
         RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination, dep_time, arr_time, t_day);
+        rideRequest.organizationId = organizationId;
+        rideRequest.postId = key;
+
         Map<String, Object> postValues = rideRequest.toMap();
         RideRequestPost rideRequest_pickupPoint = new RideRequestPost(pickupPoint);
         Map<String, Object> postValuesPickupPoint = rideRequest_pickupPoint.toMap_pickupPoint();
@@ -711,8 +722,8 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         childUpdates.put("/organization-posts/" + organizationId + "/rideRequests/" + key, postValues);
         mDatabase.updateChildren(childUpdates);
 
-        childUpdates2.put("/posts/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
-        childUpdates2.put("/user-posts/" + userId + "/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
+//        childUpdates2.put("/posts/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
+//        childUpdates2.put("/user-posts/" + userId + "/rideRequests/" + key + "/pickup-point/", postValuesPickupPoint);
         mDatabase.updateChildren(childUpdates2);
     }
     // [END write_fan_out]
