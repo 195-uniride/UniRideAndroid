@@ -40,6 +40,8 @@
             android:name=".MainSubcategoryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity android:name=".NewCarpoolActivity" />
+
         <activity android:name=".SearchResultsActivity" />
         <activity android:name=".NewOrganizationActivity" />
         <activity

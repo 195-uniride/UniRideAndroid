@@ -173,8 +173,10 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
               writeNewCarpoolObject(carpool);
 
               // Create the Carpool object:
-              Intent intent = new Intent(NewCarpoolActivity.this, CarpoolDetailActivity.class);
-              intent.putExtra("carpoolID", carpoolID);
+              Intent intent = new Intent(NewCarpoolActivity.this, PostDetailActivity.class);
+              intent.putExtra("typeOfPost", Post.PostType.CARPOOL.name());
+              intent.putExtra("postType", false); // because required (incorrect, though).
+              intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, carpool.postId);
               startActivity(intent);
           }
 
@@ -198,40 +200,47 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
       Map<String, Object> carpoolValues = carpool.toMap();
 
-      Map<String, Object> childUpdates = new HashMap<>();
-      childUpdates.put("/posts/carpools/" + key, carpoolValues);
+      Map<String, Object> childUpdatesPosts = new HashMap<>();
+      childUpdatesPosts.put("/posts/carpools/" + key, carpoolValues);
 
+      mDatabase.updateChildren(childUpdatesPosts);
+
+      Map<String, Object> childUpdatesOrganizationPosts = new HashMap<>();
       if (carpool.organizationId != null) {
-          childUpdates.put("/organization-posts/" + carpool.organizationId + "/driveOffers/" + key, carpoolValues);
+          childUpdatesOrganizationPosts.put("/organization-posts/" + carpool.organizationId + "/driveOffers/" + key, carpoolValues);
       }
+      mDatabase.updateChildren(childUpdatesOrganizationPosts);
 
+
+      Map<String, Object> childUpdatesUserCarpool = new HashMap<>();
       Map<String, String> carpoolValuesUser = carpool.userToMap("driver");
-      childUpdates.put("/user-carpools/" + carpool.getDriverPost().uid + "/" + key, carpoolValuesUser);
+      childUpdatesUserCarpool.put("/user-carpools/" + carpool.getDriverPost().uid + "/" + key, carpoolValuesUser);
 
       carpoolValuesUser = carpool.userToMap("rider");
       for (RideRequestPost post : carpool.getRiderPosts()) {
-          childUpdates.put("/user-carpools/" + post.uid + "/" + key, carpoolValuesUser);
+          childUpdatesUserCarpool.put("/user-carpools/" + post.uid + "/" + key, carpoolValuesUser);
       }
 
-
+      mDatabase.updateChildren(childUpdatesUserCarpool);
 
       // TODO: childUpdates.put("/organization-posts/" + carpool.getDriverPost().orgID + "/rideRequests/" + key, postValues);
 
       // Also save the list of Riders:
 
-      mDatabase.updateChildren(childUpdates);
+      Map<String, Map<String, Object>> carpoolRiders = carpool.riderToMap();
 
-      Map<String, Object> childUpdates2 = new HashMap<>();
+      Map<String, Object> childUpdates_Posts_Riders = new HashMap<>();
+      System.out.println("Saving CarpoolRiders to: " + "/posts/carpools/" + key + "/riderposts" + "...with carpoolRiders = " + carpoolRiders);
+      childUpdates_Posts_Riders.put("/posts/carpools/" + key + "/riderposts", carpoolRiders);
+      mDatabase.updateChildren(childUpdates_Posts_Riders);
 
-      Map<String, RideRequestPost> carpoolRiders = carpool.riderToMap();
-
-      childUpdates2.put("/posts/carpools/" + key + "/riderposts", carpoolRiders);
-
+      Map<String, Object> childUpdates_OrganizationPosts_Riders = new HashMap<>();
+      System.out.println("Saving Carpool with organizationId = " + carpool.organizationId);
       if (carpool.organizationId != null) {
-          childUpdates2.put("/organization-posts/" + carpool.organizationId + "/driveOffers/" + key + "/riderposts", carpoolRiders);
+          System.out.println("Saving CarpoolRiders to : " + "/organization-posts/" + carpool.organizationId + "/driveOffers/" + key + "/riderposts");
+          childUpdates_OrganizationPosts_Riders.put("/organization-posts/" + carpool.organizationId + "/driveOffers/" + key + "/riderposts", carpoolRiders);
       }
-
-      mDatabase.updateChildren(childUpdates2);
+      mDatabase.updateChildren(childUpdates_OrganizationPosts_Riders);
 
   }
 

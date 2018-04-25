@@ -52,8 +52,8 @@ public class RideRequestPost extends Post {
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);
-        result.put("departure", departure_time);
-        result.put("arrivalTime", arrival_time);
+        result.put("departureTime", departureTime);
+        result.put("arrivalTime", arrivalTime);
         result.put("tripDate", tripDate);
         result.put("starCount", starCount);
         result.put("stars", stars);

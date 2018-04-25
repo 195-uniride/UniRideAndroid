@@ -20,7 +20,7 @@ public class Carpool extends DriverOfferPost {
 
     private DriverOfferPost driverPost;
     private String carpoolId;
-    private List<RideRequestPost> riderPosts;
+    public List<RideRequestPost> riderPosts;
     private Date actualStartTime; //TODO: change to time.zonedDateTime
     private Date actualCompletionTime;
     private enum CarpoolState{
@@ -43,8 +43,8 @@ public class Carpool extends DriverOfferPost {
     }
 
     public Carpool(DriverOfferPost i_driverPost) {
-        super(i_driverPost.source, i_driverPost.destination, i_driverPost.passengerCount, i_driverPost.departure_time,
-                i_driverPost.arrival_time, i_driverPost.tripDate);
+        super(i_driverPost.source, i_driverPost.destination, i_driverPost.passengerCount, i_driverPost.departureTime,
+                i_driverPost.arrivalTime, i_driverPost.tripDate);
         this.driverPost = i_driverPost;
         carpoolState = CarpoolState.PLANNED;
         riderPosts = new ArrayList<RideRequestPost>();
@@ -53,8 +53,8 @@ public class Carpool extends DriverOfferPost {
         this.author = driverPost.author;
         this.source = driverPost.source;
         this.destination = driverPost.destination;
-        // this.departure_time = departure_time;
-        // this.arrival_time = arrival_time;
+        // this.departureTime = departureTime;
+        // this.arrivalTime = arrivalTime;
         this.tripDate = driverPost.tripDate;
 
         this.organizationId = driverPost.organizationId;
@@ -148,16 +148,16 @@ public class Carpool extends DriverOfferPost {
         System.out.println("timeNeedToLeaveBefore = " + timeNeedToLeaveBefore); // TODO remove....
 
         // Trip is impossible if driver.departureTime > (is after) timeNeedToLeaveBefore:
-        if (getDriverPost().getDepartureTime() > timeNeedToLeaveBefore) {
+        if (getDriverPost().departureTime > timeNeedToLeaveBefore) {
 
-            System.out.println("Trip is IMPOSSIBLE because driver.departureTime [" + getDriverPost().getDepartureTime() +
+            System.out.println("Trip is IMPOSSIBLE because driver.departureTime [" + getDriverPost().departureTime +
                     "] > (is after) timeNeedToLeaveBefore [" + timeNeedToLeaveBefore + "]."); // TODO remove....
 
             return false;
         }
         else {
 
-            System.out.println("Trip is POSSIBLE because driver.departureTime [" + getDriverPost().getDepartureTime() +
+            System.out.println("Trip is POSSIBLE because driver.departureTime [" + getDriverPost().departureTime +
                     "] <= (is before or at) timeNeedToLeaveBefore [" + timeNeedToLeaveBefore + "]."); // TODO remove....
 
             return true;
@@ -213,10 +213,10 @@ public class Carpool extends DriverOfferPost {
          of the arrival time fields of all the posts).
      */
     public int getEarliestArrivalTimeOfParticipants() {
-        int min = driverPost.getArrivalTime();
+        int min = driverPost.arrivalTime;
 
         for (RideRequestPost riderPosts : getRiderPosts()) {
-            min = Math.min(min, riderPosts.getArrivalTime());
+            min = Math.min(min, riderPosts.arrivalTime);
         }
 
         return min;
@@ -231,7 +231,7 @@ public class Carpool extends DriverOfferPost {
         SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd-HHmm"); // Note: capital 'H' means military time.
         // example: "20180230-2219" Parses as Fri Mar 02 22:19:00 UTC 2018
 
-        String dateTimeString =  "" + getDriverPost().tripDate; // Note: in format: yyyMMdd
+        String dateTimeString =  Integer.toString(getDriverPost().tripDate); // Note: in format: yyyMMdd
 
         dateTimeString += "-" + String.format("%04d", this.getEarliestArrivalTimeOfParticipants()); // Use the earliest arrival time to satisfy all participants.
 
@@ -321,15 +321,15 @@ public class Carpool extends DriverOfferPost {
         result.put("actualStartTime", actualStartTime);
         result.put("actualCompletionTime", actualCompletionTime);
         result.put("carpoolState", carpoolState);
-        result.put("currentLocation", currentLocation); //TODO: firebase nested object saving ??
+        // result.put("currentLocation", currentLocation); //TODO: firebase nested object saving ??
 
         // also need to save driver fields:
         result.put("uid", uid);
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);
-        result.put("departureTime", departure_time);
-        result.put("arrivalTime", arrival_time);
+        result.put("departureTime", departureTime);
+        result.put("arrivalTime", arrivalTime);
         result.put("tripDate", tripDate);
         result.put("starCount", starCount);
         result.put("stars", stars);
@@ -338,11 +338,20 @@ public class Carpool extends DriverOfferPost {
         return result;
     }
 
-    public Map<String, RideRequestPost> riderToMap(){
-        HashMap<String, RideRequestPost> result = new HashMap<>();
+//    public Map<String, RideRequestPost> riderToMap() {
+//        HashMap<String, RideRequestPost> result = new HashMap<>();
+//        for(RideRequestPost r : this.riderPosts){
+//            System.out.println("in Carpool:riderToMap, rider ID = " + r.uid);
+//            result.put(r.uid, r);
+//        }
+//        return result;
+//    }
+
+    public Map<String, Map<String, Object>> riderToMap() {
+        HashMap<String, Map<String, Object>> result = new HashMap<>();
         for(RideRequestPost r : this.riderPosts){
-            System.out.println("in Carpool:riderToMap, rider ID = " + r.uid);
-            result.put(r.uid, r);
+            System.out.println("in Carpool:riderToMap ver2, rider ID = " + r.uid);
+            result.put(r.uid, r.toMap());
         }
         return result;
     }

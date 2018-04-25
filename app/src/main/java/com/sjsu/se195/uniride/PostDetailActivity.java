@@ -299,6 +299,50 @@ public class PostDetailActivity extends MainActivity
     }
 
 
+    private void setupCarpoolRouteDescription(Carpool carpoolPost) {
+        TextView routeDescriptionText = findViewById(R.id.text_route_details);
+
+        /*
+            Thursday, May 5:
+            9:00 AM - depart from
+               LocA (source)
+            Picking up 3 passengers:
+            9:15 AM - pickup at
+               LocB (pickup point)
+            9:30 AM - arrive at
+               LocC (destination)
+
+         */
+
+        System.out.println("================ Setup Carpool Text: getDriverPost = " + carpoolPost.getDriverPost());
+        System.out.println("================ Setup Carpool Text: getRiderPosts = " + carpoolPost.getRiderPosts());
+
+        // TODO:
+        String routeDescription = PostInfo.getTripDateText(carpoolPost) + ": \n";
+        routeDescription += PostInfo.getDepartureDateTimeText(carpoolPost) + " - depart from: \n";
+        routeDescription += "   " + carpoolPost.source + "\n";
+        routeDescription += "\n";
+
+        if (carpoolPost.getNumberSeatsTaken() == 0) {
+            routeDescription += "No passengers yet. \n";
+        }
+        else {
+            routeDescription += "Picking up " + carpoolPost.getNumberSeatsTaken() + " passengers: \n";
+
+            // TODO: go by waypoint order!
+            for (RideRequestPost rider : carpoolPost.getRiderPosts()) {
+                routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger at: \n";
+                routeDescription += "   " + rider.source + "\n";
+            }
+        }
+
+        routeDescription += "\n";
+        routeDescription += PostInfo.getArrivalDateTimeText(carpoolPost) + " - arrive at: \n";
+        routeDescription += "   " + carpoolPost.destination;
+
+        routeDescriptionText.setText(routeDescription);
+    }
+
     private void loadPostFromFirebase() {
 
         // Initialize Database
@@ -356,6 +400,8 @@ public class PostDetailActivity extends MainActivity
                     System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
 
                     setupViewsForPost(post);
+
+                    setupCarpoolRouteDescription(post);
 
                     mPost = post;
                 }
