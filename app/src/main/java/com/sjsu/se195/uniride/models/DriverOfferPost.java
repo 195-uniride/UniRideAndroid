@@ -14,25 +14,39 @@ public class DriverOfferPost extends Post implements Parcelable {
 
     public int passengerCount;
 
-    public DriverOfferPost(){}
+    public DriverOfferPost() {
+        postType = PostType.DRIVER;
+    }
 
-    //Constructer
+    // Constructors:
+
     public DriverOfferPost(String uid, String author, String source, String destination, int pasCount,
                            int departureTime, int arrivalTime, int tripDay){
         super(uid, author, source, destination, departureTime, arrivalTime, tripDay);
         this.passengerCount = pasCount;
+
+        this.postType = PostType.DRIVER;
     }
 
     public DriverOfferPost(String source, String destination, int pasCount, int departureTime, int arrivalTime, int tripDay){
         super(source, destination, departureTime, arrivalTime, tripDay);
         this.passengerCount = pasCount;
+
+        this.postType = PostType.DRIVER;
     }
 
+    // Getters and Setters:
+
     public int getPassengerCount() { return passengerCount; }
+
+    // Firebase Mapping methods:
 
     public  Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
+        result.put("postType", postType);
+        result.put("organizationId", organizationId);
+        result.put("postId", postId);
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);
@@ -44,8 +58,6 @@ public class DriverOfferPost extends Post implements Parcelable {
         result.put("passengerCount", passengerCount);
         return result;
     }
-
-
 
     // Parcelable methods:
 

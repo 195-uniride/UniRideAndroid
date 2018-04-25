@@ -79,7 +79,10 @@ public class NavBar{
         navigationTabBar.setModels(models);
         if(activity instanceof MainActivity) {
             navigationTabBar.setViewPager(viewPager, 0);
-        }else if(activity instanceof ShowOrganizationsActivity){
+        }else if(activity instanceof ProfilePageActivity){
+            navigationTabBar.setViewPager(viewPager, 1);
+        }
+        else if(activity instanceof ShowOrganizationsActivity){
             navigationTabBar.setViewPager(viewPager, 2);
         }
 
@@ -108,6 +111,10 @@ public class NavBar{
                 int index = NavBar.this.INDEX;
                 if(index==0 && !(current instanceof MainActivity)){
                     Intent intent = new Intent(current, MainActivity.class);
+                    current.startActivity(intent);
+                }
+                if(index==1 && !(current instanceof ProfilePageActivity)){
+                    Intent intent = new Intent(current, ProfilePageActivity.class);
                     current.startActivity(intent);
                 }
                 if(index==2 && !(current instanceof ShowOrganizationsActivity)){

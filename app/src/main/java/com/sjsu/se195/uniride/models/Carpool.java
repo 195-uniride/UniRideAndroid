@@ -38,6 +38,8 @@ public class Carpool extends DriverOfferPost {
     public Carpool(){
         carpoolState = CarpoolState.PLANNED;
         riderPosts = new ArrayList<RideRequestPost>();
+
+        postType = PostType.CARPOOL;
     }
 
     public Carpool(DriverOfferPost i_driverPost) {
@@ -46,7 +48,18 @@ public class Carpool extends DriverOfferPost {
         this.driverPost = i_driverPost;
         carpoolState = CarpoolState.PLANNED;
         riderPosts = new ArrayList<RideRequestPost>();
-        //TODO: get plannedStartTime from driver post (when driver has time)
+
+        this.uid = driverPost.uid;
+        this.author = driverPost.author;
+        this.source = driverPost.source;
+        this.destination = driverPost.destination;
+        // this.departure_time = departure_time;
+        // this.arrival_time = arrival_time;
+        this.tripDate = driverPost.tripDate;
+
+        this.organizationId = driverPost.organizationId;
+
+        postType = PostType.CARPOOL;
     }
 
     
@@ -66,6 +79,14 @@ public class Carpool extends DriverOfferPost {
     }
 
     // Getters and Setters:
+
+    public String getCarpoolId() {
+        return carpoolId;
+    }
+
+    public void setCarpoolId(String carpoolId) {
+        this.carpoolId = carpoolId;
+    }
 
     public int getNumberSeatsTaken() {
         return (riderPosts == null)? 0 : riderPosts.size(); // if no riders set, return passenger count (all seats available).
@@ -288,15 +309,32 @@ public class Carpool extends DriverOfferPost {
 
     // Other methods:
 
-    // Needed for saving to Firebase:
+    // Firebase Mapping methods:
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("carpoolId", carpoolId);
+        result.put("postType", postType);
+        result.put("organizationId", organizationId);
+        result.put("postId", postId);
         result.put("driverPost", driverPost);
         result.put("actualStartTime", actualStartTime);
         result.put("actualCompletionTime", actualCompletionTime);
         result.put("carpoolState", carpoolState);
         result.put("currentLocation", currentLocation); //TODO: firebase nested object saving ??
+
+        // also need to save driver fields:
+        result.put("uid", uid);
+        result.put("author", author);
+        result.put("source", source);
+        result.put("destination", destination);
+        result.put("departureTime", departure_time);
+        result.put("arrivalTime", arrival_time);
+        result.put("tripDate", tripDate);
+        result.put("starCount", starCount);
+        result.put("stars", stars);
+        result.put("passengerCount", passengerCount);
+
         return result;
     }
 

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sjsu.se195.uniride.ProfilePageActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:background="@color/gradient4">
+            <ImageButton
+                android:id="@+id/profile_page_sign_out"
+                android:backgroundTint="@color/gradient0"
+                android:background="@drawable/ic_power_settings_new_white_24dp"
+                android:layout_margin="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                android:id="@+id/profile_page_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_above="@id/profile_user_image_card"
+                android:textColor="@color/primaryWhite"
+                android:textSize="20dp"
+                android:layout_marginBottom="20dp"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/profile_user_image_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                app:cardCornerRadius="8dp"
+                android:layout_marginBottom="10dp"
+                app:cardElevation="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_user_outline"
+                    android:scaleType="centerCrop" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/gradient4"
+                app:elevation="0dp"
+                android:layout_alignParentBottom="true"
+                android:paddingTop="@dimen/appbar_padding_top"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabIndicatorColor="@color/gradient1">
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/tabItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_info_outline_white_24dp"/>
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/tabItem2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_directions_car_white_24dp"/>
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/tabItem3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_person_pin_white_24dp" />
+
+                    <android.support.design.widget.TabItem
+                        android:id="@+id/tabItem4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_account_balance_white_24dp" />
+
+                </android.support.design.widget.TabLayout>
+            </android.support.design.widget.AppBarLayout>
+        </RelativeLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </LinearLayout>
+    <include layout="@layout/include_navbar"/>
+
+</android.support.design.widget.CoordinatorLayout>

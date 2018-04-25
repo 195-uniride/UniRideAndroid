@@ -23,8 +23,17 @@ public class Post implements Parcelable {
     public int tripDate = 0;
     public Map<String, Boolean> stars = new HashMap<>();
 
+    public String organizationId;
+    public String postId;
+
+    public enum PostType {
+        UNKNOWN, RIDER, DRIVER, CARPOOL
+    }
+    public PostType postType;
+
     public Post() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
+        this.postType = PostType.UNKNOWN; // Default type. Set correctly in constructor of subclasses.
     }
 
     public Post(String uid, String author, String source, String destination,
@@ -36,6 +45,8 @@ public class Post implements Parcelable {
         this.departure_time = departure_time;
         this.arrival_time = arrival_time;
         this.tripDate = date;
+
+        this.postType = PostType.UNKNOWN; // Default type. Set correctly in constructor of subclasses.
     }
 
     public Post(String source, String destination, int departure_time, int arrival_time, int date){
@@ -44,6 +55,8 @@ public class Post implements Parcelable {
         this.departure_time = departure_time;
         this.arrival_time = arrival_time;
         this.tripDate = date;
+
+        this.postType = PostType.UNKNOWN; // Default type. Set correctly in constructor of subclasses.
     }
 
     // [START post_to_map]
@@ -83,20 +96,7 @@ public class Post implements Parcelable {
 
     // Constructor for loading from a Parcel:
     public Post(Parcel in) {
-
-//        String[] data = new String[3];
-//
-//        in.readStringArray(data);
-//        // Reads the contents of the the order needs to be the same as in writeToParcel() method:
-//        this.uid = data[0];
-//        this.author = data[0];
-//        this.source = data[0];
-//        this.destination = data[0];
-//        this.departure_time = Integer.parseInt(data[0]);
-//        this.arrival_time = Integer.parseInt(data[0]);
-//        this.tripDate = Integer.parseInt(data[0]);
-        //---
-
+        // NOTE: order MUST be exactly the same as writeToParcel:
         this.uid = in.readString();
         this.author = in.readString();
         this.source = in.readString();
@@ -104,6 +104,11 @@ public class Post implements Parcelable {
         this.departure_time = in.readInt();
         this.arrival_time = in.readInt();
         this.tripDate = in.readInt();
+
+        this.organizationId = in.readString();
+        this.postId = in.readString();
+
+        this.postType = PostType.valueOf(in.readString()); // .valueOf(...) converts String to Enum type (must be exact match).
     }
 
     @Override
@@ -113,15 +118,7 @@ public class Post implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel out, int flags) {
-
-//        dest.writeStringArray(new String[] {this.uid,
-//                this.author,
-//                this.source,
-//                this.destination,
-//                Integer.toString(this.departure_time),
-//                Integer.toString(this.arrival_time),
-//                Integer.toString(this.tripDate)});
-        // ---
+        // NOTE: order MUST be exactly the same as Post(Parcel in):
         out.writeString(this.uid);
         out.writeString(this.author);
         out.writeString(this.source);
@@ -129,6 +126,11 @@ public class Post implements Parcelable {
         out.writeInt(this.departure_time);
         out.writeInt(this.arrival_time);
         out.writeInt(this.tripDate);
+
+        out.writeString(this.organizationId);
+        out.writeString(this.postId);
+
+        out.writeString(this.postType.name()); // .name() converts Enum to String.
     }
 
     // After implementing the `Parcelable` interface, we need to create the

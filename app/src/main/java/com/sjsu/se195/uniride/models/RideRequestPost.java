@@ -15,17 +15,26 @@ import java.util.Map;
 public class RideRequestPost extends Post {
     private LatLng pickuppoint;
 
-    public RideRequestPost() {}
+    public RideRequestPost() {
+        postType = PostType.RIDER;
+    }
 
-    //Constructer
+    // Constructors:
+
     public RideRequestPost(String uid, String author, String source, String destination
             , int departureTime, int arrivalTime, int tripDate){
         super(uid, author, source, destination, departureTime, arrivalTime, tripDate);
+
+        postType = PostType.RIDER;
     }
 
     public RideRequestPost(LatLng point){
         this.pickuppoint = point;
+
+        postType = PostType.RIDER;
     }
+
+    // Firebase Mapping methods:
 
     public Map<String, Object> toMap_pickupPoint(){
         HashMap<String, Object> result = new HashMap<>();
@@ -37,6 +46,9 @@ public class RideRequestPost extends Post {
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
+        result.put("postType", postType);
+        result.put("organizationId", organizationId);
+        result.put("postId", postId);
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);

@@ -55,12 +55,10 @@ public abstract class PostListFragment extends Fragment {
     // [END define_database_reference]
 
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
-    private RecyclerView mRecycler;
-    private LinearLayoutManager mManager;
-    protected boolean postType; //false = driverpost ; true = riderequest
-
-    private DriverOfferPost mDriverPost;
-    private RideRequestPost mRideRequestPost;
+    protected RecyclerView mRecycler;
+    protected LinearLayoutManager mManager;
+    protected boolean postType; //true = driverpost ; false = riderequest
+    private String username;
 
     public PostListFragment() {}
 
@@ -98,13 +96,11 @@ public abstract class PostListFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        System.out.println("in Fragment onActivityCreated");
         super.onActivityCreated(savedInstanceState);
-
-        //postType = savedInstanceState.getBundle("postType");
 
         // Set up Layout Manager, reverse layout
         mManager = new LinearLayoutManager(getActivity());
+        mManager.setOrientation(LinearLayoutManager.VERTICAL);
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
         mRecycler.setLayoutManager(mManager);
@@ -218,7 +214,6 @@ public abstract class PostListFragment extends Fragment {
         //getUid()
     }
 
-    String username;
     private void loadPosts() {
         System.out.println("About to load posts....."); // TODO: investigate why fragment reload not calling again...
         // Set up FirebaseRecyclerAdapter with the Query
@@ -246,14 +241,21 @@ public abstract class PostListFragment extends Fragment {
                             Intent intent = new Intent(getActivity(), PostDetailActivity.class);
                             intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
                             intent.putExtra("postType", postType);
+
+                            if (model.postType != null) {
+                                intent.putExtra("typeOfPost", model.postType.name());
+                            }
+
                             startActivity(intent);
                         }
                     }
                 });
+
                 String uid = model.uid;
+
                 mUserReference = mDatabase.child("users").child(uid);
-                String username= getPostUser();
-                if(username==null){
+                String username = getPostUser();
+                if(username == null) {
                     username = "#" + uid.substring(uid.length()-5);
                 }
                 // Determine if the current user has liked this post and set UI accordingly
@@ -284,21 +286,26 @@ public abstract class PostListFragment extends Fragment {
                     }
                 });
             }
-            private String getPostUser(){
+            private String getPostUser() {
                 ValueEventListener userListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         postUser = dataSnapshot.getValue(User.class);
-                        boolean name = false;
-                        if(null != postUser.firstName){
-                            username = postUser.firstName;
-                            name = true;
+                        boolean hasName = false;
+
+                        if (postUser != null) {
+                            if (postUser.firstName != null) {
+                                username = postUser.firstName;
+                                hasName = true;
+                            }
+
+                            if(postUser.lastName != null) {
+                                username = username + " " + postUser.lastName;
+                                hasName = true;
+                            }
                         }
-                        if(null != postUser.lastName){
-                            username = username + " " + postUser.lastName;
-                            name = true;
-                        }
-                        if(!name){
+
+                        if(!hasName){
                             username = null;
                         }
                     }

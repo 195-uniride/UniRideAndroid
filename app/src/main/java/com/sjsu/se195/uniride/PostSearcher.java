@@ -165,6 +165,10 @@ public class PostSearcher {
                     System.out.println("...to destination @ " + carpool.getDriverPost().destination + "...");
                 }
 
+                // Sort Search Results by trip time:
+
+                // TODO: mPotentialCarpools.sort();
+
                 // Show Results:
 
                 notifyDoneSearching();

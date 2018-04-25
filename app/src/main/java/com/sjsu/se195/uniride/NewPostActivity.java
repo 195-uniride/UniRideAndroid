@@ -238,7 +238,7 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
             // May throw an IOException
             //coder.getFromLocationName(strAddress, 5)
             address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
+            if (address.isEmpty()) {
                 return null;
             }
             Address location = address.get(0);
@@ -685,6 +685,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         String key = mDatabase.child("posts").child("driveOffers").push().getKey();
 
         DriverOfferPost driverPost = new DriverOfferPost(userId, username, source, destination, count, dep_time, arr_time, t_day);
+        driverPost.organizationId = organizationId;
+        driverPost.postId = key;
+
         Map<String, Object> postValues = driverPost.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
@@ -704,6 +707,9 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
         String key = mDatabase.child("posts").child("rideRequests").push().getKey();
 
         RideRequestPost rideRequest = new RideRequestPost(userId, username, source, destination, dep_time, arr_time, t_day);
+        rideRequest.organizationId = organizationId;
+        rideRequest.postId = key;
+
         Map<String, Object> postValues = rideRequest.toMap();
         RideRequestPost rideRequest_pickupPoint = new RideRequestPost(pickupPoint);
         Map<String, Object> postValuesPickupPoint = rideRequest_pickupPoint.toMap_pickupPoint();

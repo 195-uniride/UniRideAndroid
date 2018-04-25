@@ -44,6 +44,20 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         String t ="to";
         to.setText(t);
 
+        System.out.println("PostViewHolder:bindToPost: post.postType = " + post.postType);
+
+        if (post.postType == Post.PostType.RIDER) {
+            //...
+        }
+        else if (post.postType == Post.PostType.DRIVER) {
+            //...
+        }
+        else if (post.postType == Post.PostType.CARPOOL) {
+            sourceView.setText("CARPOOL: " + sourceView.getText()); // DEBUG ONLY.
+
+            // TODO: add R.drawable.carpool_card??? view elements for # passengers, waypoints, trip time, etc.
+        }
+
         if(postType){
             background.setImageResource(R.drawable.driver_card);
         }

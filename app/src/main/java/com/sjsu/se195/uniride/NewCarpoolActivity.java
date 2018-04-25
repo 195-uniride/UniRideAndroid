@@ -193,10 +193,17 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       String key = mDatabase.child("posts").child("carpools").push().getKey();
       carpoolID = key;
 
+      carpool.setCarpoolId(key);
+      carpool.postId = key;
+
       Map<String, Object> carpoolValues = carpool.toMap();
 
       Map<String, Object> childUpdates = new HashMap<>();
       childUpdates.put("/posts/carpools/" + key, carpoolValues);
+
+      if (carpool.organizationId != null) {
+          childUpdates.put("/organization-posts/" + carpool.organizationId + "/driveOffers/" + key, carpoolValues);
+      }
 
       Map<String, String> carpoolValuesUser = carpool.userToMap("driver");
       childUpdates.put("/user-carpools/" + carpool.getDriverPost().uid + "/" + key, carpoolValuesUser);
@@ -206,7 +213,11 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
           childUpdates.put("/user-carpools/" + post.uid + "/" + key, carpoolValuesUser);
       }
 
+
+
       // TODO: childUpdates.put("/organization-posts/" + carpool.getDriverPost().orgID + "/rideRequests/" + key, postValues);
+
+      // Also save the list of Riders:
 
       mDatabase.updateChildren(childUpdates);
 
@@ -215,6 +226,10 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       Map<String, RideRequestPost> carpoolRiders = carpool.riderToMap();
 
       childUpdates2.put("/posts/carpools/" + key + "/riderposts", carpoolRiders);
+
+      if (carpool.organizationId != null) {
+          childUpdates2.put("/organization-posts/" + carpool.organizationId + "/driveOffers/" + key + "/riderposts", carpoolRiders);
+      }
 
       mDatabase.updateChildren(childUpdates2);
 
