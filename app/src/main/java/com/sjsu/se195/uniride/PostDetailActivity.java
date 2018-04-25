@@ -165,9 +165,18 @@ public class PostDetailActivity extends MainActivity
 
         my_view = findViewById(R.id.for_map_layout);
 
-        mCreateCarpoolButton = findViewById(R.id.fab_create_carpool);
+        mCreateCarpoolButton = findViewById(R.id.button_create_carpool);
+        if(mPostType == Post.PostType.RIDER) {
+            mCreateCarpoolButton.setText("Offer Ride");
+        }
+        else if(mPostType == Post.PostType.DRIVER) {
+            mCreateCarpoolButton.setText("Request Ride");
+        }
+        else if(mPostType == Post.PostType.CARPOOL) {
+            mCreateCarpoolButton.setText("Join Carpool");
+        }
 
-        mFindMatchingPostsButton = findViewById(R.id.fab_find_matching_posts);
+        mFindMatchingPostsButton = findViewById(R.id.button_find_matching_posts);
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
 

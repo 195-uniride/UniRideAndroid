@@ -76,7 +76,7 @@
         tools:listitem="@layout/item_comment" />
 
     <Button
-        android:id="@+id/fab_create_carpool"
+        android:id="@+id/button_create_carpool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -104,7 +104,7 @@
         android:layout_marginBottom="20dp"/>
 
     <Button
-        android:id="@+id/fab_find_matching_posts"
+        android:id="@+id/button_find_matching_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
