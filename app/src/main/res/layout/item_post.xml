@@ -28,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+
         <LinearLayout
             android:id="@+id/star_layout"
             android:layout_width="wrap_content"
@@ -54,11 +55,26 @@
 
         </LinearLayout>
 
-        <include layout="@layout/include_post_addresses"
+        <include
+            android:id="@+id/post_addresses_layout"
+            layout="@layout/include_post_addresses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/post_author_layout"
             android:layout_toStartOf="@id/star_layout" />
+
+        <include
+            android:id="@+id/post_date_time"
+            layout="@layout/include_post_date_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/post_addresses_layout"/>
+
     </RelativeLayout>
+
+
+
 
 </android.support.v7.widget.CardView>
