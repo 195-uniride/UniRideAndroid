@@ -291,6 +291,8 @@ public class PostDetailActivity extends MainActivity
         else { // If post was loaded directly from Intent:
             setupViewsForPost(mPost);
 
+            setupPostRouteDescription(mPost);
+
             // Once Post is loaded:
             mFindMatchingPostsButton.setEnabled(true);
         }
@@ -298,47 +300,49 @@ public class PostDetailActivity extends MainActivity
         // TODO: comment section if sent Post object...
     }
 
-
-    private void setupCarpoolRouteDescription(Carpool carpoolPost) {
+    private void setupPostRouteDescription(Post post) {
         TextView routeDescriptionText = findViewById(R.id.text_route_details);
 
         /*
             Thursday, May 5:
             9:00 AM - depart from
                LocA (source)
-            Picking up 3 passengers:
-            9:15 AM - pickup at
-               LocB (pickup point)
             9:30 AM - arrive at
                LocC (destination)
 
          */
 
-        System.out.println("================ Setup Carpool Text: getDriverPost = " + carpoolPost.getDriverPost());
-        System.out.println("================ Setup Carpool Text: getRiderPosts = " + carpoolPost.getRiderPosts());
-
-        // TODO:
-        String routeDescription = PostInfo.getTripDateText(carpoolPost) + ": \n";
-        routeDescription += PostInfo.getDepartureDateTimeText(carpoolPost) + " - depart from: \n";
-        routeDescription += "   " + carpoolPost.source + "\n";
+        String routeDescription = PostInfo.getTripDateText(post) + ": \n";
+        routeDescription += PostInfo.getDepartureDateTimeText(post) + " - depart from: \n";
+        routeDescription += "   " + post.source + "\n";
         routeDescription += "\n";
 
-        if (carpoolPost.getNumberSeatsTaken() == 0) {
-            routeDescription += "No passengers yet. \n";
-        }
-        else {
-            routeDescription += "Picking up " + carpoolPost.getNumberSeatsTaken() + " passengers: \n";
+        if (post instanceof Carpool) {
+            Carpool carpoolPost = (Carpool) post;
 
-            // TODO: go by waypoint order!
-            for (RideRequestPost rider : carpoolPost.getRiderPosts()) {
-                routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger at: \n";
-                routeDescription += "   " + rider.source + "\n";
+            if (carpoolPost.getNumberSeatsTaken() == 0) {
+                routeDescription += "No passengers yet. \n";
             }
+            else {
+
+                routeDescription += "Picking up " + carpoolPost.getNumberSeatsTaken() + " passenger";
+                if (carpoolPost.getNumberSeatsTaken() > 1) {
+                    routeDescription += "s"; // add plural for passenger(s).
+                }
+                routeDescription += ": \n";
+
+                // TODO: go by waypoint order!
+                for (RideRequestPost rider : carpoolPost.getRiderPosts()) {
+                    routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger at: \n";
+                    routeDescription += "   " + rider.source + "\n";
+                }
+            }
+
+            routeDescription += "\n";
         }
 
-        routeDescription += "\n";
-        routeDescription += PostInfo.getArrivalDateTimeText(carpoolPost) + " - arrive at: \n";
-        routeDescription += "   " + carpoolPost.destination;
+        routeDescription += PostInfo.getArrivalDateTimeText(post) + " - arrive at: \n";
+        routeDescription += "   " + post.destination;
 
         routeDescriptionText.setText(routeDescription);
     }
@@ -384,12 +388,16 @@ public class PostDetailActivity extends MainActivity
                     // [START_EXCLUDE]
                     setupViewsForPost(post);
 
+                    setupPostRouteDescription(post);
+
                     mPost = post;
                 }
                 else if(mPostType == Post.PostType.DRIVER) {
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
                     setupViewsForPost(post);
+
+                    setupPostRouteDescription(post);
 
                     mPost = post;
                 }
@@ -401,7 +409,7 @@ public class PostDetailActivity extends MainActivity
 
                     setupViewsForPost(post);
 
-                    setupCarpoolRouteDescription(post);
+                    setupPostRouteDescription(post); //setupCarpoolRouteDescription(post);
 
                     mPost = post;
                 }
@@ -457,6 +465,13 @@ public class PostDetailActivity extends MainActivity
         }
         mSourceView.setText(post.source);
         mDestinationView.setText(post.destination);
+
+        TextView postTripDateText = findViewById(R.id.post_date);
+        postTripDateText.setText(PostInfo.getTripDateText(post));
+
+        TextView postDateTimeText = findViewById(R.id.post_time);
+        postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(post));
+
         // TODO: Fix:
 //        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
 //        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);

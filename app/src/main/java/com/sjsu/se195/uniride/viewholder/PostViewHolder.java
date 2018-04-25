@@ -53,7 +53,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
             //...
         }
         else if (post.postType == Post.PostType.CARPOOL) {
-            sourceView.setText("CARPOOL: " + sourceView.getText()); // DEBUG ONLY.
+            sourceView.setText("CARPOOL: \n" + sourceView.getText()); // DEBUG ONLY.
 
             // TODO: add R.drawable.carpool_card??? view elements for # passengers, waypoints, trip time, etc.
         }
