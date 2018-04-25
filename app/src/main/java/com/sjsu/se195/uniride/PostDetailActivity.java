@@ -85,8 +85,8 @@ public class PostDetailActivity extends MainActivity
     private EditText mCommentField;
     private Button mCommentButton;
     private FloatingActionButton mShowMapButton;
-    private FloatingActionButton mCreateCarpoolButton;
-    private FloatingActionButton mFindMatchingPostsButton;
+    private Button mCreateCarpoolButton;
+    private Button mFindMatchingPostsButton;
     private RecyclerView mCommentsRecycler;
     View my_view;
 
@@ -165,9 +165,9 @@ public class PostDetailActivity extends MainActivity
 
         my_view = findViewById(R.id.for_map_layout);
 
-        mCreateCarpoolButton = (FloatingActionButton) findViewById(R.id.fab_create_carpool);
+        mCreateCarpoolButton = findViewById(R.id.fab_create_carpool);
 
-        mFindMatchingPostsButton = (FloatingActionButton) findViewById(R.id.fab_find_matching_posts);
+        mFindMatchingPostsButton = findViewById(R.id.fab_find_matching_posts);
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
 
@@ -279,7 +279,7 @@ public class PostDetailActivity extends MainActivity
         if (mPost == null) { // If post was not loaded directly from Intent.
             loadPostFromFirebase();
         }
-        else {
+        else { // If post was loaded directly from Intent:
             setupViewsForPost(mPost);
 
             // Once Post is loaded:

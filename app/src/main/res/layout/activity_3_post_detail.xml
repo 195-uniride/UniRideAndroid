@@ -75,14 +75,25 @@
         android:layout_below="@+id/comment_form"
         tools:listitem="@layout/item_comment" />
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/fab_create_carpool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:text="Join"/>
+
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_create_carpool"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginBottom="20dp"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_show_map"
@@ -92,13 +103,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <Button
         android:id="@+id/fab_find_matching_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:text="Find Matches"/>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_find_matching_posts"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginBottom="20dp"/>-->
 
     <include
         android:id="@+id/for_map_layout"
