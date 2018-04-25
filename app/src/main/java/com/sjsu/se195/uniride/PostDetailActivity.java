@@ -406,6 +406,8 @@ public class PostDetailActivity extends MainActivity
                     mPost = post;
                 }
 
+                System.out.println("PostDetailActivity: Loaded mPost: \n" + mPost.toString());
+
                 // Once Post is loaded:
                 mFindMatchingPostsButton.setEnabled(true);
 

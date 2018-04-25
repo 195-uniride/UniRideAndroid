@@ -23,7 +23,7 @@ public class Carpool extends DriverOfferPost {
     public List<RideRequestPost> riderPosts;
     private Date actualStartTime; //TODO: change to time.zonedDateTime
     private Date actualCompletionTime;
-    private enum CarpoolState{
+    private enum CarpoolState {
         INCOMPLETE, CANCELLED, PLANNED, ONGOING, ABORTED, COMPLETED
     }
     private CarpoolState carpoolState;
@@ -35,7 +35,7 @@ public class Carpool extends DriverOfferPost {
 
     // Constructors:
     //TODO: used by parties with passengers only.
-    public Carpool(){
+    public Carpool() {
         carpoolState = CarpoolState.PLANNED;
         riderPosts = new ArrayList<RideRequestPost>();
 
@@ -335,6 +335,8 @@ public class Carpool extends DriverOfferPost {
         result.put("stars", stars);
         result.put("passengerCount", passengerCount);
 
+        result.put("riderPosts", riderPosts); // try...
+
         return result;
     }
 
@@ -363,5 +365,25 @@ public class Carpool extends DriverOfferPost {
     }
     // TODO: Add Parcelable implementation:
     // ...
+
+    // To String:
+
+    @Override
+    public String toString() {
+        String postString =  super.toString();
+        postString += "   " + this.getClass().getSimpleName() + ".carpoolId = " + this.carpoolId + " \n";
+        postString += "   " + this.getClass().getSimpleName() + ".carpoolState = " + this.carpoolState.name() + " \n";
+        postString += "   " + this.getClass().getSimpleName() + ".getNumberSeatsTaken() = " + this.getNumberSeatsTaken() + " \n";
+        postString += "   " + this.getClass().getSimpleName() + ".totalTripTime = " + this.totalTripTime + " \n";
+        postString += "   " + this.getClass().getSimpleName() + ".totalTripDistance = " + this.totalTripDistance + " \n";
+        postString += "   " + this.getClass().getSimpleName() + ".driverPost = " + this.driverPost.toString() + " \n";
+        for (int i = 0; i < getNumberSeatsTaken(); i++) {
+            postString += "   " + this.getClass().getSimpleName() + ".riderPost[" + i + "] = "
+                    + riderPosts.get(i).toString() + " \n";
+        }
+
+
+        return postString;
+    }
 
 }

@@ -102,4 +102,15 @@ public class DriverOfferPost extends Post implements Parcelable {
         }
     };
 
+    // To String:
+
+    @Override
+    public String toString() {
+        String className = this.getClass().getSimpleName();
+        String postString =  super.toString();
+        postString += "   " + className + ".passengerCount = " + this.passengerCount + " \n";
+
+        return postString;
+    }
+
 }

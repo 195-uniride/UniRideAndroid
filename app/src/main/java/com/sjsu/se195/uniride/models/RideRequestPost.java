@@ -104,4 +104,23 @@ public class RideRequestPost extends Post {
         }
     };
 
+
+    // To String:
+
+    @Override
+    public String toString() {
+        String className = this.getClass().getSimpleName();
+
+        String postString =  super.toString();
+        if (this.pickuppoint == null) {
+            postString += "   " + className + ".pickuppoint = null \n";
+        }
+        else {
+            postString += "   " + className + ".pickuppoint = " + this.pickuppoint.toString() + " \n";
+        }
+
+
+        return postString;
+    }
+
 }

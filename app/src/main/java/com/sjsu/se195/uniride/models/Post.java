@@ -136,5 +136,28 @@ public class Post implements Parcelable {
         }
     };
 
+    // To String:
+
+    @Override
+    public String toString() {
+        String className = this.getClass().getSimpleName();
+
+        String postString =  className + ".toString: \n";
+        postString += "   " + className + ".postId = " + this.postId + " \n";
+        postString += "   " + className + ".uid = " + this.uid + " \n";
+        postString += "   " + className + ".organizationId = " + this.organizationId + " \n";
+        postString += "   " + className + ".postType = " + this.postType.name() + " \n";
+        postString += "   " + className + ".author = " + this.author + " \n";
+        postString += "   " + className + ".source = " + this.source + " \n";
+        postString += "   " + className + ".destination = " + this.destination + " \n";
+        postString += "   " + className + ".departureTime = " + this.departureTime + " \n";
+        postString += "   " + className + ".arrivalTime = " + this.arrivalTime + " \n";
+        postString += "   " + className + ".tripDate = " + this.tripDate + " \n";
+        postString += "   " + className + ".starCount = " + this.starCount + " \n";
+        postString += "   " + className + ".stars = " + this.stars.toString() + " \n";
+
+        return postString;
+    }
+
 }
 // [END post_class]
