@@ -1,5 +1,8 @@
 package com.sjsu.se195.uniride;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +27,13 @@ import com.sjsu.se195.uniride.models.RideRequestPost;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
@@ -170,7 +179,11 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
                 addRider(carpool, (RideRequestPost) mLurkerPost);
               }
 
-              writeNewCarpoolObject(carpool);
+              try {
+                  writeNewCarpoolObject(carpool);
+              } catch (ParseException e) {
+                  e.printStackTrace();
+              }
 
               // Create the Carpool object:
               Intent intent = new Intent(NewCarpoolActivity.this, CarpoolDetailActivity.class);
@@ -187,7 +200,7 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       mLurkerPostReference.addValueEventListener(postListener);
   }
 
-  private void writeNewCarpoolObject(Carpool carpool) {
+  private void writeNewCarpoolObject(Carpool carpool) throws ParseException {
       // Create new post at /user-posts/$userid/$postid and at
       // /posts/$postid simultaneously
       String key = mDatabase.child("posts").child("carpools").push().getKey();
@@ -217,6 +230,32 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
       childUpdates2.put("/posts/carpools/" + key + "/riderposts", carpoolRiders);
 
       mDatabase.updateChildren(childUpdates2);
+
+      //Now set the alarm for when the carpool is starting
+      // lurker post is the that is the post of the current user
+      System.out.println("This is the departure time: " + mLurkerPost.tripDate);
+
+      AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+      //Getting the date and time for the alarm
+      DateFormat date_format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+      DateFormat time_format = new SimpleDateFormat("hh:mm", Locale.ENGLISH);
+      String date = Integer.toString(mLurkerPost.tripDate);
+      String time = Integer.toString(mLurkerPost.departure_time);
+
+      Date date_of_carpool = date_format.parse(date);
+      Date time_of_carpool = time_format.parse(time);
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(date_of_carpool);
+      System.out.println("***************************file - NewCarpoolActivity************************************");
+      System.out.println("Month of carpool is: " + calendar.get(Calendar.MONTH));
+
+      //Setting up the intent to start later for the alarm
+      Intent intent = new Intent(NewCarpoolActivity.this, CarpoolActivity.class);
+
+      //setting the up the intent to be called through the alarm
+      PendingIntent pendingIntent = PendingIntent.getBroadcast(NewCarpoolActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      alarm.set(AlarmManager.RTC_WAKEUP, date_of_carpool.getTime() + time_of_carpool.getTime() , pendingIntent);
 
   }
 
