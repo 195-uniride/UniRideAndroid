@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -233,29 +234,29 @@ public class NewCarpoolActivity extends BaseActivity { //AppCompatActivity {
 
       //Now set the alarm for when the carpool is starting
       // lurker post is the that is the post of the current user
-      System.out.println("This is the departure time: " + mLurkerPost.tripDate);
-
-      AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+      AlarmManager alarm = (AlarmManager) NewCarpoolActivity.this.getSystemService(Context.ALARM_SERVICE);
 
       //Getting the date and time for the alarm
-      DateFormat date_format = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
-      DateFormat time_format = new SimpleDateFormat("hh:mm", Locale.ENGLISH);
-      String date = Integer.toString(mLurkerPost.tripDate);
-      String time = Integer.toString(mLurkerPost.departure_time);
+      DateFormat date_and_time_format = new SimpleDateFormat("yyyyMMdd hhmm", Locale.ENGLISH);
+      //adding 100 because the months seems to be behind a value
+      // (even with the fact that their index starts from 0)
+      String date_and_time = Integer.toString(mLurkerPost.tripDate + 100)+
+              " " + Integer.toString(mLurkerPost.departure_time);
 
-      Date date_of_carpool = date_format.parse(date);
-      Date time_of_carpool = time_format.parse(time);
+      Date date_and_time_of_carpool = date_and_time_format.parse(date_and_time);
       Calendar calendar = Calendar.getInstance();
-      calendar.setTime(date_of_carpool);
+      calendar.setTime(date_and_time_of_carpool);
+
       System.out.println("***************************file - NewCarpoolActivity************************************");
       System.out.println("Month of carpool is: " + calendar.get(Calendar.MONTH));
+      System.out.println("The alarm will be set for: " + date_and_time_of_carpool);
 
       //Setting up the intent to start later for the alarm
       Intent intent = new Intent(NewCarpoolActivity.this, CarpoolActivity.class);
 
       //setting the up the intent to be called through the alarm
       PendingIntent pendingIntent = PendingIntent.getBroadcast(NewCarpoolActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-      alarm.set(AlarmManager.RTC_WAKEUP, date_of_carpool.getTime() + time_of_carpool.getTime() , pendingIntent);
+      alarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
   }
 

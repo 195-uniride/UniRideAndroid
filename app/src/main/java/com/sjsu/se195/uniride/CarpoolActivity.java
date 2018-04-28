@@ -9,5 +9,6 @@ public class CarpoolActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carpool);
+        System.out.println("I m in the carpool Activity");
     }
 }
