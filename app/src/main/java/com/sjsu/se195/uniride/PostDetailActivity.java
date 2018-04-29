@@ -68,7 +68,10 @@ public class PostDetailActivity extends MainActivity
     private static final String TAG = "PostDetailActivity";
 
     public static final String EXTRA_POST_KEY = "post_key";
-    private boolean postType; // True = RideRequestPost, False = DirverOfferPost
+    public static final String EXTRA_POST_TYPE = "typeOfPost";
+    public static final String EXTRA_POST_OBJECT = "post";
+
+    // private boolean postType; // True = RideRequestPost, False = DirverOfferPost
 
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
@@ -111,30 +114,30 @@ public class PostDetailActivity extends MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_3_post_detail);
-        postType = getIntent().getExtras().getBoolean("postType");
+        //postType = getIntent().getExraBoo("postType");
 
         // Get type of post (RIDER, DRIVER, CARPOOL) from intent:
         try {
-            mPostType = Post.PostType.valueOf(getIntent().getStringExtra("typeOfPost"));
+            mPostType = Post.PostType.valueOf(getIntent().getStringExtra(PostDetailActivity.EXTRA_POST_TYPE));
         }
         catch (NullPointerException ex) { // If this post does not have this postType attribute, set to UNKNOWN:
             mPostType = Post.PostType.UNKNOWN;
         }
 
-        if (mPostType == Post.PostType.UNKNOWN) {
-            if (postType) {
-                mPostType = Post.PostType.RIDER;
-            } else {
-                mPostType = Post.PostType.DRIVER;
-            }
-        }
+//        if (mPostType == Post.PostType.UNKNOWN) {
+//            if (postType) {
+//                mPostType = Post.PostType.RIDER;
+//            } else {
+//                mPostType = Post.PostType.DRIVER;
+//            }
+//        }
 
         System.out.println("Setting Post to Type: " + mPostType);
 
-        // Get post key from intent
+        // Get post key from intent: If not sent Firebase key, check if sent Post object itself:
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
         if (mPostKey == null || mPostKey.equals("")) {
-            mPost = getIntent().getParcelableExtra("post");
+            mPost = getIntent().getParcelableExtra(PostDetailActivity.EXTRA_POST_OBJECT);
 
             if (mPost == null) {
                 throw new IllegalArgumentException("PostDetailActivity: Must pass EXTRA_POST_KEY or Post Object");
@@ -255,12 +258,12 @@ public class PostDetailActivity extends MainActivity
         mCreateCarpoolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
-                intent.putExtra("postType", postType);
-
-                intent.putExtra("postId", mPostKey); // for: FirebaseDatabase.getInstance().getReference().child("posts").child("rideRequests").child(mPostKey);
-
                 System.out.println("Starting NewCarpoolActivity...");
+
+                Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
+
+                intent.putExtra(NewCarpoolActivity.EXTRA_POST_OBJECT, mPost);
+
                 startActivity(intent);
             }
         });
@@ -274,7 +277,7 @@ public class PostDetailActivity extends MainActivity
                 System.out.println("..... Sending mPost = " + mPost + "; with mPost.source = " + mPost.source);
 
                 Intent intent = new Intent(PostDetailActivity.this, SearchResultsActivity.class);
-                intent.putExtra("post", mPost); // TODO fix
+                intent.putExtra(SearchResultsActivity.EXTRA_POST_OBJECT, mPost);
 
                 startActivity(intent);
             }

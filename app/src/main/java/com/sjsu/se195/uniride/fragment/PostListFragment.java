@@ -223,8 +223,8 @@ public abstract class PostListFragment extends Fragment {
                             System.out.println("current activity is newcarpoolactivity");
                             //setPostsAndCreateCarpool(postRef);
                             //Call the method in NewCarpoolActivity
-                            // TODO:
-                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
+                            // TODO: Remove...NewCarpoolActivity now uses SearchResultsPostListFragment.
+//                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
                         }
                         else {
                             // Launch PostDetailActivity

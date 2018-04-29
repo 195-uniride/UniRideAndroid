@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class SearchResultsActivity extends BaseActivity implements PostSearchResultsListener {
 
     private static final String TAG = "SearchResultsActivity";
+    public static final String EXTRA_POST_OBJECT = "SearchResultsActivity.post";
 
     private Post mPost;
 
@@ -32,15 +33,17 @@ public class SearchResultsActivity extends BaseActivity implements PostSearchRes
 
         setContentView(R.layout.activity_search_results);
 
-        loadingIndicator = (ProgressBar)findViewById(R.id.loadingIndicator);
+        loadingIndicator = findViewById(R.id.loadingIndicator);
         loadingIndicator.setIndeterminate(false);
         startLoadingSpinAnimation();
 
         // Get Post object from Intent extras:
-        mPost = getIntent().getExtras().getParcelable("post");
+        mPost = getIntent().getParcelableExtra(SearchResultsActivity.EXTRA_POST_OBJECT);
 
         if (mPost == null) {
             System.out.println("ERROR: ==== CANNOT START SEARCH ====; mPost = " + mPost);
+
+            throw new IllegalArgumentException(TAG + ": Must pass EXTRA_POST_OBJECT.");
         }
         else {
 
@@ -48,7 +51,7 @@ public class SearchResultsActivity extends BaseActivity implements PostSearchRes
             System.out.println("==== STARTING SEARCH ====");
             System.out.println("=== Searching with mPost = " + mPost + "; with mPost.source = " + mPost.source);
 
-
+            // TODO: Add filter options: ...
 
             PostSearcher searcher = new PostSearcher(FirebaseDatabase.getInstance().getReference());
 
@@ -70,8 +73,8 @@ public class SearchResultsActivity extends BaseActivity implements PostSearchRes
 
         System.out.println("....Sending bundle with searchResults = " + searchResults);
         // Add bundle arguments:
-        bundle.putParcelableArrayList("searchResults", searchResults);
-        bundle.putParcelableArrayList("potentialCarpoolResults", potentialCarpools);
+        bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_SEARCH_RESULTS, searchResults);
+        bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_POTENTIAL_CARPOOL_RESULTS, potentialCarpools);
 
         Fragment searchResultsFragment = new SearchResultsPostListFragment();
         searchResultsFragment.setArguments(bundle);

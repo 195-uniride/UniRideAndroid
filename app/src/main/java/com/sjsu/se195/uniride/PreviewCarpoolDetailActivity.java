@@ -58,25 +58,21 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
         routeDescriptionText = findViewById(R.id.text_route_details);
 
         mConfirmCarpoolButton = findViewById(R.id.button_confirm_carpool);
+
+        // Start with the confirmation button disabled:
+        mConfirmCarpoolButton.setEnabled(false); // Wait until determined that the carpool is possible.
+
         mConfirmCarpoolButton.setOnClickListener(new View.OnClickListener() {
 
             // TODO: save Carpool to database!
 
             @Override
             public void onClick(View view) {
-                // TODO: intent to PostDetailActivity of the newly created Carpool.
-//                Intent intent = new Intent(PreviewCarpoolDetailActivity.this, NewCarpoolActivity.class);
-//                intent.putExtra("postType", postType);
-//
-//                intent.putExtra("postId", mPostKey); // for: FirebaseDatabase.getInstance().getReference().child("posts").child("rideRequests").child(mPostKey);
-//
-//                System.out.println("Starting NewCarpoolActivity...");
-//                startActivity(intent);
+                writeNewCarpoolObject(mPotentialCarpool);
             }
         });
 
-        // Start with the confirmation button disabled:
-        mConfirmCarpoolButton.setEnabled(false); // Wait until determined that the carpool is possible.
+
     }
 
     @Override
@@ -87,13 +83,15 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
 
         if (mPotentialCarpool.areAllTripTimeLimitsSatisfied()) {
             // If carpool is possible, let user confirm carpool:
-            routeDescriptionText.setText(PostInfo.getRouteDescription(mPotentialCarpool));
+            routeDescriptionText.setText("Preview Potential Carpool: \n\n"
+                    + PostInfo.getRouteDescription(mPotentialCarpool));
 
             mConfirmCarpoolButton.setEnabled(true);
         }
         else {
             // Tell user that carpool is impossible:
-            routeDescriptionText.setText("[!] Due to incompatible time constraints, the carpool is not possible:"
+            routeDescriptionText.setText("Preview Potential Carpool: \n\n"
+                    + "[!] Due to incompatible time constraints, the carpool is not possible:"
                 + "\n\n" + PostInfo.getRouteDescription(mPotentialCarpool));
 
             mConfirmCarpoolButton.setEnabled(false);
@@ -113,6 +111,9 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
         }
         mSourceView.setText(post.source);
         mDestinationView.setText(post.destination);
+
+        TextView toText = findViewById(R.id.post_card_address_to);
+        toText.setText("to");
 
         TextView postTripDateText = findViewById(R.id.post_date);
         postTripDateText.setText(PostInfo.getTripDateText(post));
@@ -177,6 +178,17 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
         }
 
         mDatabase.updateChildren(childUpdatesUserCarpool);
+
+        // Now do Intent to newly-created PostDetailActivity (of carpool post).
+
+        // Launch PostDetailActivity
+        Intent intent = new Intent(PreviewCarpoolDetailActivity.this, PostDetailActivity.class);
+
+        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, key);
+        intent.putExtra(PostDetailActivity.EXTRA_POST_TYPE, Post.PostType.CARPOOL.name());
+
+        startActivity(intent);
+
 
         // Also save the list of Riders: (DON'T NEED TO: will automatically save with new carpool method.
 

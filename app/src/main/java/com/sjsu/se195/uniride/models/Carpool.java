@@ -1,10 +1,14 @@
 package com.sjsu.se195.uniride.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.sjsu.se195.uniride.Mapper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -372,6 +376,108 @@ public class Carpool extends DriverOfferPost {
     }
     // TODO: Add Parcelable implementation:
     // ...
+
+    // Parcelable methods:
+
+    /*
+    private DriverOfferPost driverPost;
+    private String carpoolId;
+    public List<RideRequestPost> riderPosts;
+    private Date actualStartTime;
+    private Date actualCompletionTime;
+    private enum CarpoolState {
+        INCOMPLETE, CANCELLED, PLANNED, ONGOING, ABORTED, COMPLETED
+    }
+    private CarpoolState carpoolState;
+    private Location currentLocation; //TODO: add setter. only if carpool ONGOING
+    private int totalTripTime = -1; // in seconds; -1 represents an unset or invalid state.
+    private int totalTripDistance = -1; // in meters; -1 represents an unset or invalid state.
+
+    private boolean areAllTripTimeLimitsSatisfied = false;
+
+    private Mapper carpoolMapper = null;
+     */
+
+    // Constructor for loading from a Parcel:
+    public Carpool(Parcel in) {
+
+        super(in);
+
+        // NOTE: order MUST be exactly the same as writeToParcel:
+
+        this.driverPost = in.readParcelable(DriverOfferPost.class.getClassLoader());
+
+        RideRequestPost[] ridersArray = in.createTypedArray(RideRequestPost.CREATOR);
+        this.riderPosts = Arrays.asList(ridersArray);
+
+        this.carpoolId = in.readString();
+
+        this.carpoolState = CarpoolState.valueOf(in.readString());
+
+        this.totalTripTime = in.readInt();
+
+        this.totalTripDistance = in.readInt();
+
+        // TODO: read areAllTripTimeLimitsSatisfied...
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+
+        super.writeToParcel(out, flags);
+
+        // NOTE: order MUST be exactly the same as Post(Parcel in):
+
+        out.writeParcelable(this.driverPost, flags);
+
+        out.writeTypedArray(getRiderPostsInArray(), flags);
+
+        out.writeString(this.carpoolId);
+
+        out.writeString(this.carpoolState.name());
+
+        out.writeInt(this.totalTripTime);
+
+        out.writeInt(this.totalTripDistance);
+
+        // TODO: write areAllTripTimeLimitsSatisfied...
+    }
+
+    // Parcelable-Helper method:
+    private RideRequestPost[] getRiderPostsInArray() {
+        RideRequestPost[] ridersArray = new RideRequestPost[riderPosts.size()];
+
+        ridersArray = riderPosts.toArray(ridersArray);
+
+        return ridersArray;
+    }
+
+    // After implementing the `Parcelable` interface, we need to create the
+    // `Parcelable.Creator<MyParcelable> CREATOR` constant for our class;
+    // Notice how it has our class specified as its type.
+    public static final Parcelable.Creator<Carpool> CREATOR
+            = new Parcelable.Creator<Carpool>() {
+
+        // This simply calls our new constructor (typically private) and
+        // passes along the unmarshalled `Parcel`, and then returns the new object!
+        @Override
+        public Carpool createFromParcel(Parcel in) {
+            return new Carpool(in);
+        }
+
+        // We just need to copy this and change the type to match our class.
+        @Override
+        public Carpool[] newArray(int size) {
+            return new Carpool[size];
+        }
+    };
+
 
     // To String:
 
