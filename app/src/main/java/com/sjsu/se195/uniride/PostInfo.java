@@ -2,7 +2,9 @@ package com.sjsu.se195.uniride;
 
 import android.util.Log;
 
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.Post;
+import com.sjsu.se195.uniride.models.RideRequestPost;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -88,6 +90,52 @@ public class PostInfo {
         }
 
         return dateTime;
+    }
+
+
+    public static String getRouteDescription(Post post) {
+        /*
+            Thursday, May 5:
+            9:00 AM - depart from
+               LocA (source)
+            9:30 AM - arrive at
+               LocC (destination)
+
+         */
+
+        String routeDescription = PostInfo.getTripDateText(post) + ": \n";
+        routeDescription += PostInfo.getDepartureDateTimeText(post) + " - depart from: \n";
+        routeDescription += "   " + post.source + "\n";
+        routeDescription += "\n";
+
+        if (post instanceof Carpool) {
+            Carpool carpoolPost = (Carpool) post;
+
+            if (carpoolPost.getNumberSeatsTaken() == 0) {
+                routeDescription += "No passengers yet. \n";
+            }
+            else {
+
+                routeDescription += "Picking up " + carpoolPost.getNumberSeatsTaken() + " passenger";
+                if (carpoolPost.getNumberSeatsTaken() > 1) {
+                    routeDescription += "s"; // add plural for passenger(s).
+                }
+                routeDescription += ": \n";
+
+                // TODO: go by waypoint order!
+                for (RideRequestPost rider : carpoolPost.getRiderPosts()) {
+                    routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger at: \n";
+                    routeDescription += "   " + rider.source + "\n";
+                }
+            }
+
+            routeDescription += "\n";
+        }
+
+        routeDescription += PostInfo.getArrivalDateTimeText(post) + " - arrive at: \n";
+        routeDescription += "   " + post.destination;
+
+        return routeDescription;
     }
 
 }

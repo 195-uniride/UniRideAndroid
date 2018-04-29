@@ -43,7 +43,7 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         postDateTimeText = itemView.findViewById(R.id.post_time);
     }
 
-    public void bindToPost(String name, Boolean postType, Post post, View.OnClickListener starClickListener) {
+    public void bindToPost(String name, Post.PostType postType, Post post, View.OnClickListener starClickListener) {
         authorView.setText(name);
         sourceView.setText(trimAddress(post.source));
         numStarsView.setText(String.valueOf(post.starCount));
@@ -53,14 +53,16 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
         System.out.println("PostViewHolder:bindToPost: post.postType = " + post.postType);
 
-        if (post.postType == Post.PostType.RIDER) {
-            //...
+        if (postType == Post.PostType.RIDER) {
+            background.setImageResource(R.drawable.driver_card); // NOTE: driver card is for Ride Request.
         }
-        else if (post.postType == Post.PostType.DRIVER) {
-            //...
+        else if (postType == Post.PostType.DRIVER) {
+            background.setImageResource(R.drawable.rider_card); // NOTE: rider card is for Drive Offer.
         }
-        else if (post.postType == Post.PostType.CARPOOL) {
+        else if (postType == Post.PostType.CARPOOL) {
             sourceView.setText("CARPOOL: \n" + sourceView.getText()); // DEBUG ONLY.
+
+            background.setImageResource(R.drawable.carpool_card); // TODO: make special card for carpools.
 
             // TODO: add R.drawable.carpool_card??? view elements for # passengers, waypoints, trip time, etc.
         }
@@ -68,12 +70,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         postTripDateText.setText(PostInfo.getTripDateText(post));
         postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(post));
 
-        if(postType){
-            background.setImageResource(R.drawable.driver_card);
-        }
-        else{
-            background.setImageResource(R.drawable.rider_card);
-        }
         starView.setOnClickListener(starClickListener);
     }
 

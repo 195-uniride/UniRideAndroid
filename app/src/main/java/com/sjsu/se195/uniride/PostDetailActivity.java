@@ -303,48 +303,7 @@ public class PostDetailActivity extends MainActivity
     private void setupPostRouteDescription(Post post) {
         TextView routeDescriptionText = findViewById(R.id.text_route_details);
 
-        /*
-            Thursday, May 5:
-            9:00 AM - depart from
-               LocA (source)
-            9:30 AM - arrive at
-               LocC (destination)
-
-         */
-
-        String routeDescription = PostInfo.getTripDateText(post) + ": \n";
-        routeDescription += PostInfo.getDepartureDateTimeText(post) + " - depart from: \n";
-        routeDescription += "   " + post.source + "\n";
-        routeDescription += "\n";
-
-        if (post instanceof Carpool) {
-            Carpool carpoolPost = (Carpool) post;
-
-            if (carpoolPost.getNumberSeatsTaken() == 0) {
-                routeDescription += "No passengers yet. \n";
-            }
-            else {
-
-                routeDescription += "Picking up " + carpoolPost.getNumberSeatsTaken() + " passenger";
-                if (carpoolPost.getNumberSeatsTaken() > 1) {
-                    routeDescription += "s"; // add plural for passenger(s).
-                }
-                routeDescription += ": \n";
-
-                // TODO: go by waypoint order!
-                for (RideRequestPost rider : carpoolPost.getRiderPosts()) {
-                    routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger at: \n";
-                    routeDescription += "   " + rider.source + "\n";
-                }
-            }
-
-            routeDescription += "\n";
-        }
-
-        routeDescription += PostInfo.getArrivalDateTimeText(post) + " - arrive at: \n";
-        routeDescription += "   " + post.destination;
-
-        routeDescriptionText.setText(routeDescription);
+        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
     }
 
     private void loadPostFromFirebase() {
@@ -386,6 +345,10 @@ public class PostDetailActivity extends MainActivity
                 if(mPostType == Post.PostType.RIDER) {
                     RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
+                    if (post.postType == Post.PostType.UNKNOWN) {
+                        post.postType = Post.PostType.RIDER; // Set post type if wasn't present in databse.
+                    }
+
                     setupViewsForPost(post);
 
                     setupPostRouteDescription(post);
@@ -395,6 +358,9 @@ public class PostDetailActivity extends MainActivity
                 else if(mPostType == Post.PostType.DRIVER) {
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
+                    if (post.postType == Post.PostType.UNKNOWN) {
+                        post.postType = Post.PostType.DRIVER; // Set post type if wasn't present in databse.
+                    }
                     setupViewsForPost(post);
 
                     setupPostRouteDescription(post);
@@ -404,6 +370,9 @@ public class PostDetailActivity extends MainActivity
                 else if(mPostType == Post.PostType.CARPOOL) {
                     Carpool post = dataSnapshot.getValue(Carpool.class);
                     // [START_EXCLUDE]
+                    if (post.postType == Post.PostType.UNKNOWN) {
+                        post.postType = Post.PostType.CARPOOL; // Set post type if wasn't present in databse.
+                    }
 
                     System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
 
@@ -412,6 +381,10 @@ public class PostDetailActivity extends MainActivity
                     setupPostRouteDescription(post); //setupCarpoolRouteDescription(post);
 
                     mPost = post;
+                }
+
+                if (mPost.postId == null || mPost.postId.isEmpty()) {
+                    mPost.postId = mPostKey; // Set the post's key as ID if wasn't stored in database.
                 }
 
                 System.out.println("PostDetailActivity: Loaded mPost: \n" + mPost.toString());

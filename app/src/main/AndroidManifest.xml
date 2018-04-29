@@ -63,7 +63,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CarpoolDetailActivity"
+            android:name=".PreviewCarpoolDetailActivity"
             android:label="@string/title_activity_carpool_detail" />
         <activity
             android:name=".ProfilePageActivity"

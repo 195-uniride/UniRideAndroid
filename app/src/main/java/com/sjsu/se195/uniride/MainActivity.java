@@ -40,6 +40,7 @@ import devlight.io.library.ntb.NavigationTabBar;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
+import com.sjsu.se195.uniride.models.Post;
 
 import java.util.ArrayList;
 
@@ -51,20 +52,23 @@ public class  MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_0_main);
+
+        // "I am a driver" -> Show me Ride Requests:
         findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
-                intent.putExtra("driverMode", true);
+                intent.putExtra(MainSubcategoryActivity.EXTRA_POST_TYPE_TO_SHOW, Post.PostType.RIDER.name());
                 startActivity(intent);
             }
         });
 
+        // "I am a passenger" -> Show me Drive Offers (including Carpools):
         findViewById(R.id.rider_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
-                intent.putExtra("driverMode", false);
+                intent.putExtra(MainSubcategoryActivity.EXTRA_POST_TYPE_TO_SHOW, Post.PostType.DRIVER.name());
                 startActivity(intent);
             }
         });

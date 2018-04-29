@@ -31,6 +31,8 @@ public class Carpool extends DriverOfferPost {
     private int totalTripTime = -1; // in seconds; -1 represents an unset or invalid state.
     private int totalTripDistance = -1; // in meters; -1 represents an unset or invalid state.
 
+    private boolean areAllTripTimeLimitsSatisfied = false;
+
     private Mapper carpoolMapper = null;
 
     // Constructors:
@@ -129,6 +131,11 @@ public class Carpool extends DriverOfferPost {
     // Information methods:
 
     public boolean areAllTripTimeLimitsSatisfied() {
+
+        // Skip calculation if have done before:
+        if (areAllTripTimeLimitsSatisfied) {
+            return true;
+        }
 
         System.out.println("getTotalTripTime() = " + getEstimatedTotalTripTimeInSeconds()); // TODO remove....
 
@@ -370,15 +377,16 @@ public class Carpool extends DriverOfferPost {
 
     @Override
     public String toString() {
+        String className = this.getClass().getSimpleName();
         String postString =  super.toString();
-        postString += "   " + this.getClass().getSimpleName() + ".carpoolId = " + this.carpoolId + " \n";
-        postString += "   " + this.getClass().getSimpleName() + ".carpoolState = " + this.carpoolState.name() + " \n";
-        postString += "   " + this.getClass().getSimpleName() + ".getNumberSeatsTaken() = " + this.getNumberSeatsTaken() + " \n";
-        postString += "   " + this.getClass().getSimpleName() + ".totalTripTime = " + this.totalTripTime + " \n";
-        postString += "   " + this.getClass().getSimpleName() + ".totalTripDistance = " + this.totalTripDistance + " \n";
-        postString += "   " + this.getClass().getSimpleName() + ".driverPost = " + this.driverPost.toString() + " \n";
+        postString += "   " + className + ".carpoolId = " + this.carpoolId + " \n";
+        postString += "   " + className + ".carpoolState = " + this.carpoolState.name() + " \n";
+        postString += "   " + className + ".getNumberSeatsTaken() = " + this.getNumberSeatsTaken() + " \n";
+        postString += "   " + className + ".totalTripTime = " + this.totalTripTime + " \n";
+        postString += "   " + className + ".totalTripDistance = " + this.totalTripDistance + " \n";
+        postString += "   " + className + ".driverPost = " + this.driverPost.toString() + " \n";
         for (int i = 0; i < getNumberSeatsTaken(); i++) {
-            postString += "   " + this.getClass().getSimpleName() + ".riderPost[" + i + "] = "
+            postString += "   " + className + ".riderPost[" + i + "] = "
                     + riderPosts.get(i).toString() + " \n";
         }
 
