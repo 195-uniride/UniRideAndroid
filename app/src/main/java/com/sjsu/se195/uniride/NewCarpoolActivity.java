@@ -69,6 +69,9 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
 
             PostSearcher searcher = new PostSearcher(FirebaseDatabase.getInstance().getReference());
 
+            // Add filter for showing only current user's posts for join:
+            searcher.userSearchType = PostSearcher.UserSearchType.USER_POSTS_ONLY;
+
             searcher.findSearchResults(mSelectedPostToJoin); // Note: asynchronous function. Use onSearchResultsFound to get results.
 
             searcher.addListener(NewCarpoolActivity.this);

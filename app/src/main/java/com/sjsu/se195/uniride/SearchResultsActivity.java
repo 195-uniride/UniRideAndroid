@@ -51,9 +51,10 @@ public class SearchResultsActivity extends BaseActivity implements PostSearchRes
             System.out.println("==== STARTING SEARCH ====");
             System.out.println("=== Searching with mPost = " + mPost + "; with mPost.source = " + mPost.source);
 
-            // TODO: Add filter options: ...
-
             PostSearcher searcher = new PostSearcher(FirebaseDatabase.getInstance().getReference());
+
+            // Add filter for showing only other users' posts for matches:
+            searcher.userSearchType = PostSearcher.UserSearchType.NO_USER_POSTS;
 
             searcher.findSearchResults(mPost); // Note: asynchronous function. Use onSearchResultsFound to get results.
 

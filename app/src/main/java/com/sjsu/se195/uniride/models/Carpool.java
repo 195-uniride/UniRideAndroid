@@ -25,7 +25,7 @@ public class Carpool extends DriverOfferPost {
     private DriverOfferPost driverPost;
     private String carpoolId;
     public List<RideRequestPost> riderPosts;
-    private Date actualStartTime; //TODO: change to time.zonedDateTime
+    private Date actualStartTime;
     private Date actualCompletionTime;
     private enum CarpoolState {
         INCOMPLETE, CANCELLED, PLANNED, ONGOING, ABORTED, COMPLETED

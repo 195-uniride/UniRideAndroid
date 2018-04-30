@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.PreviewCarpoolDetailActivity;
@@ -58,9 +59,20 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
 
         rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
 
-        mRecycler = rootView.findViewById(R.id.messages_list);
 
-        mRecycler.setHasFixedSize(true);
+
+        if (mPotentialCarpools.size() == 0) {
+            TextView noResultsFoundText = rootView.findViewById(R.id.no_posts_found_text);
+            noResultsFoundText.setText("No Search Results Found");
+            noResultsFoundText.setVisibility(View.VISIBLE);
+        }
+        else {
+            mRecycler = rootView.findViewById(R.id.messages_list);
+
+            mRecycler.setHasFixedSize(true);
+        }
+
+
         return rootView;
     }
 
@@ -71,13 +83,17 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
 
         //postType = savedInstanceState.getBundle("postType");
 
-        // Set up Layout Manager, reverse layout
-        mManager = new LinearLayoutManager(getActivity());
-        mManager.setReverseLayout(true);
-        mManager.setStackFromEnd(true);
-        mRecycler.setLayoutManager(mManager);
+        if (mPotentialCarpools.size() > 0) {
+            // Set up Layout Manager, reverse layout
+            mManager = new LinearLayoutManager(getActivity());
+            mManager.setReverseLayout(true);
+            mManager.setStackFromEnd(true);
+            mRecycler.setLayoutManager(mManager);
 
-        loadPosts();
+            loadPosts();
+        }
+
+
 
     }
 
@@ -94,16 +110,12 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
     private void loadPosts() {
         System.out.println("About to load posts.....");
 
-        // With Posts:
-        // mAdapter = new PostListRecyclerAdapter(mPostList);
-
         // With Potential Carpool objects:
         mAdapter = new PotentialCarpoolListRecyclerAdapter(mPotentialCarpools);
 
         mRecycler.setAdapter(mAdapter);
 
         mAdapter.setClickListener(this);
-
     }
 
     @Override

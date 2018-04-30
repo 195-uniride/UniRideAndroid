@@ -348,7 +348,7 @@ public class PostDetailActivity extends MainActivity
                 if(mPostType == Post.PostType.RIDER) {
                     RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == Post.PostType.UNKNOWN) {
+                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
                         post.postType = Post.PostType.RIDER; // Set post type if wasn't present in databse.
                     }
 
@@ -361,7 +361,7 @@ public class PostDetailActivity extends MainActivity
                 else if(mPostType == Post.PostType.DRIVER) {
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == Post.PostType.UNKNOWN) {
+                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
                         post.postType = Post.PostType.DRIVER; // Set post type if wasn't present in databse.
                     }
                     setupViewsForPost(post);
@@ -373,7 +373,7 @@ public class PostDetailActivity extends MainActivity
                 else if(mPostType == Post.PostType.CARPOOL) {
                     Carpool post = dataSnapshot.getValue(Carpool.class);
                     // [START_EXCLUDE]
-                    if (post.postType == Post.PostType.UNKNOWN) {
+                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
                         post.postType = Post.PostType.CARPOOL; // Set post type if wasn't present in databse.
                     }
 

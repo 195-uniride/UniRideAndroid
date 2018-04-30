@@ -62,9 +62,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         else if (postType == Post.PostType.CARPOOL) {
             sourceView.setText("CARPOOL: \n" + sourceView.getText()); // DEBUG ONLY.
 
-            background.setImageResource(R.drawable.carpool_card); // TODO: make special card for carpools.
+            background.setImageResource(R.drawable.carpool_card);
 
-            // TODO: add R.drawable.carpool_card??? view elements for # passengers, waypoints, trip time, etc.
+            // TODO: add view elements for # passengers, waypoints, trip time, etc.
         }
 
         postTripDateText.setText(PostInfo.getTripDateText(post));
