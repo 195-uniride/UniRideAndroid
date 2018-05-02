@@ -165,7 +165,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     // [START write_fan_out]
     private void addUserToOrganization(String userOrganizationEmail) {
         // Link user with the organization, and include the user's organization email:
-        String key = mDatabase.child("user-organizations").push().getKey();
+        String userOrgkey = mDatabase.child("user-organizations").push().getKey();
 
         Map<String, Object> userOrganizationValues = getUserOrganizationValuesMap(userOrganizationEmail, mOrganizationNameView.getText().toString());
 
@@ -174,7 +174,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         mDatabase.updateChildren(childUpdates);
 
-        setOrganizationAsNewDefault(key);
+        setOrganizationAsNewDefault(mOrganizationKey);
     }
 
     private void setOrganizationAsNewDefault(final String organizationId) {
