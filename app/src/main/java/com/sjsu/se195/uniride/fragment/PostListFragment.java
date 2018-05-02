@@ -164,9 +164,21 @@ public abstract class PostListFragment extends Fragment {
     // TODO:
     public String getSelectedOrganizationId() {
 //        System.out.println("Getting selected org ID from MainSubcategoryActivity...");
-//        return ((MainSubcategoryActivity)getActivity()).getSelectedOrganizationId();
+        if (getActivity() instanceof MainSubcategoryActivity) {
+            return ((MainSubcategoryActivity)getActivity()).getSelectedOrganizationId();
+        }
+        else {
+            /*
+                DO NOT USE: mSelectedOrganizationId will not be updated by OrgSpinner.
+                 Make sure to add additional if-statement if add another Activity that
+                 uses this fragment, and have it return the currently
+                 selected organization ID.
+             */
+            return mSelectedOrganizationId;
+        }
 
-        return mSelectedOrganizationId;
+
+
     }
 
 
