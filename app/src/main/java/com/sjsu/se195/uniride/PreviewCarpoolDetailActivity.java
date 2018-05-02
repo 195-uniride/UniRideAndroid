@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,6 +17,7 @@ import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
+import com.sjsu.se195.uniride.models.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -121,6 +123,8 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
         TextView postDateTimeText = findViewById(R.id.post_time);
         postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(post));
 
+        setPostAuthor();
+
         // TODO: Fix:
 //        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
 //        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
@@ -142,6 +146,33 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
 //        }
 //    }
 
+
+    private void setPostAuthor() {
+
+        // Need to get user:
+        DatabaseReference postUserReference =
+                FirebaseDatabase.getInstance().getReference().child("users").child(mPotentialCarpool.uid);
+
+        postUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Organization object and use the values to update the UI
+                User postUser = dataSnapshot.getValue(User.class);
+
+                mAuthorView.setText(UserInformation.getShortName(postUser));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Organization failed, log a message
+                Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                // [START_EXCLUDE]
+                Toast.makeText(PreviewCarpoolDetailActivity.this, "Failed to load user.",
+                        Toast.LENGTH_SHORT).show();
+                // [END_EXCLUDE]
+            }
+        });
+    }
 
 
     // Saves the new carpool object to the databse:

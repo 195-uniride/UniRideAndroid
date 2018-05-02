@@ -56,7 +56,7 @@ public class SearchResultsActivity extends BaseActivity implements PostSearchRes
             // Add filter for showing only other users' posts for matches:
             searcher.userSearchType = PostSearcher.UserSearchType.NO_USER_POSTS;
 
-            searcher.findSearchResults(mPost); // Note: asynchronous function. Use onSearchResultsFound to get results.
+            searcher.findSearchResults(mPost, getUid()); // Note: asynchronous function. Use onSearchResultsFound to get results.
 
             searcher.addListener(SearchResultsActivity.this);
         }

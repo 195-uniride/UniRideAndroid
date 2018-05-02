@@ -11,6 +11,7 @@ import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
+import com.sjsu.se195.uniride.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class PostSearcher {
     // parameters:
     // - userPost: the post that we are checking every other post against.
     // - user: the owner of the user post
-    public void findSearchResults(Post userPost) {
+    public void findSearchResults(Post userPost, String userID) {
 
         // step 1: filter posts by type (drive offer or rider request): (in getAllPostsBySearchType)
         boolean isLookingForDriver = true;
@@ -78,7 +79,9 @@ public class PostSearcher {
         // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
         Query searchQuery = getAllPostsBySearchType(userPost, isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate);
 
-        findPostSearchResults(userPost, searchQuery, isLookingForDriver);
+        Log.d(TAG, "Searching with Filter:UserSearchType = " + userSearchType.name());
+
+        findPostSearchResults(userPost, searchQuery, isLookingForDriver, userID);
 
         // list is set asynchronously.
     }
@@ -104,7 +107,8 @@ public class PostSearcher {
     }
 
 
-    private void findPostSearchResults(final Post userPost, Query searchQuery, final boolean isLookingForDriver) {
+    private void findPostSearchResults(final Post userPost, Query searchQuery,
+                                       final boolean isLookingForDriver, final String userID) {
         System.out.println("findRideRequestSearchResults with searchQuery = " + searchQuery);
 
         searchQuery.addValueEventListener(new ValueEventListener() {
@@ -143,7 +147,7 @@ public class PostSearcher {
                             " with key = " + postSnapshot.getKey() + " ----");
 
                     // Check if post meets all criteria:
-                    if (meetsFilterCriteria(postToCheck, userPost.uid)
+                    if (meetsFilterCriteria(postToCheck, userID)
                             && isTripTimeWithinTimeLimit(userPost, postToCheck)) {
 
                         System.out.println("Search: post IS a match: " + postToCheck +
@@ -208,11 +212,15 @@ public class PostSearcher {
 
         if (post.uid.equals(userId)) { // If this post is by the current user...
             if (userSearchType == UserSearchType.NO_USER_POSTS) {
+                Log.d(TAG, "Filter:UserSearchType: Post [" + post.postId + "] NOT a match: userID ["
+                        + userId + "] matches post.uid [" + post.uid + "]");
                 return false; // filter out posts by the current user.
             }
         }
         else { // If this post is by another user:
             if (userSearchType == UserSearchType.USER_POSTS_ONLY) {
+                Log.d(TAG, "Filter:UserSearchType: Post [" + post.postId + "] NOT a match: userID ["
+                        + userId + "] does NOT match post.uid [" + post.uid + "]");
                 return false; // filter out posts by other users.
             }
         }

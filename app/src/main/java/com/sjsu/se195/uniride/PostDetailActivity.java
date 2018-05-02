@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -124,14 +125,6 @@ public class PostDetailActivity extends MainActivity
             mPostType = Post.PostType.UNKNOWN;
         }
 
-//        if (mPostType == Post.PostType.UNKNOWN) {
-//            if (postType) {
-//                mPostType = Post.PostType.RIDER;
-//            } else {
-//                mPostType = Post.PostType.DRIVER;
-//            }
-//        }
-
         System.out.println("Setting Post to Type: " + mPostType);
 
         // Get post key from intent: If not sent Firebase key, check if sent Post object itself:
@@ -145,6 +138,103 @@ public class PostDetailActivity extends MainActivity
         }
 
 
+        setupJoinButton();
+
+        setupFindMatchingPostsButton();
+
+        setupMapButton();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mPost == null) { // If post was not loaded directly from Intent.
+            loadPostFromFirebase();
+        }
+        else { // If post was loaded directly from Intent:
+            setupViewsForPost(mPost);
+
+            setupPostRouteDescription(mPost);
+        }
+
+        // TODO: comment section if sent Post object...
+    }
+
+    private void setupJoinButton() {
+        mCreateCarpoolButton = findViewById(R.id.button_create_carpool);
+
+        if(mPostType == Post.PostType.RIDER) {
+            mCreateCarpoolButton.setText("Offer Ride");
+        }
+        else if(mPostType == Post.PostType.DRIVER) {
+            mCreateCarpoolButton.setText("Request Ride");
+        }
+        else if(mPostType == Post.PostType.CARPOOL) {
+            mCreateCarpoolButton.setText("Join Carpool");
+        }
+
+        /*
+            Make button gone at first.
+            After Post is loaded, make visible if post is NOT the user's post.
+            (Can only join posts by other users):
+         */
+        mCreateCarpoolButton.setEnabled(false);
+        mCreateCarpoolButton.setVisibility(View.INVISIBLE);
+
+        // Set OnClick action:
+        mCreateCarpoolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Starting NewCarpoolActivity...");
+
+                Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
+
+                intent.putExtra(NewCarpoolActivity.EXTRA_POST_OBJECT, mPost);
+
+                startActivity(intent);
+            }
+        });
+    }
+
+
+
+    private void setupFindMatchingPostsButton() {
+        mFindMatchingPostsButton = findViewById(R.id.button_find_matching_posts);
+
+        /*
+            Make button gone at first.
+            After Post is loaded, make visible if post IS the user's post.
+            (Can only find matches for your own posts):
+         */
+        mFindMatchingPostsButton.setEnabled(false);
+        mFindMatchingPostsButton.setVisibility(View.INVISIBLE);
+
+        mFindMatchingPostsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                System.out.println("..... SENDING POST FOR SEARCHING .....");
+                System.out.println("..... Sending mPost = " + mPost + "; with mPost.source = " + mPost.source);
+
+                Intent intent = new Intent(PostDetailActivity.this, SearchResultsActivity.class);
+                intent.putExtra(SearchResultsActivity.EXTRA_POST_OBJECT, mPost);
+
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    private void setupPostRouteDescription(Post post) {
+        TextView routeDescriptionText = findViewById(R.id.text_route_details);
+
+        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
+    }
+
+
+
+    private void setupMapButton() {
         alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
@@ -158,7 +248,7 @@ public class PostDetailActivity extends MainActivity
         mCommentButton.setOnClickListener(this);
         mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-            //marker for sjsu
+        //marker for sjsu
         sjsu = new MarkerOptions()
                 .position(new LatLng(37.335188, -121.881066))
                 .title("SJSU")
@@ -168,18 +258,9 @@ public class PostDetailActivity extends MainActivity
 
         my_view = findViewById(R.id.for_map_layout);
 
-        mCreateCarpoolButton = findViewById(R.id.button_create_carpool);
-        if(mPostType == Post.PostType.RIDER) {
-            mCreateCarpoolButton.setText("Offer Ride");
-        }
-        else if(mPostType == Post.PostType.DRIVER) {
-            mCreateCarpoolButton.setText("Request Ride");
-        }
-        else if(mPostType == Post.PostType.CARPOOL) {
-            mCreateCarpoolButton.setText("Join Carpool");
-        }
+        setupJoinButton();
 
-        mFindMatchingPostsButton = findViewById(R.id.button_find_matching_posts);
+        setupFindMatchingPostsButton();
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
 
@@ -254,59 +335,6 @@ public class PostDetailActivity extends MainActivity
                 }
             }
         });
-
-        mCreateCarpoolButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("Starting NewCarpoolActivity...");
-
-                Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
-
-                intent.putExtra(NewCarpoolActivity.EXTRA_POST_OBJECT, mPost);
-
-                startActivity(intent);
-            }
-        });
-
-        mFindMatchingPostsButton.setEnabled(false);
-        mFindMatchingPostsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                System.out.println("..... SENDING POST FOR SEARCHING .....");
-                System.out.println("..... Sending mPost = " + mPost + "; with mPost.source = " + mPost.source);
-
-                Intent intent = new Intent(PostDetailActivity.this, SearchResultsActivity.class);
-                intent.putExtra(SearchResultsActivity.EXTRA_POST_OBJECT, mPost);
-
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        if (mPost == null) { // If post was not loaded directly from Intent.
-            loadPostFromFirebase();
-        }
-        else { // If post was loaded directly from Intent:
-            setupViewsForPost(mPost);
-
-            setupPostRouteDescription(mPost);
-
-            // Once Post is loaded:
-            mFindMatchingPostsButton.setEnabled(true);
-        }
-
-        // TODO: comment section if sent Post object...
-    }
-
-    private void setupPostRouteDescription(Post post) {
-        TextView routeDescriptionText = findViewById(R.id.text_route_details);
-
-        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
     }
 
     private void loadPostFromFirebase() {
@@ -352,11 +380,11 @@ public class PostDetailActivity extends MainActivity
                         post.postType = Post.PostType.RIDER; // Set post type if wasn't present in databse.
                     }
 
+                    mPost = post;
+
                     setupViewsForPost(post);
 
                     setupPostRouteDescription(post);
-
-                    mPost = post;
                 }
                 else if(mPostType == Post.PostType.DRIVER) {
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
@@ -364,11 +392,12 @@ public class PostDetailActivity extends MainActivity
                     if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
                         post.postType = Post.PostType.DRIVER; // Set post type if wasn't present in databse.
                     }
+
+                    mPost = post;
+
                     setupViewsForPost(post);
 
                     setupPostRouteDescription(post);
-
-                    mPost = post;
                 }
                 else if(mPostType == Post.PostType.CARPOOL) {
                     Carpool post = dataSnapshot.getValue(Carpool.class);
@@ -379,11 +408,11 @@ public class PostDetailActivity extends MainActivity
 
                     System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
 
+                    mPost = post;
+
                     setupViewsForPost(post);
 
                     setupPostRouteDescription(post); //setupCarpoolRouteDescription(post);
-
-                    mPost = post;
                 }
 
                 if (mPost.postId == null || mPost.postId.isEmpty()) {
@@ -391,9 +420,6 @@ public class PostDetailActivity extends MainActivity
                 }
 
                 System.out.println("PostDetailActivity: Loaded mPost: \n" + mPost.toString());
-
-                // Once Post is loaded:
-                mFindMatchingPostsButton.setEnabled(true);
 
                 // [END_EXCLUDE]
             }
@@ -436,9 +462,7 @@ public class PostDetailActivity extends MainActivity
     }
 
     private void setupViewsForPost(Post post) {
-        if (post.author != null) {
-            mAuthorView.setText(post.author);
-        }
+
         mSourceView.setText(post.source);
         mDestinationView.setText(post.destination);
 
@@ -447,6 +471,14 @@ public class PostDetailActivity extends MainActivity
 
         TextView postDateTimeText = findViewById(R.id.post_time);
         postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(post));
+
+        TextView toText = findViewById(R.id.post_card_address_to);
+        toText.setText("to");
+
+        // Set FindMatches or Join button:
+        setFindMatchesOrJoinButton(getUid(), post);
+
+        setPostAuthor();
 
         // TODO: Fix:
 //        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
@@ -459,6 +491,49 @@ public class PostDetailActivity extends MainActivity
 //                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
 //                .title("Destination")
 //                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+    }
+
+
+    private void setPostAuthor() {
+
+        // Need to get user:
+        DatabaseReference postUserReference =
+                FirebaseDatabase.getInstance().getReference().child("users").child(mPost.uid);
+
+        postUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Organization object and use the values to update the UI
+                User postUser = dataSnapshot.getValue(User.class);
+
+                mAuthorView.setText(UserInformation.getShortName(postUser));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Organization failed, log a message
+                Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                // [START_EXCLUDE]
+                Toast.makeText(PostDetailActivity.this, "Failed to load user.",
+                        Toast.LENGTH_SHORT).show();
+                // [END_EXCLUDE]
+            }
+        });
+    }
+
+    private void setFindMatchesOrJoinButton(String userId, Post post) {
+        if (post.uid != null) {
+            if (post.uid.equals(userId)) {
+                // Make FindMatches button active:
+                mFindMatchingPostsButton.setEnabled(true);
+                mFindMatchingPostsButton.setVisibility(View.VISIBLE);
+            }
+            else {
+                // Make Join button active:
+                mCreateCarpoolButton.setEnabled(true);
+                mCreateCarpoolButton.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

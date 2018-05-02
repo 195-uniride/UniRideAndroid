@@ -69,6 +69,8 @@ public class PotentialCarpoolListRecyclerAdapter extends RecyclerView.Adapter<Po
         private TextView estimatedTravelDistanceTextView;
         public TextView to;
 
+        // TODO: add driver & passengers
+
         public TextView postTripDateText;
         public TextView postDateTimeText;
 
@@ -99,12 +101,13 @@ public class PotentialCarpoolListRecyclerAdapter extends RecyclerView.Adapter<Po
             sourceView.setText(carpool.source);
             authorView.setText(carpool.author);
             destinationView.setText(carpool.destination);
-            
+
             to.setText("to");
             postTripDateText.setText(PostInfo.getTripDateText(carpool));
             postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(carpool));
 
-            passengerCountTextView.setText(carpool.getNumberSeatsTaken() + " / " + carpool.getPassengerCount() + " Passengers");
+            // Show seats taken - 1 because 1 will always be taken by the potential new rider:
+            passengerCountTextView.setText((carpool.getNumberSeatsTaken() - 1) + " / " + carpool.getPassengerCount() + " Passengers");
             estimatedTravelTimeTextView.setText(carpool.getEstimatedTotalTripTimeInMinutes() + " minutes");
             estimatedTravelDistanceTextView.setText(carpool.getEstimatedTotalTripDistanceInKilometers() + " km");
         }

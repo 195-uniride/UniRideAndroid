@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +25,7 @@ import com.sjsu.se195.uniride.MainSubcategoryActivity;
 import com.sjsu.se195.uniride.NewCarpoolActivity;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.UserInformation;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.viewholder.PostViewHolder;
@@ -258,73 +260,101 @@ public abstract class PostListFragment extends Fragment {
                     }
                 });
 
-                String uid = model.uid;
+//                String uid = model.uid;
 
-                mUserReference = mDatabase.child("users").child(uid);
-                String username = getPostUser();
-                if(username == null) {
-                    username = "#" + uid.substring(uid.length()-5);
-                }
+//                mUserReference = mDatabase.child("users").child(uid);
+//                String username = getPostUser();
+//                if(username == null) {
+//                    username = "#" + uid.substring(uid.length()-5);
+//                }
+
+
                 // Determine if the current user has liked this post and set UI accordingly
                 if (model.stars.containsKey(getUid())) {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
                 } else {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
                 }
-                // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(username, mPostType, model, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View starView) {
-                        // Need to write to both places the post is stored
-                        DatabaseReference globalPostRef;
-                        DatabaseReference userPostRef;
-                        if (mPostType == Post.PostType.DRIVER) { //if(!postType){
-                            globalPostRef = mDatabase.child("posts").child("driveOffers").child(postRef.getKey());
-                            userPostRef = mDatabase.child("user-posts").child(model.uid).child("driveOffers").child(postRef.getKey());
-                        }
-                        else {
-                            globalPostRef = mDatabase.child("posts").child("rideRequests").child(postRef.getKey());
-                            userPostRef = mDatabase.child("user-posts").child(model.uid).child("rideRequests").child(postRef.getKey());
-                        }
 
-                        // Run two transactions
-                        onStarClicked(globalPostRef);
-                        onStarClicked(userPostRef);
-                    }
-                });
-            }
-            private String getPostUser() {
-                ValueEventListener userListener = new ValueEventListener() {
+                // Need to get user:
+                DatabaseReference postUserReference =
+                        FirebaseDatabase.getInstance().getReference().child("users").child(model.uid);
+
+                postUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        postUser = dataSnapshot.getValue(User.class);
-                        boolean hasName = false;
+                        // Get Organization object and use the values to update the UI
+                        User postUser = dataSnapshot.getValue(User.class);
 
-                        if (postUser != null) {
-                            if (postUser.firstName != null) {
-                                username = postUser.firstName;
-                                hasName = true;
+                        //mAuthorView.setText(UserInformation.getShortName(postUser));
+                        username = UserInformation.getShortName(postUser);
+
+                        // Bind Post to ViewHolder, setting OnClickListener for the star button
+                        viewHolder.bindToPost(username, mPostType, model, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View starView) {
+                                // Need to write to both places the post is stored
+                                DatabaseReference globalPostRef;
+                                DatabaseReference userPostRef;
+                                if (mPostType == Post.PostType.DRIVER) { //if(!postType){
+                                    globalPostRef = mDatabase.child("posts").child("driveOffers").child(postRef.getKey());
+                                    userPostRef = mDatabase.child("user-posts").child(model.uid).child("driveOffers").child(postRef.getKey());
+                                }
+                                else {
+                                    globalPostRef = mDatabase.child("posts").child("rideRequests").child(postRef.getKey());
+                                    userPostRef = mDatabase.child("user-posts").child(model.uid).child("rideRequests").child(postRef.getKey());
+                                }
+
+                                // Run two transactions
+                                onStarClicked(globalPostRef);
+                                onStarClicked(userPostRef);
                             }
-
-                            if(postUser.lastName != null) {
-                                username = username + " " + postUser.lastName;
-                                hasName = true;
-                            }
-                        }
-
-                        if(!hasName){
-                            username = null;
-                        }
+                        });
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
                     }
-                };
-                mUserReference.addListenerForSingleValueEvent(userListener);
-                return username;
+                });
+
+
+
             }
+
+
+//            private String getPostUser() {
+//                ValueEventListener userListener = new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        postUser = dataSnapshot.getValue(User.class);
+//                        boolean hasName = false;
+//
+//                        if (postUser != null) {
+//                            if (postUser.firstName != null) {
+//                                username = postUser.firstName;
+//                                hasName = true;
+//                            }
+//
+//                            if(postUser.lastName != null) {
+//                                username = username + " " + postUser.lastName;
+//                                hasName = true;
+//                            }
+//                        }
+//
+//                        if(!hasName){
+//                            username = null;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+//                    }
+//                };
+//                mUserReference.addListenerForSingleValueEvent(userListener);
+//                return username;
+//            }
         };
         mRecycler.setAdapter(mAdapter);
     }
