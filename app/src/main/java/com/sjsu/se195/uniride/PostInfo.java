@@ -3,6 +3,7 @@ package com.sjsu.se195.uniride;
 import android.util.Log;
 
 import com.sjsu.se195.uniride.models.Carpool;
+import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 
@@ -103,8 +104,44 @@ public class PostInfo {
 
          */
 
-        String routeDescription = PostInfo.getTripDateText(post) + ": \n";
-        routeDescription += PostInfo.getDepartureDateTimeText(post) + " - depart from: \n";
+
+        String routeDescription = "Route Details: \n";
+
+        if (post instanceof Carpool) {
+            Carpool carpoolPost = (Carpool) post;
+
+            // Show seats taken - 1 because 1 will always be taken by the potential new rider:
+            String passengerCount = (carpoolPost.getNumberSeatsTaken() - 1) + " / "
+                    + carpoolPost.getPassengerCount() + " Passengers";
+
+            String estimatedTravelTime = (carpoolPost.getEstimatedTotalTripTimeInMinutes() + " minutes");
+
+            String estimatedTravelDistance = (carpoolPost.getEstimatedTotalTripDistanceInKilometers() + " km");
+
+            routeDescription += passengerCount + "\n" + "Estimated trip time: " + estimatedTravelTime
+                    + " (" + estimatedTravelDistance + ")\n";
+        }
+
+
+
+        routeDescription += "\n";
+
+        routeDescription += PostInfo.getTripDateText(post) + ": \n";
+
+        if (post instanceof DriverOfferPost) {
+
+            String driverName = "";
+
+            if (post.author != null) {
+                driverName = " " + post.author;
+            }
+
+            routeDescription += PostInfo.getDepartureDateTimeText(post) + " - Driver" + driverName + " will depart from: \n";
+        }
+        else if (post instanceof RideRequestPost) {
+            routeDescription += PostInfo.getDepartureDateTimeText(post) + " - pickup at: \n";
+        }
+
         routeDescription += "   " + post.source + "\n";
         routeDescription += "\n";
 
@@ -124,7 +161,14 @@ public class PostInfo {
 
                 // TODO: go by waypoint order!
                 for (RideRequestPost rider : carpoolPost.getRiderPosts()) {
-                    routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger at: \n";
+
+                    String passengerName = "";
+                    if (post.author != null) {
+                        passengerName = " " + rider.author;
+                    }
+
+                    routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger"
+                            + passengerName + " at: \n";
                     routeDescription += "   " + rider.source + "\n";
                 }
             }

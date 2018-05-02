@@ -39,6 +39,8 @@ public class Carpool extends DriverOfferPost {
 
     private Mapper carpoolMapper = null;
 
+    public List<WayPoint> riderWaypoints = null;
+
     // Constructors:
     //TODO: used by parties with passengers only.
     public Carpool() {
@@ -154,25 +156,43 @@ public class Carpool extends DriverOfferPost {
 
         // Need to leave before (earliest arrival time - total trip time):
 
-        int timeNeedToLeaveBefore = getEarliestArrivalTimeOfParticipants() - getEstimatedTotalTripTimeInMinutes();
+        // TODO: NEEDS TO BE FIXED:
+        // int timeNeedToLeaveBefore = getEarliestArrivalTimeOfParticipants() - getEstimatedTotalTripTimeInMinutes();
 
-        System.out.println("timeNeedToLeaveBefore = " + timeNeedToLeaveBefore); // TODO remove....
+        Date earliestArrivalDateTime = getDateTime(getEarliestArrivalTimeOfParticipants());
+
+        Date timeDateNeedToLeaveBefore = getTimeBefore(earliestArrivalDateTime, getEstimatedTotalTripTimeInMinutes());
+
+        System.out.println("timeDateNeedToLeaveBefore = " + timeDateNeedToLeaveBefore); // TODO remove....
 
         // Trip is impossible if driver.departureTime > (is after) timeNeedToLeaveBefore:
-        if (getDriverPost().departureTime > timeNeedToLeaveBefore) {
+        //if (getDriverPost().departureTime > timeNeedToLeaveBefore) {
+        Date driverDepartDateTime = getDateTime(getDriverPost().departureTime);
 
-            System.out.println("Trip is IMPOSSIBLE because driver.departureTime [" + getDriverPost().departureTime +
-                    "] > (is after) timeNeedToLeaveBefore [" + timeNeedToLeaveBefore + "]."); // TODO remove....
+        if (driverDepartDateTime.after(timeDateNeedToLeaveBefore)) {
+
+            System.out.println("Trip is IMPOSSIBLE because driverDepartDateTime [" + driverDepartDateTime +
+                    "] is after timeDateNeedToLeaveBefore [" + timeDateNeedToLeaveBefore + "]."); // TODO remove....
 
             return false;
         }
         else {
 
-            System.out.println("Trip is POSSIBLE because driver.departureTime [" + getDriverPost().departureTime +
-                    "] <= (is before or at) timeNeedToLeaveBefore [" + timeNeedToLeaveBefore + "]."); // TODO remove....
+            // TODO: Update departure and arrival times for post:
+
+
+            System.out.println("Trip is POSSIBLE because driverDepartDateTime [" + driverDepartDateTime +
+                    "] <= (is before or at) timeDateNeedToLeaveBefore [" + timeDateNeedToLeaveBefore + "]."); // TODO remove....
 
             return true;
         }
+    }
+
+    private static Date getTimeBefore(Date initialTime, int minutes) {
+        final long ONE_MINUTE_IN_MILLISECONDS = 60000;//millisecs
+
+        long initialTimeInMilliseconds = initialTime.getTime();
+        return new Date(initialTimeInMilliseconds - (minutes * ONE_MINUTE_IN_MILLISECONDS));
     }
 
     /*
@@ -216,8 +236,6 @@ public class Carpool extends DriverOfferPost {
         return (0.001 * getEstimatedTotalTripTimeInSeconds()); // distance in meters * (1 km / 1000 meters) = distance in km.
     }
 
-
-
     /*
         Returns the arrival time (in format HHmm, i.e. 1325 for 1:25pm) of the
          post with the earliest arrival time (by finding the minimum
@@ -260,6 +278,26 @@ public class Carpool extends DriverOfferPost {
     }
 
 
+    private Date getDateTime(int intTmeFormat) {
+        SimpleDateFormat ft = new SimpleDateFormat ("yyyyMMdd-HHmm"); // Note: capital 'H' means military time.
+        // example: "20180230-2219" Parses as Fri Mar 02 22:19:00 UTC 2018
+
+        String dateTimeString =  Integer.toString(getDriverPost().tripDate); // Note: in format: yyyMMdd
+
+        dateTimeString += "-" + String.format("%04d", intTmeFormat);
+
+        System.out.print(dateTimeString + " Parses as ");
+
+        Date dateTime = null;
+        try {
+            dateTime = ft.parse(dateTimeString);
+            System.out.println(dateTime);
+        } catch (ParseException e) {
+            System.out.println("ERROR: dateTimeString=" + dateTimeString + " is Unparseable using " + ft);
+        }
+
+        return dateTime;
+    }
 
     /*
         Returns the calculated expected total trip time of the carpool.
@@ -302,7 +340,34 @@ public class Carpool extends DriverOfferPost {
             carpoolMapper = new Mapper(this);
         }
 
+        setWayPoints();
+
         return carpoolMapper;
+    }
+
+
+    private void setWayPoints() {
+
+        ArrayList<Integer> legDurationsInSeconds = carpoolMapper.getTripWaypointTimes();
+
+        riderWaypoints = new ArrayList<WayPoint>();
+
+
+        // Get startTime: (timeNeedToLeaveBeofre...)
+
+
+        for (int i = 0; i < riderPosts.size(); i++) {
+            WayPoint wayPoint = new WayPoint();
+
+            wayPoint.setDuration(legDurationsInSeconds.get(i));
+
+            // NOTE: Ok to floor for this estimate purpose:
+            int legDurationInMinutes = legDurationsInSeconds.get(i) / 60;  // time in seconds * (1 min / 60 sec) = time in minutes.
+
+            //int tripArrivalTime = // add from start time...(previous time?)
+
+
+        }
     }
 
     // State-changing methods:

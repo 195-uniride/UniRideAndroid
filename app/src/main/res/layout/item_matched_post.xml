@@ -42,31 +42,15 @@
             android:layout_marginBottom="10dp"
             android:layout_below="@+id/post_address_layout"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <include
+            layout="@layout/include_carpool_details"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/post_date_time"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="5dp">
-
-            <include
-                layout="@layout/include_post_passenger_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <include
-                layout="@layout/include_carpool_estimated_trip_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <include
-                layout="@layout/include_carpool_estimated_trip_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
+            android:padding="5dp"/>
 
 
     </RelativeLayout>

@@ -57,6 +57,8 @@ import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -230,6 +232,8 @@ public class PostDetailActivity extends MainActivity
         TextView routeDescriptionText = findViewById(R.id.text_route_details);
 
         routeDescriptionText.setText(PostInfo.getRouteDescription(post));
+
+
     }
 
 

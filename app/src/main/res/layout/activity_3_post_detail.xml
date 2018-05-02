@@ -43,13 +43,23 @@
 
 
     <TextView
-        android:id="@+id/text_route_details"
+        android:id="@+id/text_carpool_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/post_date_time"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="[Route Details]"/>
+        android:text=""/>
+
+    <TextView
+        android:id="@+id/text_route_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_carpool_details"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text=""/>
+
 
     <LinearLayout
         android:id="@+id/comment_form"

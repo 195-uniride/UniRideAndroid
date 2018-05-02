@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class PreviewCarpoolDetailActivity extends MainActivity {
 
-    private static final String TAG = "PreviewCarpoolDetailActivity";
+    private static final String TAG = "PreviewCarpool";
     public static final String EXTRA_CARPOOL_OBJECT = "PreviewCarpoolDetailActivity.carpool";
 
     private Carpool mPotentialCarpool;
@@ -85,6 +85,7 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
 
         if (mPotentialCarpool.areAllTripTimeLimitsSatisfied()) {
             // If carpool is possible, let user confirm carpool:
+
             routeDescriptionText.setText("Preview Potential Carpool: \n\n"
                     + PostInfo.getRouteDescription(mPotentialCarpool));
 
@@ -173,7 +174,6 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
             }
         });
     }
-
 
     // Saves the new carpool object to the databse:
     private void writeNewCarpoolObject(Carpool carpool) {
