@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.models.Post;
 import com.yalantis.phoenix.PullToRefreshView;
 
 public abstract class MyPostsFragment extends PostListFragment {
@@ -51,11 +52,11 @@ public abstract class MyPostsFragment extends PostListFragment {
 
         if(this instanceof MyDriverPostsFragment){
             this.createTitle(this.DRIVER_TAB_TITLE);
-            super.postType = false;
+            mPostType = Post.PostType.DRIVER; // super.postType = false;
         }
         else{
             this.createTitle(this.RIDER_TAB_TITLE);
-            super.postType = true;
+            mPostType = Post.PostType.RIDER; // super.postType = true;
         }
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();

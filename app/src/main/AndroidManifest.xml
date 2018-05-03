@@ -40,6 +40,8 @@
             android:name=".MainSubcategoryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity android:name=".NewCarpoolActivity" />
+
         <activity android:name=".SearchResultsActivity" />
         <activity android:name=".NewOrganizationActivity" />
         <activity
@@ -61,7 +63,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CarpoolDetailActivity"
+            android:name=".PreviewCarpoolDetailActivity"
             android:label="@string/title_activity_carpool_detail" />
         <activity
             android:name=".ProfilePageActivity"

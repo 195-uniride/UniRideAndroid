@@ -21,4 +21,10 @@
         tools:listitem="@layout/item_post" />
     </com.yalantis.phoenix.PullToRefreshView>
 
+    <TextView
+        android:id="@+id/no_posts_found_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
+
 </LinearLayout>

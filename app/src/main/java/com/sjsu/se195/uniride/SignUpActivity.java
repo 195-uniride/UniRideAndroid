@@ -139,14 +139,23 @@ public class SignUpActivity extends BaseActivity implements View.OnClickListener
     private void onAuthSuccess(FirebaseUser user) {
         String first = FirstEditText.getText().toString();
         String last = LastEditText.getText().toString();
-        String phone = phoneEditText.getText().toString();
+
+        String phone = "";
+        if (phoneEditText != null) {
+            phone = phoneEditText.getText().toString();
+        }
+
+
+        String imageURL = "";
 
         if (filePath != null) {
             StorageReference ref = storageReference.child("profileImages/" + UUID.randomUUID().toString());
             ref.putFile(filePath);
-            String imageURL = UUID.randomUUID().toString();
-            writeNewUser(user.getUid(),user.getEmail(), first, last, phone, imageURL);
+            imageURL = UUID.randomUUID().toString();
+//            writeNewUser(user.getUid(),user.getEmail(), first, last, phone, imageURL);
         }
+
+        writeNewUser(user.getUid(),user.getEmail(), first, last, phone, imageURL);
 
         //Go to MainActivity
         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);

@@ -50,8 +50,8 @@ public class DriverOfferPost extends Post implements Parcelable {
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);
-        result.put("departureTime", departure_time);
-        result.put("arrivalTime", arrival_time);
+        result.put("departureTime", departureTime);
+        result.put("arrivalTime", arrivalTime);
         result.put("tripDate", tripDate);
         result.put("starCount", starCount);
         result.put("stars", stars);
@@ -101,5 +101,16 @@ public class DriverOfferPost extends Post implements Parcelable {
             return new DriverOfferPost[size];
         }
     };
+
+    // To String:
+
+    @Override
+    public String toString() {
+        String className = this.getClass().getSimpleName();
+        String postString =  super.toString();
+        postString += "   " + className + ".passengerCount = " + this.passengerCount + " \n";
+
+        return postString;
+    }
 
 }

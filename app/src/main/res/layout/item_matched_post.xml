@@ -5,6 +5,12 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="5dp">
 
+    <ImageView
+        android:id="@+id/card_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,31 +33,24 @@
                  android:layout_marginLeft="5dp"
                  android:layout_marginTop="10dp" />
 
-        <LinearLayout
+        <include
+            android:id="@+id/post_date_time"
+            layout="@layout/include_post_date_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/post_address_layout"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@+id/post_address_layout"/>
+
+        <include
+            layout="@layout/include_carpool_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/post_date_time"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="5dp">
-
-            <include
-                layout="@layout/include_post_passenger_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <include
-                layout="@layout/include_carpool_estimated_trip_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <include
-                layout="@layout/include_carpool_estimated_trip_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
+            android:padding="5dp"/>
 
 
     </RelativeLayout>

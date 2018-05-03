@@ -641,10 +641,12 @@ public class NewPostActivity extends BaseActivity implements OnMapReadyCallback,
 
                             // Write new post
                             if(postType) {
-                                writeNewDriveOfferPost(userId, user.username, source, destination, passengerCount, departureTime, arrivalTime, tripDate, mPostOrganizationId);
+                                writeNewDriveOfferPost(userId, UserInformation.getShortName(user),
+                                        source, destination, passengerCount, departureTime, arrivalTime, tripDate, mPostOrganizationId);
                             }
                             else{
-                                writeNewRideRequestPost(userId, user.username, source, destination, pickupPoint, departureTime, arrivalTime, tripDate, mPostOrganizationId);
+                                writeNewRideRequestPost(userId, UserInformation.getShortName(user),
+                                        source, destination, pickupPoint, departureTime, arrivalTime, tripDate, mPostOrganizationId);
                             }
                         }
 

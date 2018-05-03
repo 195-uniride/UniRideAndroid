@@ -41,12 +41,32 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
 
+
+    <TextView
+        android:id="@+id/text_carpool_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/post_date_time"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text=""/>
+
+    <TextView
+        android:id="@+id/text_route_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_carpool_details"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text=""/>
+
+
     <LinearLayout
         android:id="@+id/comment_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/post_date_time"
+        android:layout_below="@+id/text_route_details"
         android:layout_marginTop="20dp"
         android:weightSum="1.0">
 
@@ -75,14 +95,25 @@
         android:layout_below="@+id/comment_form"
         tools:listitem="@layout/item_comment" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_create_carpool"
+    <Button
+        android:id="@+id/button_create_carpool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:text="Join"/>
+
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_create_carpool"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_marginBottom="20dp"/>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_show_map"
@@ -92,13 +123,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_find_matching_posts"
+    <Button
+        android:id="@+id/button_find_matching_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:text="Find Matches"/>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_find_matching_posts"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginBottom="20dp"/>-->
 
     <include
         android:id="@+id/for_map_layout"

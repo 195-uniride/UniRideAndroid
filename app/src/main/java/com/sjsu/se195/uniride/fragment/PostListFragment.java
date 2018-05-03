@@ -10,12 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import android.widget.ImageView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,40 +21,41 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.sjsu.se195.uniride.CarpoolDetailActivity;
 import com.sjsu.se195.uniride.MainSubcategoryActivity;
 import com.sjsu.se195.uniride.NewCarpoolActivity;
 import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.R;
-import com.sjsu.se195.uniride.models.Carpool;
-import com.sjsu.se195.uniride.models.DriverOfferPost;
+import com.sjsu.se195.uniride.UserInformation;
 import com.sjsu.se195.uniride.models.Post;
-import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.viewholder.PostViewHolder;
 import com.yalantis.phoenix.PullToRefreshView;
 
-import java.util.ArrayList;
-import java.util.Date;
-
 public abstract class PostListFragment extends Fragment {
 
     private static final String TAG = "PostListFragment";
+    public static final String EXTRA_POST_TYPE = "postType";
+    public static final String EXTRA_ORGANIZATION_ID = "organizationId";
+
+    public static final String EXTRA_TRIP_DATE = "tripDate";
 
     private User currentUser;
     private User postUser;
     private PullToRefreshView mPullToRefreshView;
 
-    // [START define_database_reference]
     protected DatabaseReference mDatabase;
     protected DatabaseReference mUserReference;
-    // [END define_database_reference]
 
     private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
     protected RecyclerView mRecycler;
     protected LinearLayoutManager mManager;
-    protected boolean postType; //true = driverpost ; false = riderequest
+    // protected boolean postType; //true = driverpost ; false = riderequest
+    protected Post.PostType mPostType;
     private String username;
+
+    private String mSelectedOrganizationId;
+
+    private int mTripDate = -1;
 
     public PostListFragment() {}
 
@@ -66,11 +63,20 @@ public abstract class PostListFragment extends Fragment {
     public View onCreateView (LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        postType = getArguments().getBoolean("postType");
-        System.out.println("PostListFragment line67 PostType = " + postType);
-        View rootView;
 
+        // postType = getArguments().getBoolean(PostListFragment.EXTRA_POST_TYPE);
+        // System.out.println("PostListFragment line67 PostType = " + postType);
+
+        mPostType = Post.PostType.valueOf(getArguments().getString(PostListFragment.EXTRA_POST_TYPE));
+
+        mSelectedOrganizationId = getArguments().getString(PostListFragment.EXTRA_ORGANIZATION_ID);
+
+        // May pass trip date as a filter:
+        mTripDate = getArguments().getInt(PostListFragment.EXTRA_TRIP_DATE);
+
+        View rootView;
         rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
+
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
@@ -159,33 +165,25 @@ public abstract class PostListFragment extends Fragment {
 
     // TODO:
     public String getSelectedOrganizationId() {
-        System.out.println("Getting selected org ID from MainSubcategoryActivity...");
-        return ((MainSubcategoryActivity)getActivity()).getSelectedOrganizationId();
-    }
-
-    // TODO: change to throw error if user doesn't have a default organization:
-    public String getUserDefaultOrganizationId() {
-
-        String defaultUserOrganizationId = "";
-
-        if (getCurrentUser() != null) {
-            defaultUserOrganizationId = getCurrentUser().defaultOrganizationId;
+//        System.out.println("Getting selected org ID from MainSubcategoryActivity...");
+        if (getActivity() instanceof MainSubcategoryActivity) {
+            return ((MainSubcategoryActivity)getActivity()).getSelectedOrganizationId();
+        }
+        else {
+            /*
+                DO NOT USE: mSelectedOrganizationId will not be updated by OrgSpinner.
+                 Make sure to add additional if-statement if add another Activity that
+                 uses this fragment, and have it return the currently
+                 selected organization ID.
+             */
+            return mSelectedOrganizationId;
         }
 
-        if (defaultUserOrganizationId == null || defaultUserOrganizationId.equals("")) {
-            System.out.println("ERROR: No default Org Id found for user: " + getCurrentUser());
 
-            // TODO: show load page with no results and prompt user to choose a default organization.
 
-            // WIP ONLY: For testing purposes: set an arbitrary Org Id: // TODO: REMOVE: FOR WIP STATE ONLY.
-            defaultUserOrganizationId = "-L47q6ayVu4wPq23hnmm"; // "Marta's Organization"
-            System.out.println("WIP ONLY: Setting default Org Id to arbitrary Id: " + defaultUserOrganizationId);
-        }
-
-        System.out.println("User's default Org Id = " + defaultUserOrganizationId);
-
-        return defaultUserOrganizationId;
     }
+
+
 
     public abstract Query getQuery(DatabaseReference databaseReference);
 
@@ -225,6 +223,11 @@ public abstract class PostListFragment extends Fragment {
             protected void populateViewHolder(final PostViewHolder viewHolder, final Post model, final int position) {
                 final DatabaseReference postRef = getRef(position);
 
+                System.out.println("model.postType = " + model.postType);
+                if (model.postType != null && model.postType != Post.PostType.UNKNOWN) {
+                    mPostType = model.postType;
+                }
+
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -234,106 +237,134 @@ public abstract class PostListFragment extends Fragment {
                             System.out.println("current activity is newcarpoolactivity");
                             //setPostsAndCreateCarpool(postRef);
                             //Call the method in NewCarpoolActivity
-                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
+                            // TODO: Remove...NewCarpoolActivity now uses SearchResultsPostListFragment.
+//                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
                         }
                         else {
                             // Launch PostDetailActivity
                             Intent intent = new Intent(getActivity(), PostDetailActivity.class);
                             intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
-                            intent.putExtra("postType", postType);
+                            //intent.putExtra("postType", postType);
 
-                            if (model.postType != null) {
-                                intent.putExtra("typeOfPost", model.postType.name());
-                            }
+//                            if (model.postType != null) {
+//                                intent.putExtra("typeOfPost", model.postType.name());
+//                            }
+//                            else {
+//                                intent.putExtra("typeOfPost", mPostType.name());
+//                            }
+
+                            intent.putExtra("typeOfPost", model.postType.name());
 
                             startActivity(intent);
                         }
                     }
                 });
 
-                String uid = model.uid;
+//                String uid = model.uid;
 
-                mUserReference = mDatabase.child("users").child(uid);
-                String username = getPostUser();
-                if(username == null) {
-                    username = "#" + uid.substring(uid.length()-5);
-                }
+//                mUserReference = mDatabase.child("users").child(uid);
+//                String username = getPostUser();
+//                if(username == null) {
+//                    username = "#" + uid.substring(uid.length()-5);
+//                }
+
+
                 // Determine if the current user has liked this post and set UI accordingly
                 if (model.stars.containsKey(getUid())) {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
                 } else {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
                 }
-                // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(username, postType, model, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View starView) {
-                        // Need to write to both places the post is stored
-                        DatabaseReference globalPostRef;
-                        DatabaseReference userPostRef;
-                        if(!postType){
-                            globalPostRef = mDatabase.child("posts").child("driveOffers").child(postRef.getKey());
-                            userPostRef = mDatabase.child("user-posts").child(model.uid).child("driveOffers").child(postRef.getKey());
-                        }
-                        else{
-                            globalPostRef = mDatabase.child("posts").child("rideRequests").child(postRef.getKey());
-                            userPostRef = mDatabase.child("user-posts").child(model.uid).child("rideRequests").child(postRef.getKey());
-                        }
 
-                        // Run two transactions
-                        onStarClicked(globalPostRef);
-                        onStarClicked(userPostRef);
-                    }
-                });
-            }
-            private String getPostUser() {
-                ValueEventListener userListener = new ValueEventListener() {
+                // Need to get user:
+                DatabaseReference postUserReference =
+                        FirebaseDatabase.getInstance().getReference().child("users").child(model.uid);
+
+                postUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        postUser = dataSnapshot.getValue(User.class);
-                        boolean hasName = false;
+                        // Get Organization object and use the values to update the UI
+                        User postUser = dataSnapshot.getValue(User.class);
 
-                        if (postUser != null) {
-                            if (postUser.firstName != null) {
-                                username = postUser.firstName;
-                                hasName = true;
+                        //mAuthorView.setText(UserInformation.getShortName(postUser));
+                        username = UserInformation.getShortName(postUser);
+
+                        // Bind Post to ViewHolder, setting OnClickListener for the star button
+                        viewHolder.bindToPost(username, model.postType, model, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View starView) {
+                                // Need to write to both places the post is stored
+                                DatabaseReference globalPostRef;
+                                DatabaseReference userPostRef;
+                                if (mPostType == Post.PostType.DRIVER) { //if(!postType){
+                                    globalPostRef = mDatabase.child("posts").child("driveOffers").child(postRef.getKey());
+                                    userPostRef = mDatabase.child("user-posts").child(model.uid).child("driveOffers").child(postRef.getKey());
+                                }
+                                else {
+                                    globalPostRef = mDatabase.child("posts").child("rideRequests").child(postRef.getKey());
+                                    userPostRef = mDatabase.child("user-posts").child(model.uid).child("rideRequests").child(postRef.getKey());
+                                }
+
+                                // Run two transactions
+                                onStarClicked(globalPostRef);
+                                onStarClicked(userPostRef);
                             }
-
-                            if(postUser.lastName != null) {
-                                username = username + " " + postUser.lastName;
-                                hasName = true;
-                            }
-                        }
-
-                        if(!hasName){
-                            username = null;
-                        }
+                        });
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
                     }
-                };
-                mUserReference.addListenerForSingleValueEvent(userListener);
-                return username;
+                });
+
+
+
             }
+
+
+//            private String getPostUser() {
+//                ValueEventListener userListener = new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        postUser = dataSnapshot.getValue(User.class);
+//                        boolean hasName = false;
+//
+//                        if (postUser != null) {
+//                            if (postUser.firstName != null) {
+//                                username = postUser.firstName;
+//                                hasName = true;
+//                            }
+//
+//                            if(postUser.lastName != null) {
+//                                username = username + " " + postUser.lastName;
+//                                hasName = true;
+//                            }
+//                        }
+//
+//                        if(!hasName){
+//                            username = null;
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+//                    }
+//                };
+//                mUserReference.addListenerForSingleValueEvent(userListener);
+//                return username;
+//            }
         };
         mRecycler.setAdapter(mAdapter);
     }
-    public User getCurrentUser() {
-        return currentUser;
-    }
+
+//    public User getCurrentUser() {
+//        return currentUser;
+//    }
 
 
-
-    protected Query getAllDriveOfferPosts() {
-        return mDatabase.child("organization-posts").child(getUserDefaultOrganizationId())
-                .child("driveOffers");
-    }
-
-    protected Query getAllRideRequestPosts() {
-        return mDatabase.child("organization-posts").child(getUserDefaultOrganizationId())
-                .child("rideRequests");
+    protected int getSelectedTripDate() {
+        return mTripDate;
     }
 }
