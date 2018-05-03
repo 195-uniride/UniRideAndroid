@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".ShowOrganizationsActivity">
+<LinearLayout
+    android:id="@+id/fragment_all_organizations_linearlayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShowOrganizationsActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messages_list"
@@ -15,4 +18,4 @@
         android:scrollbars="vertical"
         tools:listitem="@layout/item_organization" />
 
-</FrameLayout>
+</LinearLayout>

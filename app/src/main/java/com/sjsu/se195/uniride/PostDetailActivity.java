@@ -1,18 +1,37 @@
 package com.sjsu.se195.uniride;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -21,27 +40,41 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
+import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
+import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
 
+import org.w3c.dom.Text;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
-public class PostDetailActivity extends MainActivity implements View.OnClickListener, OnMapReadyCallback{
+public class PostDetailActivity extends MainActivity
+        implements View.OnClickListener, OnMapReadyCallback {
 
     private static final String TAG = "PostDetailActivity";
 
     public static final String EXTRA_POST_KEY = "post_key";
-    private boolean postType;
+    public static final String EXTRA_POST_TYPE = "typeOfPost";
+    public static final String EXTRA_POST_OBJECT = "post";
+
+    // private boolean postType; // True = RideRequestPost, False = DirverOfferPost
 
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
@@ -49,54 +82,170 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
     private String mPostKey;
     private CommentAdapter mAdapter;
 
+    private Post mPost;
+    private Post.PostType mPostType = Post.PostType.UNKNOWN;
+
     private TextView mAuthorView;
-    private TextView mTitleView;
-    private TextView mBodyView;
+    private TextView mSourceView;
+    private TextView mDestinationView;
     private EditText mCommentField;
     private Button mCommentButton;
+    private FloatingActionButton mShowMapButton;
+    private Button mCreateCarpoolButton;
+    private Button mFindMatchingPostsButton;
     private RecyclerView mCommentsRecycler;
+    View my_view;
 
     private GoogleMap m_map;
     private boolean mapReady;
 
+    private Animation alpha_animation;
+
     //markers
     private MarkerOptions sjsu;
+    private MarkerOptions source_marker;
+    private MarkerOptions destination_marker;
+
+    //latlng
+    private LatLng source_latlng;
+    private LatLng dest_latlng;
+
+    //Outside class GMapV2
+    private GMapV2Direction md = new GMapV2Direction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_3_post_detail);
-        postType = getIntent().getExtras().getBoolean("postType");
-        // Get post key from intent
+        //postType = getIntent().getExraBoo("postType");
+
+        // Get type of post (RIDER, DRIVER, CARPOOL) from intent:
+        try {
+            mPostType = Post.PostType.valueOf(getIntent().getStringExtra(PostDetailActivity.EXTRA_POST_TYPE));
+        }
+        catch (NullPointerException ex) { // If this post does not have this postType attribute, set to UNKNOWN:
+            mPostType = Post.PostType.UNKNOWN;
+        }
+
+        System.out.println("Setting Post to Type: " + mPostType);
+
+        // Get post key from intent: If not sent Firebase key, check if sent Post object itself:
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        if (mPostKey == null) {
-            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+        if (mPostKey == null || mPostKey.equals("")) {
+            mPost = getIntent().getParcelableExtra(PostDetailActivity.EXTRA_POST_OBJECT);
+
+            if (mPost == null) {
+                throw new IllegalArgumentException("PostDetailActivity: Must pass EXTRA_POST_KEY or Post Object");
+            }
         }
 
-        // Initialize Database
-        if(postType){
-            mPostReference = FirebaseDatabase.getInstance().getReference()
-                    .child("posts").child("rideRequests").child(mPostKey);
-            mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                    .child("post-comments").child(mPostKey);
-        }else{
-            mPostReference = FirebaseDatabase.getInstance().getReference()
-                    .child("posts").child("driveOffers").child(mPostKey);
-            mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                    .child("post-comments").child(mPostKey);
+
+        setupJoinButton();
+
+        setupFindMatchingPostsButton();
+
+        setupMapButton();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mPost == null) { // If post was not loaded directly from Intent.
+            loadPostFromFirebase();
+        }
+        else { // If post was loaded directly from Intent:
+            setupViewsForPost(mPost);
+
+            setupPostRouteDescription(mPost);
         }
 
-        System.out.println(mPostReference.toString());
-        /*mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("post-comments").child(mPostKey);*/
+        // TODO: comment section if sent Post object...
+    }
 
+    private void setupJoinButton() {
+        mCreateCarpoolButton = findViewById(R.id.button_create_carpool);
+
+        if(mPostType == Post.PostType.RIDER) {
+            mCreateCarpoolButton.setText("Offer Ride");
+        }
+        else if(mPostType == Post.PostType.DRIVER) {
+            mCreateCarpoolButton.setText("Request Ride");
+        }
+        else if(mPostType == Post.PostType.CARPOOL) {
+            mCreateCarpoolButton.setText("Join Carpool");
+        }
+
+        /*
+            Make button gone at first.
+            After Post is loaded, make visible if post is NOT the user's post.
+            (Can only join posts by other users):
+         */
+        mCreateCarpoolButton.setEnabled(false);
+        mCreateCarpoolButton.setVisibility(View.INVISIBLE);
+
+        // Set OnClick action:
+        mCreateCarpoolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("Starting NewCarpoolActivity...");
+
+                Intent intent = new Intent(PostDetailActivity.this, NewCarpoolActivity.class);
+
+                intent.putExtra(NewCarpoolActivity.EXTRA_POST_OBJECT, mPost);
+
+                startActivity(intent);
+            }
+        });
+    }
+
+
+
+    private void setupFindMatchingPostsButton() {
+        mFindMatchingPostsButton = findViewById(R.id.button_find_matching_posts);
+
+        /*
+            Make button gone at first.
+            After Post is loaded, make visible if post IS the user's post.
+            (Can only find matches for your own posts):
+         */
+        mFindMatchingPostsButton.setEnabled(false);
+        mFindMatchingPostsButton.setVisibility(View.INVISIBLE);
+
+        mFindMatchingPostsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                System.out.println("..... SENDING POST FOR SEARCHING .....");
+                System.out.println("..... Sending mPost = " + mPost + "; with mPost.source = " + mPost.source);
+
+                Intent intent = new Intent(PostDetailActivity.this, SearchResultsActivity.class);
+                intent.putExtra(SearchResultsActivity.EXTRA_POST_OBJECT, mPost);
+
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    private void setupPostRouteDescription(Post post) {
+        TextView routeDescriptionText = findViewById(R.id.text_route_details);
+
+        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
+    }
+
+
+
+    private void setupMapButton() {
+        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
         // Initialize Views
-        mAuthorView = (TextView) findViewById(R.id.post_author);
-        mTitleView = (TextView) findViewById(R.id.post_source);
-        mBodyView = (TextView) findViewById(R.id.post_destination);
+        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
+        mSourceView = (TextView) findViewById(R.id.post_source);
+        mDestinationView = (TextView) findViewById(R.id.post_destination);
         mCommentField = (EditText) findViewById(R.id.field_comment_text);
         mCommentButton = (Button) findViewById(R.id.button_post_comment);
         mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
+        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
 
         mCommentButton.setOnClickListener(this);
         mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -107,13 +256,116 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                 .title("SJSU")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.extra_icon));
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+
+        my_view = findViewById(R.id.for_map_layout);
+
+        setupJoinButton();
+
+        setupFindMatchingPostsButton();
+
+        mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+
+        if(my_view.getVisibility()==View.VISIBLE){
+            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
+        }
+        else{
+            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
+        }
+        mShowMapButton.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onClick(View v) {
+                // get the center for the clipping circle
+                int cx = Math.round(mShowMapButton.getX() + (mShowMapButton.getWidth())/2);
+                int cy = Math.round(mShowMapButton.getY() + (mShowMapButton.getHeight())/2);
+
+                // get the final radius for the clipping circle
+                float finalRadius1 = (float) Math.hypot(cx, cy);
+                // create the animator for this view (the start radius is zero)
+
+                if(my_view.getVisibility() == View.INVISIBLE){
+                    Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, 0, finalRadius1);
+                    anim1.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                        /*mMapOverlay.animate().alpha(0f).setDuration(100).setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                mMapOverlay.setVisibility(View.GONE);
+                            }
+                        });*/
+                            mMapOverlay.setVisibility(View.GONE);
+                            mMapOverlay.startAnimation(alpha_animation);
+                            MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+                            mapFragment.getMapAsync(PostDetailActivity.this);
+                        }
+                    });
+                    // make the view visible and start the animation
+                    my_view.setVisibility(View.VISIBLE);
+                    anim1.start();
+                }
+                else{
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
+                    Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, finalRadius1, 0);
+                    anim1.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+                            mMapOverlay.animate().alphaBy(1f).setDuration(300);
+                            mMapOverlay.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+                            my_view.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+                    // make the view visible and start the animation
+                    anim1.start();
+                }
+            }
+        });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void loadPostFromFirebase() {
+
+        // Initialize Database
+        if(mPostType == Post.PostType.RIDER) {
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("rideRequests").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+        else if(mPostType == Post.PostType.DRIVER) {
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("driveOffers").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+        else if(mPostType == Post.PostType.CARPOOL) {
+            mPostReference = FirebaseDatabase.getInstance().getReference()
+                    .child("posts").child("carpools").child(mPostKey);
+            mCommentsReference = FirebaseDatabase.getInstance().getReference()
+                    .child("post-comments").child(mPostKey);
+        }
+        else {
+            Log.e(PostDetailActivity.TAG, "ERROR: mPostType = " + mPostType);
+        }
+
+
+
 
         // Add value event listener to the post
         // [START post_value_event_listener]
@@ -122,20 +374,55 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 System.out.println(dataSnapshot.toString());
-                if(postType){
+
+                if(mPostType == Post.PostType.RIDER) {
                     RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
-                    mAuthorView.setText(post.author);
-                    mTitleView.setText(post.source);
-                    mBodyView.setText(post.destination);
+                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                        post.postType = Post.PostType.RIDER; // Set post type if wasn't present in databse.
+                    }
+
+                    mPost = post;
+
+                    setupViewsForPost(post);
+
+                    setupPostRouteDescription(post);
                 }
-                else{
+                else if(mPostType == Post.PostType.DRIVER) {
                     DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
-                    mAuthorView.setText(post.author);
-                    mTitleView.setText(post.source);
-                    mBodyView.setText(post.destination);
+                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                        post.postType = Post.PostType.DRIVER; // Set post type if wasn't present in databse.
+                    }
+
+                    mPost = post;
+
+                    setupViewsForPost(post);
+
+                    setupPostRouteDescription(post);
                 }
+                else if(mPostType == Post.PostType.CARPOOL) {
+                    Carpool post = dataSnapshot.getValue(Carpool.class);
+                    // [START_EXCLUDE]
+                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                        post.postType = Post.PostType.CARPOOL; // Set post type if wasn't present in databse.
+                    }
+
+                    System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
+
+                    mPost = post;
+
+                    setupViewsForPost(post);
+
+                    setupPostRouteDescription(post); //setupCarpoolRouteDescription(post);
+                }
+
+                if (mPost.postId == null || mPost.postId.isEmpty()) {
+                    mPost.postId = mPostKey; // Set the post's key as ID if wasn't stored in database.
+                }
+
+                System.out.println("PostDetailActivity: Loaded mPost: \n" + mPost.toString());
+
                 // [END_EXCLUDE]
             }
 
@@ -170,7 +457,85 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
         }
 
         // Clean up comments listener
-        mAdapter.cleanupListener();
+        if (mAdapter != null) {
+            mAdapter.cleanupListener();
+        }
+
+    }
+
+    private void setupViewsForPost(Post post) {
+
+        mSourceView.setText(post.source);
+        mDestinationView.setText(post.destination);
+
+        TextView postTripDateText = findViewById(R.id.post_date);
+        postTripDateText.setText(PostInfo.getTripDateText(post));
+
+        TextView postDateTimeText = findViewById(R.id.post_time);
+        postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(post));
+
+        TextView toText = findViewById(R.id.post_card_address_to);
+        toText.setText("to");
+
+        // Set FindMatches or Join button:
+        setFindMatchesOrJoinButton(getUid(), post);
+
+        setPostAuthor();
+
+        // TODO: Fix:
+//        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+//        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+//        source_marker = new MarkerOptions()
+//                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+//                .title("Source")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+//        destination_marker = new MarkerOptions()
+//                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+//                .title("Destination")
+//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+    }
+
+
+    private void setPostAuthor() {
+
+        // Need to get user:
+        DatabaseReference postUserReference =
+                FirebaseDatabase.getInstance().getReference().child("users").child(mPost.uid);
+
+        postUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Organization object and use the values to update the UI
+                User postUser = dataSnapshot.getValue(User.class);
+
+                mAuthorView.setText(UserInformation.getShortName(postUser));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Organization failed, log a message
+                Log.w(TAG, "loadUser:onCancelled", databaseError.toException());
+                // [START_EXCLUDE]
+                Toast.makeText(PostDetailActivity.this, "Failed to load user.",
+                        Toast.LENGTH_SHORT).show();
+                // [END_EXCLUDE]
+            }
+        });
+    }
+
+    private void setFindMatchesOrJoinButton(String userId, Post post) {
+        if (post.uid != null) {
+            if (post.uid.equals(userId)) {
+                // Make FindMatches button active:
+                mFindMatchingPostsButton.setEnabled(true);
+                mFindMatchingPostsButton.setVisibility(View.VISIBLE);
+            }
+            else {
+                // Make Join button active:
+                mCreateCarpoolButton.setEnabled(true);
+                mCreateCarpoolButton.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -208,6 +573,8 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
                     }
                 });
     }
+
+
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 
@@ -352,18 +719,50 @@ public class PostDetailActivity extends MainActivity implements View.OnClickList
 
     }
 
+    //Mandatory method when creating a map is involved
     @Override
     public void onMapReady(GoogleMap map){
         mapReady = true;
         m_map = map;
-        m_map.addMarker(sjsu);
-        LatLng city = new LatLng(37.3394, -121.8938);
-        CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
-        m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+        if(source_marker != null)
+            m_map.addMarker(source_marker);
+        if(destination_marker != null)
+            m_map.addMarker(destination_marker);
+        //LatLng city = new LatLng(37.3394, -121.8938);
+        //CameraPosition target = CameraPosition.builder().target(city).zoom(14).build();
+        //m_map.moveCamera(CameraUpdateFactory.newCameraPosition(target));
+
+        //Here the method that draws polylines gets called
+        try {
+            if(source_latlng != null && dest_latlng != null)
+                md.drawDirections(source_latlng, dest_latlng, m_map);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(source_marker != null && destination_marker != null)
+            setCamera();
     }
 
     //to animate when moving to a new location
     public void flyTo(CameraPosition target){
         m_map.animateCamera(CameraUpdateFactory.newCameraPosition(target));
     }
+
+    //Sets the camera for the view of the map
+    private void setCamera(){
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(source_marker.getPosition());
+        builder.include(destination_marker.getPosition());
+        System.out.println(source_marker.getPosition());
+        System.out.println(destination_marker.getPosition());
+        LatLngBounds bounds = builder.build();
+        int padding = 100; // offset from edges of the map in pixels, newLatLngBounds(LatLngBounds, int, int, int)
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        int zoomLevel = 0;
+        m_map.moveCamera(cu);
+    }
+
 }

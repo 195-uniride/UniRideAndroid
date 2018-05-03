@@ -8,121 +8,105 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.sjsu.se195.uniride.SignUpActivity">
+    tools:context="com.sjsu.se195.uniride.SignUpActivity"
+    android:background="@drawable/gradient">
 
-    <TextView
-        android:id="@+id/SignUpText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="89dp"
+        android:layout_height="81dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="34dp"
-        android:text="Sign Up" />
+        android:layout_marginTop="66dp"
+        android:background="#e4e8ee"
+        android:clickable="true"
+        android:src="@drawable/ic_user_outline" />
 
-    <TextView
-        android:id="@+id/FirstNameText"
-        android:layout_width="wrap_content"
+
+    <EditText
+        android:id="@+id/first_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/SignUpText"
-        android:layout_marginLeft="34dp"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="19dp"
-        android:text="First Name:" />
-
-    <EditText
-        android:id="@+id/FirstNameEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/FirstNameText"
-        android:layout_alignBottom="@+id/FirstNameText"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:ems="10"
-        android:hint="First name"
-        android:inputType="textPersonName" />
-
-    <TextView
-        android:id="@+id/LastNameText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/FirstNameText"
-        android:layout_alignStart="@+id/FirstNameText"
-        android:layout_below="@+id/FirstNameText"
-        android:layout_marginTop="19dp"
-        android:text="Last Name:" />
-
-    <EditText
-        android:id="@+id/LastNameEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="177dp"
+        android:drawableLeft="@drawable/ic_user_outline"
+        android:ellipsize="end"
+        android:hint="@string/info_first"
         android:inputType="textPersonName"
-        android:hint="Last name"
-        android:layout_below="@+id/FirstNameEditText"
-        android:layout_alignLeft="@+id/FirstNameEditText"
-        android:layout_alignStart="@+id/FirstNameEditText" />
-
-    <TextView
-        android:id="@+id/EmailText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email:"
-        android:layout_below="@+id/LastNameText"
-        android:layout_alignLeft="@+id/LastNameText"
-        android:layout_alignStart="@+id/LastNameText"
-        android:layout_marginTop="21dp" />
+        android:maxLines="1"
+        android:padding="10dp" />
 
     <EditText
-        android:id="@+id/EmailEditText"
-        android:layout_width="wrap_content"
+        android:id="@+id/last_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/LastNameEditText"
-        android:layout_alignStart="@+id/LastNameEditText"
-        android:layout_alignTop="@+id/EmailText"
-        android:ems="10"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/first_name"
+        android:drawableLeft="@drawable/ic_user_outline"
+        android:ellipsize="end"
+        android:hint="@string/info_last"
         android:inputType="textPersonName"
-        android:hint="Email" />
+        android:maxLines="1"
+        android:padding="10dp" />
 
-    <TextView
-        android:id="@+id/PasswordText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/EmailText"
-        android:layout_alignStart="@+id/EmailText"
-        android:layout_below="@+id/EmailText"
-        android:layout_marginTop="24dp"
-        android:hint="Password: " />
 
     <EditText
-        android:id="@+id/PasswordEditText"
-        android:layout_width="wrap_content"
+        android:id="@+id/create_email"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/first_name"
+        android:layout_marginTop="48dp"
+        android:drawableLeft="@drawable/ic_user_outline"
+        android:ellipsize="end"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/create_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/create_email"
+        android:layout_marginTop="53dp"
+        android:drawableLeft="@drawable/ic_user_password"
+        android:ellipsize="end"
+        android:hint="@string/hint_password"
         android:inputType="textPassword"
-        android:layout_below="@+id/EmailEditText"
-        android:layout_alignLeft="@+id/EmailEditText"
-        android:layout_alignStart="@+id/EmailEditText" />
+        android:maxLines="1"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/create_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_password"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_user_outline"
+        android:ellipsize="end"
+        android:hint="@string/info_phone"
+        android:inputType="phone"
+        android:maxLines="1"
+        android:padding="10dp" />
 
     <Button
-        android:id="@+id/SignUpButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/save_information"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/PasswordEditText"
-        android:layout_alignStart="@+id/PasswordEditText"
-        android:layout_below="@+id/PasswordEditText"
-        android:layout_marginTop="25dp"
-        android:text="Create Account" />
-
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:text="@string/info_save"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:layout_alignParentBottom="true"
+        android:drawableLeft="@drawable/ic_keyboard_arrow_right_white_24dp"
+        android:background="@drawable/button_login"/>
+
 
 </RelativeLayout>

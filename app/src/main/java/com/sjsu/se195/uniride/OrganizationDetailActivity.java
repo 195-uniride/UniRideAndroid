@@ -5,7 +5,9 @@ package com.sjsu.se195.uniride;
  */
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -141,7 +145,11 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         // Finish this Activity, back to the stream
         setEditingEnabled(true);
-        finish();
+
+        // Go back to Main Activity when done:
+        Intent intent = new Intent(OrganizationDetailActivity.this, MainActivity.class);
+        startActivity(intent);
+        // finish(); // Don't use.
     }
 
     private void setEditingEnabled(boolean enabled) {
@@ -157,15 +165,37 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     // [START write_fan_out]
     private void addUserToOrganization(String userOrganizationEmail) {
         // Link user with the organization, and include the user's organization email:
-        String key = mDatabase.child("user-organizations").push().getKey();
+        String userOrgkey = mDatabase.child("user-organizations").push().getKey();
 
         Map<String, Object> userOrganizationValues = getUserOrganizationValuesMap(userOrganizationEmail, mOrganizationNameView.getText().toString());
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/user-organizations/" + getUid() + "/" + mOrganizationKey, userOrganizationValues); // TODO: add needed organization fields to this list.
 
-
         mDatabase.updateChildren(childUpdates);
+
+        setOrganizationAsNewDefault(mOrganizationKey);
+    }
+
+    private void setOrganizationAsNewDefault(final String organizationId) {
+
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
+
+        HashMap<String, Object> userInformation = new HashMap<>();
+
+        userInformation.put("defaultOrganizationId", organizationId);
+
+        userReference.updateChildren(userInformation).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // Don't need to inform user.
+                    // Toast.makeText(OrganizationDetailActivity.this, "Default Organization updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(OrganizationDetailActivity.this, "Failed to update Default Organization", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     // [START post_to_map]
@@ -195,8 +225,10 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         }
     }
 
+
     private void hideJoinIfUserHasAlreadyJoinedOrganization()
     {
+
         mDatabase.child("user-organizations").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {

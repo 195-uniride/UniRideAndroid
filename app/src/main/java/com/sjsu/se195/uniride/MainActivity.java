@@ -16,17 +16,33 @@
 
 package com.sjsu.se195.uniride;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.transition.Slide;
+import android.transition.TransitionInflater;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import devlight.io.library.ntb.NavigationTabBar;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
+import com.sjsu.se195.uniride.models.Post;
+
+import java.util.ArrayList;
 
 public class  MainActivity extends BaseActivity {
 
@@ -37,23 +53,28 @@ public class  MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_0_main);
 
+        // "I am a driver" -> Show me Ride Requests:
         findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
-                intent.putExtra("driverMode", true);
+                intent.putExtra(MainSubcategoryActivity.EXTRA_POST_TYPE_TO_SHOW, Post.PostType.RIDER.name());
                 startActivity(intent);
             }
         });
 
+        // "I am a passenger" -> Show me Drive Offers (including Carpools):
         findViewById(R.id.rider_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
-                intent.putExtra("driverMode", false);
+                intent.putExtra(MainSubcategoryActivity.EXTRA_POST_TYPE_TO_SHOW, Post.PostType.DRIVER.name());
                 startActivity(intent);
             }
         });
+      
+        setNavBar(this);
+
     }
 
     @Override
@@ -74,7 +95,11 @@ public class  MainActivity extends BaseActivity {
             startActivity(new Intent(this, ShowOrganizationsActivity.class));
             finish();
             return true;
-        } else {
+        } else if (i == R.id.edit_profile){
+            startActivity(new Intent(this, AddUserInformation.class));
+            finish();
+            return true;
+        }else {
             return super.onOptionsItemSelected(item);
         }
     }

@@ -31,7 +31,7 @@ public class  ShowOrganizationsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_organizations);
-
+        setNavBar(this);
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] {
@@ -94,4 +94,3 @@ public class  ShowOrganizationsActivity extends BaseActivity {
     }
 
 }
-

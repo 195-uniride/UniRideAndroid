@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sjsu.se195.uniride.PreviewCarpoolDetailActivity">
+
+    <include
+        android:id="@+id/post_author_layout"
+        layout="@layout/include_post_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_centerHorizontal="true" />
+
+    <include
+        android:id="@+id/post_text_layout"
+        layout="@layout/include_post_addresses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/post_author_layout"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"/>
+
+    <View
+        android:id="@+id/post_divider"
+        android:layout_below="@+id/post_text_layout"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0.5dip"
+        android:background="#B6B6B6" />
+
+    <include
+        android:id="@+id/post_date_time"
+        layout="@layout/include_post_date_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/post_divider"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
+
+
+    <TextView
+        android:id="@+id/text_carpool_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/post_date_time"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text=""/>
+
+    <TextView
+        android:id="@+id/text_route_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_carpool_details"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text=""/>
+
+
+
+
+    <Button
+        android:id="@+id/button_confirm_carpool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Confirm"/>
+
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab_create_carpool"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginRight="20dp"-->
+    <!--android:layout_marginBottom="20dp"/>-->
+
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab_find_matching_posts"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_marginLeft="20dp"-->
+    <!--android:layout_marginBottom="20dp"/>-->
+
+    <!--<include-->
+        <!--android:id="@+id/for_map_layout"-->
+        <!--layout="@layout/include_post_map"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="invisible"/>-->
+
+</RelativeLayout>

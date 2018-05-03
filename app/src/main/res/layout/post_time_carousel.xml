@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="5">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:background="@color/gradient3"
+        android:paddingTop="10dp">
+        <TextView
+            android:id="@+id/carousel_title"
+            android:layout_height="50dp"
+            android:layout_width="match_parent"
+            style="@style/post_title"/>
+
+        <TextView
+            android:id="@+id/post_carousel_label"
+            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:text="@string/post_label_passengerCount"
+            style="@style/post_label"
+            android:layout_below="@id/carousel_title"/>
+
+        <TextView
+            android:id="@+id/post_carousel_label_time_arrival"
+            android:layout_height="25dp"
+            android:layout_marginTop="20dp"
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:text="Arrive Before"
+            style="@style/post_label"
+            android:layout_below="@id/post_carousel_label"/>
+
+        <Button
+            android:id="@+id/arriveTime"
+            android:layout_width="300dp"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:layout_height="50dp"
+            android:hint="Reach Destination Anytime Before.."
+            android:textSize="15dp"
+            android:inputType="time"
+            android:layout_below="@id/post_carousel_label_time_arrival"
+            style="@style/post_text_field"
+            android:onClick="showTimePickerDialog"/>
+
+        <TextView
+            android:id="@+id/post_carousel_label_time_depart"
+            android:layout_height="25dp"
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:text="Departure After"
+            style="@style/post_label"
+            android:layout_below="@id/arriveTime"/>
+
+        <Button
+            android:id="@+id/departTime"
+            android:layout_width="300dp"
+            android:textAlignment="center"
+            android:layout_centerHorizontal="true"
+            android:layout_height="50dp"
+            android:text="Leave Source Antytime After.."
+            android:textSize="15dp"
+            android:inputType="time"
+            android:layout_below="@id/post_carousel_label_time_depart"
+            style="@style/post_text_field"
+            android:onClick="showTimePickerDialog"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/gradient3">
+
+        <ImageView
+            android:id="@+id/TimeButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:alpha="0.6"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_access_time_white_48dp"/>
+
+    </RelativeLayout>
+</LinearLayout>

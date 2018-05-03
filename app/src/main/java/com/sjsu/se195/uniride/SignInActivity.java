@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.sjsu.se195.uniride.models.User;
 
 public class SignInActivity extends BaseActivity implements View.OnClickListener {
 
@@ -89,26 +88,23 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void onAuthSuccess(FirebaseUser user) {
-        String username = usernameFromEmail(user.getEmail());
+       // String username = usernameFromEmail(user.getEmail());
 
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail());
+//        writeNewUser(user.getUid(), username, user.getEmail());
 
         // Go to MainActivity
-        startActivity(new Intent(SignInActivity.this, MainActivity.class)); //TODO: change to show org.s page.
-
-
-
+        startActivity(new Intent(SignInActivity.this, MainActivity.class));
         finish();
     }
 
-    private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
-        } else {
-            return email;
-        }
-    }
+//    private String usernameFromEmail(String email) {
+//        if (email.contains("@")) {
+//            return email.split("@")[0];
+//        } else {
+//            return email;
+//        }
+//    }
 
     private boolean validateForm() {
         boolean result = true;
@@ -129,13 +125,13 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         return result;
     }
 
-    // [START basic_write]
-    private void writeNewUser(String userId, String name, String email) {
-        User user = new User(name, email);
-
-        mDatabase.child("users").child(userId).setValue(user);
-    }
-    // [END basic_write]
+//    // [START basic_write]
+//    private void writeNewUser(String userId, String name, String email) {
+//        User user = new User(name, email);
+//
+//        mDatabase.child("users").child(userId).setValue(user);
+//    }
+//    // [END basic_write]
 
     @Override
     public void onClick(View v) {
@@ -143,7 +139,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         if (i == R.id.button_sign_in) {
             signIn();
         } else if (i == R.id.signup2){
-                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
+                startActivity(new Intent(SignInActivity.this,  SignUpActivity.class));
         }
     }
 }
