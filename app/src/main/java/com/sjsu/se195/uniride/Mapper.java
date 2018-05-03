@@ -94,13 +94,18 @@ public class Mapper {
 
     // returns the trip distance (in meters) of all legs of the carpool:
     public int getTotalTripDistance() {
-        return getCarpoolTotalTripDurationValue(mDocument);
+        return getCarpoolTotalTripDistanceValue(mDocument);
     }
 
 
     // returns a list of trip times (in seconds) for each leg of the carpool:
     public ArrayList<Integer> getTripWaypointTimes() {
         return getLegDurations(mDocument);
+    }
+
+    // returns a list of end addresses for each leg of the carpool:
+    public ArrayList<String> getTripWaypointAddresses() {
+        return getTripWaypointAddresses(mDocument);
     }
 
     // Helper methods:
@@ -127,9 +132,7 @@ public class Mapper {
             }
         }
 
-        urlString += "&sensor=false&units=imperial&mode=driving";
-
-        // TODO: add depart time & traffic estimate parameters...
+        urlString += "&sensor=false&units=imperial&mode=driving"; // imperial: miles
 
         return urlString;
     }
@@ -197,8 +200,8 @@ public class Mapper {
                     <leg>
                         ...
                         <distance>
-                            <value>22915</value>
-                            <text>22.9 km</text>
+                            <value>1223</value>
+                            <text>0.8 mi</text>
                         </distance>
                     </leg>
                     <leg>
@@ -277,6 +280,56 @@ public class Mapper {
 
         return legDurations;
     }
+
+
+
+
+    private ArrayList<String> getTripWaypointAddresses(Document doc) {
+        ArrayList<String> legEndAddresses = new ArrayList<String>();
+
+        try {
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+            /*
+                XML format:
+                <route>
+                ...
+                    <leg>
+                        ...
+                        <start_address>123 N 10th St, San Jose, CA 95112, USA</start_address>
+                        <end_address>437 N 7th St, San Jose, CA 95112, USA</end_address>
+                    </leg>
+                    <leg>
+                        ...
+                    </leg>
+                </route>
+             */
+
+            // Go to a list of "leg" tags, wit each leg tag having a "duration" tag with a "value" tag within it:
+            NodeList nodeList = (NodeList) xPath.evaluate("//leg/end_address", doc, XPathConstants.NODESET);
+
+            System.out.println("nodeList.getLength() = " + nodeList.getLength());
+
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                System.out.println("Leg/end_address: Node Name[" + i + "] = " + node.getNodeName());
+                // OUTPUT = Leg/Duration/Value: Node Name[0] = value
+                System.out.println("Leg/end_address: Node Value[" + i + "] = " + node.getTextContent());
+                // OUTPUT = Leg/Duration/Value: Node Value[0] = 1455
+
+                String legEndAddress = node.getTextContent();
+
+                legEndAddresses.add(legEndAddress);
+            }
+
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+
+        return legEndAddresses;
+    }
+
+
 
     public String getTripURL() {
         return tripURL;

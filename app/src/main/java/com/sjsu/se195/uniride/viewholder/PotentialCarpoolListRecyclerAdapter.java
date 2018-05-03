@@ -12,6 +12,7 @@ import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.Post;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -109,7 +110,10 @@ public class PotentialCarpoolListRecyclerAdapter extends RecyclerView.Adapter<Po
             // Show seats taken - 1 because 1 will always be taken by the potential new rider:
             passengerCountTextView.setText((carpool.getNumberSeatsTaken() - 1) + " / " + carpool.getPassengerCount() + " Passengers");
             estimatedTravelTimeTextView.setText(carpool.getEstimatedTotalTripTimeInMinutes() + " minutes");
-            estimatedTravelDistanceTextView.setText(carpool.getEstimatedTotalTripDistanceInKilometers() + " km");
+
+            DecimalFormat decimalFormat = new DecimalFormat("0.##");
+            String distance = decimalFormat.format(carpool.getEstimatedTotalTripDistanceInMiles()) + " mi";
+            estimatedTravelDistanceTextView.setText(distance);
         }
 
         @Override

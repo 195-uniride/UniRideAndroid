@@ -2,6 +2,7 @@ package com.sjsu.se195.uniride.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.sjsu.se195.uniride.Mapper;
 
@@ -13,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -156,12 +158,7 @@ public class Carpool extends DriverOfferPost {
 
         // Need to leave before (earliest arrival time - total trip time):
 
-        // TODO: NEEDS TO BE FIXED:
-        // int timeNeedToLeaveBefore = getEarliestArrivalTimeOfParticipants() - getEstimatedTotalTripTimeInMinutes();
-
-        Date earliestArrivalDateTime = getDateTime(getEarliestArrivalTimeOfParticipants());
-
-        Date timeDateNeedToLeaveBefore = getTimeBefore(earliestArrivalDateTime, getEstimatedTotalTripTimeInMinutes());
+        Date timeDateNeedToLeaveBefore = getTimeNeedToLeaveBefore();
 
         System.out.println("timeDateNeedToLeaveBefore = " + timeDateNeedToLeaveBefore); // TODO remove....
 
@@ -177,9 +174,10 @@ public class Carpool extends DriverOfferPost {
             return false;
         }
         else {
-
             // TODO: Update departure and arrival times for post:
 
+            this.departureTime = getIntTime(timeDateNeedToLeaveBefore);
+            this.arrivalTime = getEarliestArrivalTimeOfParticipants();
 
             System.out.println("Trip is POSSIBLE because driverDepartDateTime [" + driverDepartDateTime +
                     "] <= (is before or at) timeDateNeedToLeaveBefore [" + timeDateNeedToLeaveBefore + "]."); // TODO remove....
@@ -188,11 +186,26 @@ public class Carpool extends DriverOfferPost {
         }
     }
 
-    private static Date getTimeBefore(Date initialTime, int minutes) {
+
+
+    private Date getTimeNeedToLeaveBefore() {
+        Date earliestArrivalDateTime = getDateTime(getEarliestArrivalTimeOfParticipants());
+
+        return getTimeBefore(earliestArrivalDateTime, getEstimatedTotalTripTimeInMinutes());
+    }
+
+    private Date getTimeBefore(Date initialTime, int minutes) {
         final long ONE_MINUTE_IN_MILLISECONDS = 60000;//millisecs
 
         long initialTimeInMilliseconds = initialTime.getTime();
         return new Date(initialTimeInMilliseconds - (minutes * ONE_MINUTE_IN_MILLISECONDS));
+    }
+
+    private Date getTimeAfter(Date initialTime, int minutes) {
+        final long ONE_MINUTE_IN_MILLISECONDS = 60000;//millisecs
+
+        long initialTimeInMilliseconds = initialTime.getTime();
+        return new Date(initialTimeInMilliseconds + (minutes * ONE_MINUTE_IN_MILLISECONDS));
     }
 
     /*
@@ -225,15 +238,17 @@ public class Carpool extends DriverOfferPost {
             totalTripDistance = calculateTotalTripDistance();
         }
 
+        Log.d("Carpool", "totalTripDistance (in meters) = " + totalTripDistance);
+
         return totalTripDistance;
     }
 
     /*
         Returns the estimated total trip distance (in km) of the carpool.
      */
-    public double getEstimatedTotalTripDistanceInKilometers() {
-        // Convert totalTripDistance to km:
-        return (0.001 * getEstimatedTotalTripTimeInSeconds()); // distance in meters * (1 km / 1000 meters) = distance in km.
+    public double getEstimatedTotalTripDistanceInMiles() {
+        final double METERS_PER_MILE = 1609.344;
+        return ((double)getEstimatedTotalTripDistanceInMeters() / METERS_PER_MILE);
     }
 
     /*
@@ -275,6 +290,22 @@ public class Carpool extends DriverOfferPost {
         }
 
         return dateTime;
+    }
+
+    private int getIntTime(Date dateTime) {
+        SimpleDateFormat ft = new SimpleDateFormat ("HHmm", Locale.US); // Note: capital 'H' means military time.
+        // example: "20180230-2219" Parses as Fri Mar 02 22:19:00 UTC 2018
+
+        String timeString = "0";
+        try {
+            timeString = ft.format(dateTime);
+        } catch (Exception ex ) {
+            System.out.println(ex);
+        }
+
+        Log.d("getIntTime", "from Date [" + dateTime + "] -> int[" + timeString + "]");
+
+        return Integer.parseInt(timeString);
     }
 
 
@@ -338,9 +369,9 @@ public class Carpool extends DriverOfferPost {
         if (carpoolMapper == null) {
             System.out.println("...now starting Mapper....");
             carpoolMapper = new Mapper(this);
-        }
 
-        setWayPoints();
+            setWayPoints();
+        }
 
         return carpoolMapper;
     }
@@ -349,25 +380,58 @@ public class Carpool extends DriverOfferPost {
     private void setWayPoints() {
 
         ArrayList<Integer> legDurationsInSeconds = carpoolMapper.getTripWaypointTimes();
+        ArrayList<String> legAddresses = carpoolMapper.getTripWaypointAddresses();
+
+        if (legDurationsInSeconds.size() != legAddresses.size()) {
+            Log.e("setWayPoints", "legDurationsInSeconds.size() ["
+                    + legDurationsInSeconds.size() + "] != legAddresses.size() ["
+                    + legAddresses.size() + "]");
+        }
 
         riderWaypoints = new ArrayList<WayPoint>();
 
+        Date previousPointTime = getTimeNeedToLeaveBefore(); // Estimated Start Time
 
-        // Get startTime: (timeNeedToLeaveBeofre...)
-
-
-        for (int i = 0; i < riderPosts.size(); i++) {
+        /*
+            Use (legDurationsInSeconds.size() - 1) because don't add a waypoint for the last leg.
+            Last leg of trip is just from last pickup point to final destination (which isn't considered
+            a pickup point).
+         */
+        for (int i = 0; i < (legDurationsInSeconds.size() - 1); i++) {
             WayPoint wayPoint = new WayPoint();
+
+            for (int riderIndex = 0; riderIndex < riderPosts.size(); riderIndex++) {
+                if (riderPosts.get(riderIndex).source.equals(legAddresses.get(i))) {
+
+                    wayPoint.setPostId(riderPosts.get(riderIndex).postId);
+                    wayPoint.setRiderIndex(riderIndex);
+                }
+            }
 
             wayPoint.setDuration(legDurationsInSeconds.get(i));
 
             // NOTE: Ok to floor for this estimate purpose:
             int legDurationInMinutes = legDurationsInSeconds.get(i) / 60;  // time in seconds * (1 min / 60 sec) = time in minutes.
 
-            //int tripArrivalTime = // add from start time...(previous time?)
+            Date waypointArrivalTime = getTimeAfter(previousPointTime, legDurationInMinutes);
 
+            wayPoint.setPickupTime(waypointArrivalTime.getTime());
 
+            // add waypoint:
+
+            riderWaypoints.add(wayPoint);
+
+            // increment previous waypoint time:
+            previousPointTime = waypointArrivalTime;
         }
+
+        // DEBUG:
+
+        for (int i = 0; i < riderWaypoints.size(); i++) {
+            Log.d("Carpool", "riderWaypoints[" + i + "]: " + riderWaypoints.get(i).toString());
+        }
+
+
     }
 
     // State-changing methods:
@@ -411,7 +475,9 @@ public class Carpool extends DriverOfferPost {
         result.put("stars", stars);
         result.put("passengerCount", passengerCount);
 
-        result.put("riderPosts", riderPosts); // try...
+        result.put("riderPosts", riderPosts);
+
+        result.put("waypoints", riderWaypoints);
 
         return result;
     }
@@ -483,6 +549,9 @@ public class Carpool extends DriverOfferPost {
 
         this.totalTripDistance = in.readInt();
 
+        WayPoint[] wayPointArray = in.createTypedArray(WayPoint.CREATOR);
+        this.riderWaypoints = Arrays.asList(wayPointArray);
+
         // TODO: read areAllTripTimeLimitsSatisfied...
 
     }
@@ -511,6 +580,8 @@ public class Carpool extends DriverOfferPost {
 
         out.writeInt(this.totalTripDistance);
 
+        out.writeTypedArray(getWayPointsInArray(), flags);
+
         // TODO: write areAllTripTimeLimitsSatisfied...
     }
 
@@ -521,6 +592,15 @@ public class Carpool extends DriverOfferPost {
         ridersArray = riderPosts.toArray(ridersArray);
 
         return ridersArray;
+    }
+
+    // Parcelable-Helper method:
+    private WayPoint[] getWayPointsInArray() {
+        WayPoint[] wayPointArray = new WayPoint[riderWaypoints.size()];
+
+        wayPointArray = riderWaypoints.toArray(wayPointArray);
+
+        return wayPointArray;
     }
 
     // After implementing the `Parcelable` interface, we need to create the

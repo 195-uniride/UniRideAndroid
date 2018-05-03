@@ -6,7 +6,9 @@ import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
+import com.sjsu.se195.uniride.models.WayPoint;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -116,7 +118,8 @@ public class PostInfo {
 
             String estimatedTravelTime = (carpoolPost.getEstimatedTotalTripTimeInMinutes() + " minutes");
 
-            String estimatedTravelDistance = (carpoolPost.getEstimatedTotalTripDistanceInKilometers() + " km");
+            DecimalFormat decimalFormat = new DecimalFormat("0.##");
+            String estimatedTravelDistance = decimalFormat.format(carpoolPost.getEstimatedTotalTripDistanceInMiles()) + " mi";
 
             routeDescription += passengerCount + "\n" + "Estimated trip time: " + estimatedTravelTime
                     + " (" + estimatedTravelDistance + ")\n";
@@ -160,15 +163,31 @@ public class PostInfo {
                 routeDescription += ": \n";
 
                 // TODO: go by waypoint order!
-                for (RideRequestPost rider : carpoolPost.getRiderPosts()) {
+
+                for (WayPoint riderWayPoint : carpoolPost.riderWaypoints) {
+
+                    RideRequestPost rider = carpoolPost.riderPosts.get(riderWayPoint.getRiderIndex());
 
                     String passengerName = "";
                     if (post.author != null) {
                         passengerName = " " + rider.author;
                     }
 
-                    routeDescription += PostInfo.getDepartureDateTimeText(rider) + " - pickup passenger"
+                    //routeDescription += PostInfo.getDepartureDateTimeText(rider);
+
+                    long pickupTimeInMilliseconds = riderWayPoint.getPickupTime();
+
+                    Date dateTime = new Date(pickupTimeInMilliseconds);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a", Locale.US);
+
+                    String pickupTimeString = dateFormat.format(dateTime);
+
+                    routeDescription += pickupTimeString;
+
+                    routeDescription += " - pickup passenger"
                             + passengerName + " at: \n";
+
                     routeDescription += "   " + rider.source + "\n";
                 }
             }

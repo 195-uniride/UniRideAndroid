@@ -253,7 +253,7 @@ public abstract class PostListFragment extends Fragment {
 //                                intent.putExtra("typeOfPost", mPostType.name());
 //                            }
 
-                            intent.putExtra("typeOfPost", mPostType.name());
+                            intent.putExtra("typeOfPost", model.postType.name());
 
                             startActivity(intent);
                         }
@@ -290,7 +290,7 @@ public abstract class PostListFragment extends Fragment {
                         username = UserInformation.getShortName(postUser);
 
                         // Bind Post to ViewHolder, setting OnClickListener for the star button
-                        viewHolder.bindToPost(username, mPostType, model, new View.OnClickListener() {
+                        viewHolder.bindToPost(username, model.postType, model, new View.OnClickListener() {
                             @Override
                             public void onClick(View starView) {
                                 // Need to write to both places the post is stored

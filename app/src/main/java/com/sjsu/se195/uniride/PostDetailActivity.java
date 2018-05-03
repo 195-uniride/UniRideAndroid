@@ -232,8 +232,6 @@ public class PostDetailActivity extends MainActivity
         TextView routeDescriptionText = findViewById(R.id.text_route_details);
 
         routeDescriptionText.setText(PostInfo.getRouteDescription(post));
-
-
     }
 
 

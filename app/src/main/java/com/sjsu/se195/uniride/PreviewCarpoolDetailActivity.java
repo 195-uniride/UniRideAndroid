@@ -86,7 +86,7 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
         if (mPotentialCarpool.areAllTripTimeLimitsSatisfied()) {
             // If carpool is possible, let user confirm carpool:
 
-            routeDescriptionText.setText("Preview Potential Carpool: \n\n"
+            routeDescriptionText.setText("Preview Potential Carpool: \n"
                     + PostInfo.getRouteDescription(mPotentialCarpool));
 
             mConfirmCarpoolButton.setEnabled(true);
