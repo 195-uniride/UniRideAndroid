@@ -64,6 +64,12 @@
             android:name=".NewCarpoolActivity"
             android:label="@string/title_activity_new_carpool" />
         <activity android:name=".CarpoolActivity"></activity>
+        <activity
+            android:name=".ProfilePageActivity"
+            android:label="@string/title_activity_profile_page"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <receiver android:name="AlarmListener" />
     </application>
 
 </manifest>
