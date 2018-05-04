@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sjsu.se195.uniride.PostDetailActivity;
+import com.sjsu.se195.uniride.PostInfo;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
@@ -24,6 +25,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
     public ImageView background;
     public TextView to;
 
+    public TextView postTripDateText;
+    public TextView postDateTimeText;
+
     public PostViewHolder(View itemView) {
         super(itemView);
 
@@ -34,9 +38,12 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         destinationView = (TextView) itemView.findViewById(R.id.post_destination);
         background = (ImageView) itemView.findViewById(R.id.card_background);
         to = (TextView) itemView.findViewById(R.id.post_card_address_to);
+
+        postTripDateText = itemView.findViewById(R.id.post_date);
+        postDateTimeText = itemView.findViewById(R.id.post_time);
     }
 
-    public void bindToPost(String name, Boolean postType, Post post, View.OnClickListener starClickListener) {
+    public void bindToPost(String name, Post.PostType postType, Post post, View.OnClickListener starClickListener) {
         authorView.setText(name);
         sourceView.setText(trimAddress(post.source));
         numStarsView.setText(String.valueOf(post.starCount));
@@ -44,12 +51,25 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         String t ="to";
         to.setText(t);
 
-        if(postType){
-            background.setImageResource(R.drawable.driver_card);
+        System.out.println("PostViewHolder:bindToPost: post.postType = " + post.postType);
+
+        if (postType == Post.PostType.RIDER) {
+            background.setImageResource(R.drawable.driver_card); // NOTE: driver card is for Ride Request.
         }
-        else{
-            background.setImageResource(R.drawable.rider_card);
+        else if (postType == Post.PostType.DRIVER) {
+            background.setImageResource(R.drawable.rider_card); // NOTE: rider card is for Drive Offer.
         }
+        else if (postType == Post.PostType.CARPOOL) {
+            sourceView.setText("CARPOOL: \n" + sourceView.getText()); // DEBUG ONLY.
+
+            background.setImageResource(R.drawable.carpool_card);
+
+            // TODO: add view elements for # passengers, waypoints, trip time, etc.
+        }
+
+        postTripDateText.setText(PostInfo.getTripDateText(post));
+        postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(post));
+
         starView.setOnClickListener(starClickListener);
     }
 

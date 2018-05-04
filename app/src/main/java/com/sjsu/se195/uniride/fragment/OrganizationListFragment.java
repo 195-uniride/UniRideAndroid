@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +22,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 //import com.sjsu.se195.uniride.PostDetailActivity; //TODO
 import com.sjsu.se195.uniride.OrganizationDetailActivity; //changed
+import com.sjsu.se195.uniride.ProfilePageActivity;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.Organization; //changed
 //import com.sjsu.se195.uniride.viewholder.PostViewHolder; //TODO
@@ -37,6 +39,9 @@ public abstract class OrganizationListFragment extends Fragment {
     private FirebaseRecyclerAdapter<Organization, OrganizationViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
+    private String ORGANIZATION_TAB_TITLE;
+    protected String uID;
+    private TextView mTabTitle;
 
     public OrganizationListFragment() {}
 
@@ -45,6 +50,16 @@ public abstract class OrganizationListFragment extends Fragment {
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_all_organizations, container, false);
+
+
+        if(getActivity() instanceof ProfilePageActivity){
+            this.uID = getArguments().getString("uID");
+            String firstname = getArguments().getString("userName");
+            this.ORGANIZATION_TAB_TITLE = firstname+ "'s Organizations";
+        }
+        else{
+            this.uID = getUid(); // TODO: pass userID to keep query independent of current user
+        }
 
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();

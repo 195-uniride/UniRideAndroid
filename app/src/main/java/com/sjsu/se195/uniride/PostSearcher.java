@@ -1,7 +1,5 @@
 package com.sjsu.se195.uniride;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -9,7 +7,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
@@ -39,6 +36,11 @@ public class PostSearcher {
 
     public ArrayList<Carpool> mPotentialCarpools;
 
+    public enum UserSearchType {
+        ALL, USER_POSTS_ONLY, NO_USER_POSTS
+    }
+    public UserSearchType userSearchType = UserSearchType.ALL;
+
     // Constructor:
 
     public PostSearcher(DatabaseReference databaseReference) {
@@ -56,7 +58,7 @@ public class PostSearcher {
     // parameters:
     // - userPost: the post that we are checking every other post against.
     // - user: the owner of the user post
-    public void findSearchResults(Post userPost) {
+    public void findSearchResults(Post userPost, String userID) {
 
         // step 1: filter posts by type (drive offer or rider request): (in getAllPostsBySearchType)
         boolean isLookingForDriver = true;
@@ -77,7 +79,9 @@ public class PostSearcher {
         // step 2: filter posts by date: (orderByChild("tripDate").equalTo(userPost.tripDate))
         Query searchQuery = getAllPostsBySearchType(userPost, isLookingForDriver).orderByChild("tripDate").equalTo(userPost.tripDate);
 
-        findPostSearchResults(userPost, searchQuery, isLookingForDriver);
+        Log.d(TAG, "Searching with Filter:UserSearchType = " + userSearchType.name());
+
+        findPostSearchResults(userPost, searchQuery, isLookingForDriver, userID);
 
         // list is set asynchronously.
     }
@@ -85,20 +89,28 @@ public class PostSearcher {
     // Search helper methods:
 
     private Query getAllPostsBySearchType(Post userPost, boolean isLookingForDriver) {
+
+        if (userPost.organizationId == null) {
+            throw new IllegalArgumentException("ERROR: " + TAG + ": userPost.organizationId == null");
+        }
+
+        String postType;
+
         if (isLookingForDriver) {
-            //return getAllDriveOfferPosts();
-            // TODO: return mDatabase.child("organization-posts").child(userPost.organizationId).child("driveOffers");
-            return mDatabase.child("posts").child("driveOffers"); // TEMP
+            postType = "driveOffers";
         }
         else {
-            // TODO: return mDatabase.child("organization-posts").child(userPost.organizationId).child("driveOffers");
-            return mDatabase.child("posts").child("rideRequests"); // TEMP
+            postType = "rideRequests";
         }
+
+        return mDatabase.child("organization-posts").child(userPost.organizationId).child(postType);
     }
 
 
-    private void findPostSearchResults(final Post userPost, Query searchQuery, final boolean isLookingForDriver) {
+    private void findPostSearchResults(final Post userPost, Query searchQuery,
+                                       final boolean isLookingForDriver, final String userID) {
         System.out.println("findRideRequestSearchResults with searchQuery = " + searchQuery);
+
         searchQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot postListSnapshot) {
@@ -116,6 +128,12 @@ public class PostSearcher {
 
                     if (isLookingForDriver) {
                         postToCheck = (DriverOfferPost) postSnapshot.getValue(DriverOfferPost.class);
+
+                        // Get as a Carpool post if is a carpool:
+                        if (postToCheck.postType != null
+                                && postToCheck.postType == Post.PostType.CARPOOL) {
+                            postToCheck = (Carpool) postSnapshot.getValue(Carpool.class);
+                        }
                     }
                     else {
                         postToCheck = (RideRequestPost) postSnapshot.getValue(RideRequestPost.class);
@@ -128,9 +146,13 @@ public class PostSearcher {
                     System.out.println("Search: ---- Looking at postToCheck: " + postToCheck +
                             " with key = " + postSnapshot.getKey() + " ----");
 
-                    if (isTripTimeWithinTimeLimit(userPost, postToCheck)) {
+                    // Check if post meets all criteria:
+                    if (meetsFilterCriteria(postToCheck, userID)
+                            && isTripTimeWithinTimeLimit(userPost, postToCheck)) {
+
                         System.out.println("Search: post IS a match: " + postToCheck +
                                 " with key = " + postSnapshot.getKey() + " ----");
+
                         // Add to list of matching posts:
                         mSearchResultsPosts.add(postToCheck);
                     }
@@ -138,6 +160,7 @@ public class PostSearcher {
                         System.out.println("Search: post NOT a match: " + postToCheck +
                                 " with key = " + postSnapshot.getKey() + " ----");
                     }
+
                     postCount++;
 
                     System.out.println("---- ... ----");
@@ -165,6 +188,10 @@ public class PostSearcher {
                     System.out.println("...to destination @ " + carpool.getDriverPost().destination + "...");
                 }
 
+                // Sort Search Results by trip time:
+
+                // TODO: mPotentialCarpools.sort();
+
                 // Show Results:
 
                 notifyDoneSearching();
@@ -180,6 +207,26 @@ public class PostSearcher {
         });
     }
 
+
+    private boolean meetsFilterCriteria(Post post, String userId) {
+
+        if (post.uid.equals(userId)) { // If this post is by the current user...
+            if (userSearchType == UserSearchType.NO_USER_POSTS) {
+                Log.d(TAG, "Filter:UserSearchType: Post [" + post.postId + "] NOT a match: userID ["
+                        + userId + "] matches post.uid [" + post.uid + "]");
+                return false; // filter out posts by the current user.
+            }
+        }
+        else { // If this post is by another user:
+            if (userSearchType == UserSearchType.USER_POSTS_ONLY) {
+                Log.d(TAG, "Filter:UserSearchType: Post [" + post.postId + "] NOT a match: userID ["
+                        + userId + "] does NOT match post.uid [" + post.uid + "]");
+                return false; // filter out posts by other users.
+            }
+        }
+
+        return true;
+    }
 
 
     /*
@@ -275,10 +322,5 @@ public class PostSearcher {
             listener.onSearchResultsFound(mSearchResultsPosts, mPotentialCarpools);
         }
     }
-
-//    // TODO:
-//    private void loadPosts() { // TODO: Do this in a Listener??? And make the Activity do this OnSearchFinished...
-//
-//    }
 
 }

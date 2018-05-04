@@ -49,6 +49,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
+import com.sjsu.se195.uniride.models.Post;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,35 +72,23 @@ public class  MainActivity extends BaseActivity {
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
-                intent.putExtra("driverMode", true);
+                intent.putExtra(MainSubcategoryActivity.EXTRA_POST_TYPE_TO_SHOW, Post.PostType.RIDER.name());
                 startActivity(intent);
             }
         });
 
+        // "I am a passenger" -> Show me Drive Offers (including Carpools):
         findViewById(R.id.rider_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(MainActivity.this, MainSubcategoryActivity.class);
-                intent.putExtra("driverMode", false);
+                intent.putExtra(MainSubcategoryActivity.EXTRA_POST_TYPE_TO_SHOW, Post.PostType.DRIVER.name());
                 startActivity(intent);
             }
         });
+        pushTokenToFirebase();
         setNavBar(this);
 
-        FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
-        mUser.getIdToken(true)
-                .addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                    public void onComplete(@NonNull Task<GetTokenResult> task) {
-                        if (task.isSuccessful()) {
-                            String idToken = task.getResult().getToken();
-                            pushTokenToFirebase(idToken);
-                            // Send token to your backend via HTTPS
-                            // ...
-                        } else {
-                            // Handle error -> task.getException();
-                        }
-                    }
-                });
     }
 
     @Override
@@ -131,17 +120,15 @@ public class  MainActivity extends BaseActivity {
 
     //This method will push this Firebasetoken online so that
     //  the cloud functions may use it.
-    public void pushTokenToFirebase(String token){
+    public void pushTokenToFirebase(){
         Map<String, Object> childUpdates = new HashMap<>();
         String instance_id = FirebaseInstanceId.getInstance().getId();
         String instance_token = FirebaseInstanceId.getInstance().getToken();
 
         System.out.println(getUid());
         System.out.println(FirebaseInstanceId.getInstance().getId());
-        System.out.println(token);
         System.out.println(instance_token);
 
-        childUpdates.put("/users/"+getUid()+"/tokens/", token);
         childUpdates.put("/users/"+getUid()+"/firebase_instance_id/", instance_id);
         childUpdates.put("/users/"+getUid()+"/firebase_instance_token/", instance_token);
         mDatabase.updateChildren(childUpdates);

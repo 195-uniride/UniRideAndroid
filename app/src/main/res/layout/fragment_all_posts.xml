@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_all_posts_linearlayout"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primaryWhite"
+    android:orientation="vertical"
     android:clipToPadding="false"
     tools:context=".MainSubcategoryActivity">
     <com.yalantis.phoenix.PullToRefreshView
@@ -19,4 +21,10 @@
         tools:listitem="@layout/item_post" />
     </com.yalantis.phoenix.PullToRefreshView>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/no_posts_found_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
+
+</LinearLayout>

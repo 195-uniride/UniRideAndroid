@@ -34,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.fragment.PostListFragment;
 import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
+import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.User;
 
 import java.util.ArrayList;
@@ -48,25 +49,33 @@ import java.util.List;
 public class MainSubcategoryActivity extends MainActivity implements AdapterView.OnItemSelectedListener {
 
     private static final String TAG = "MainSubcategoryActivity";
+    public static final String EXTRA_POST_TYPE_TO_SHOW = "postType";
 
     private User currentUser;
     private HashMap<String, String> OrganizationNameIdMap;
     private Spinner orgSpinner;
     private ArrayAdapter<String> orgAdapter;
     private String selectedOrganizationId;
+    private Post.PostType mPostType;
 
-    private boolean postType; //true: rideRequests. false: driveOffers
+    // private boolean postType; //true: rideRequests. false: driveOffers
     private ViewPager mViewPager;
     private FragmentPagerAdapter mPagerAdapter;
+    private DatabaseReference mDatabase;
 
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        postType = getIntent().getExtras().getBoolean("driverMode");
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if (postType) {
+        // postType = getIntent().getExtras().getBoolean("driverMode");
+
+        mPostType = Post.PostType.valueOf(getIntent().getStringExtra(MainSubcategoryActivity.EXTRA_POST_TYPE_TO_SHOW));
+
+        // If showing Ride Request Posts, then user is a Driver:
+        if (mPostType == Post.PostType.RIDER) { // if (postType) {
             setContentView(R.layout.activity_1_driver_main);
+
             findViewById(R.id.new_drive_offer_post).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,7 +84,9 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
                     startActivity(intent);
                 }
             });
-        } else {
+        }
+        // If showing Drive Offer Posts, then user is a Rider:
+        else {
             setContentView(R.layout.activity_1_rider_main);
 
             findViewById(R.id.new_ride_request_post).setOnClickListener(new View.OnClickListener() {
@@ -111,7 +122,11 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
 
     private void loadPosts() {
         Bundle bundle = new Bundle();
-        bundle.putBoolean("postType", postType); // TODO: change name?
+        //bundle.putBoolean("postType", postType); // TODO: change name?
+        bundle.putString(PostListFragment.EXTRA_POST_TYPE, mPostType.name());
+
+        bundle.putString(PostListFragment.EXTRA_ORGANIZATION_ID, getSelectedOrganizationId());
+
         Fragment posts = new RecentPostsFragment();
         posts.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.post_fragment_placeholder, posts, "PostsList").commit();
@@ -227,6 +242,60 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
 
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
+    }
+
+//    // TODO: change to throw error if user doesn't have a default organization:
+//    public String getUserDefaultOrganizationId() {
+//
+//        String defaultUserOrganizationId = "";
+//
+//        if (getCurrentUser() != null) {
+//            defaultUserOrganizationId = getCurrentUser().defaultOrganizationId;
+//        }
+//
+//        if (defaultUserOrganizationId == null || defaultUserOrganizationId.equals("")) {
+//            System.out.println("ERROR: No default Org Id found for user: " + getCurrentUser());
+//
+//            // TODO: show load page with no results and prompt user to choose a default organization.
+//
+//            // WIP ONLY: For testing purposes: set an arbitrary Org Id: // TODO: REMOVE: FOR WIP STATE ONLY.
+//            defaultUserOrganizationId = "-L47q6ayVu4wPq23hnmm"; // "Marta's Organization"
+//            System.out.println("WIP ONLY: Setting default Org Id to arbitrary Id: " + defaultUserOrganizationId);
+//        }
+//
+//        System.out.println("User's default Org Id = " + defaultUserOrganizationId);
+//
+//        return defaultUserOrganizationId;
+//    }
+
+
+//    public void setCurrentUserAndLoadPosts() {
+//
+//        // System.out.println("Starting to set user....");
+//
+//        mDatabase.child("users").child(getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // Need to get the user object before loading posts because the query to find posts requires user.
+//
+//                // Get User object and use the values to update the UI
+//                currentUser = dataSnapshot.getValue(User.class);
+//
+//                loadPosts();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        //getUid()
+//    }
+
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 
 }

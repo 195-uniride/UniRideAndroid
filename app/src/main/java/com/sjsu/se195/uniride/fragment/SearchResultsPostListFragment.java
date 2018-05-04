@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.sjsu.se195.uniride.PostDetailActivity;
+import com.sjsu.se195.uniride.PreviewCarpoolDetailActivity;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.Post;
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 public class SearchResultsPostListFragment extends Fragment implements OnItemClickListener {
 
     private static final String TAG = "SearchResultsPostListFragment";
+    public static final String EXTRA_SEARCH_RESULTS = "SearchResultsPostListFragment.searchResults";
+    public static final String EXTRA_POTENTIAL_CARPOOL_RESULTS = "SearchResultsPostListFragment.potentialCarpoolResults";
 
     private RecyclerView mRecycler;
     private PotentialCarpoolListRecyclerAdapter mAdapter;
@@ -39,19 +43,36 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Get list of Post objects to display:
-        mPostList = getArguments().getParcelableArrayList("searchResults");
+        mPostList = getArguments().getParcelableArrayList(SearchResultsPostListFragment.EXTRA_SEARCH_RESULTS);
 
-        mPotentialCarpools = getArguments().getParcelableArrayList("potentialCarpoolResults");
+        if (mPostList == null) {
+            throw new IllegalArgumentException(TAG + ": Must pass EXTRA_SEARCH_RESULTS.");
+        }
 
-        System.out.println("in SearchResultsPostListFragment: just got mPostList = " + mPostList);
+        mPotentialCarpools = getArguments().getParcelableArrayList(SearchResultsPostListFragment.EXTRA_POTENTIAL_CARPOOL_RESULTS);
+
+        if (mPotentialCarpools == null) {
+            throw new IllegalArgumentException(TAG + ": Must pass EXTRA_POTENTIAL_CARPOOL_RESULTS.");
+        }
 
         View rootView;
 
         rootView = inflater.inflate(R.layout.fragment_all_posts, container, false);
 
-        mRecycler = rootView.findViewById(R.id.messages_list);
 
-        mRecycler.setHasFixedSize(true);
+
+        if (mPotentialCarpools.size() == 0) {
+            TextView noResultsFoundText = rootView.findViewById(R.id.no_posts_found_text);
+            noResultsFoundText.setText("No Search Results Found");
+            noResultsFoundText.setVisibility(View.VISIBLE);
+        }
+        else {
+            mRecycler = rootView.findViewById(R.id.messages_list);
+
+            mRecycler.setHasFixedSize(true);
+        }
+
+
         return rootView;
     }
 
@@ -62,13 +83,17 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
 
         //postType = savedInstanceState.getBundle("postType");
 
-        // Set up Layout Manager, reverse layout
-        mManager = new LinearLayoutManager(getActivity());
-        mManager.setReverseLayout(true);
-        mManager.setStackFromEnd(true);
-        mRecycler.setLayoutManager(mManager);
+        if (mPotentialCarpools.size() > 0) {
+            // Set up Layout Manager, reverse layout
+            mManager = new LinearLayoutManager(getActivity());
+            mManager.setReverseLayout(true);
+            mManager.setStackFromEnd(true);
+            mRecycler.setLayoutManager(mManager);
 
-        loadPosts();
+            loadPosts();
+        }
+
+
 
     }
 
@@ -85,30 +110,27 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
     private void loadPosts() {
         System.out.println("About to load posts.....");
 
-        // With Posts:
-        // mAdapter = new PostListRecyclerAdapter(mPostList);
-
         // With Potential Carpool objects:
         mAdapter = new PotentialCarpoolListRecyclerAdapter(mPotentialCarpools);
 
         mRecycler.setAdapter(mAdapter);
 
         mAdapter.setClickListener(this);
-
     }
 
     @Override
     public void onClick(View view, int position) {
-        // Get post clicked from position:
-        Post postClicked = mPostList.get(position);
+        // Get potential carpool post clicked from position in list:
 
-        System.out.println("postClicked = " + postClicked + " from " + postClicked.source);
+        Carpool potentialCarpoolClicked = mPotentialCarpools.get(position);
 
-        // Launch PostDetailActivity
-        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, "");
-        intent.putExtra("postType", (postClicked instanceof RideRequestPost));
-        intent.putExtra("post", postClicked);
+        System.out.println("potentialCarpoolClicked = " + potentialCarpoolClicked);
+
+        // Launch PreviewCarpoolDetailActivity
+        Intent intent = new Intent(getActivity(), PreviewCarpoolDetailActivity.class);
+
+        intent.putExtra(PreviewCarpoolDetailActivity.EXTRA_CARPOOL_OBJECT, potentialCarpoolClicked);
+
         startActivity(intent);
     }
 }

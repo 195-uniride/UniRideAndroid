@@ -15,17 +15,26 @@ import java.util.Map;
 public class RideRequestPost extends Post {
     private LatLng pickuppoint;
 
-    public RideRequestPost() {}
+    public RideRequestPost() {
+        postType = PostType.RIDER;
+    }
 
-    //Constructer
+    // Constructors:
+
     public RideRequestPost(String uid, String author, String source, String destination
             , int departureTime, int arrivalTime, int tripDate){
         super(uid, author, source, destination, departureTime, arrivalTime, tripDate);
+
+        postType = PostType.RIDER;
     }
 
     public RideRequestPost(LatLng point){
         this.pickuppoint = point;
+
+        postType = PostType.RIDER;
     }
+
+    // Firebase Mapping methods:
 
     public Map<String, Object> toMap_pickupPoint(){
         HashMap<String, Object> result = new HashMap<>();
@@ -37,11 +46,14 @@ public class RideRequestPost extends Post {
     public Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
+        result.put("postType", postType);
+        result.put("organizationId", organizationId);
+        result.put("postId", postId);
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);
-        result.put("departure", departure_time);
-        result.put("arrivalTime", arrival_time);
+        result.put("departureTime", departureTime);
+        result.put("arrivalTime", arrivalTime);
         result.put("tripDate", tripDate);
         result.put("starCount", starCount);
         result.put("stars", stars);
@@ -91,5 +103,24 @@ public class RideRequestPost extends Post {
             return new RideRequestPost[size];
         }
     };
+
+
+    // To String:
+
+    @Override
+    public String toString() {
+        String className = this.getClass().getSimpleName();
+
+        String postString =  super.toString();
+        if (this.pickuppoint == null) {
+            postString += "   " + className + ".pickuppoint = null \n";
+        }
+        else {
+            postString += "   " + className + ".pickuppoint = " + this.pickuppoint.toString() + " \n";
+        }
+
+
+        return postString;
+    }
 
 }

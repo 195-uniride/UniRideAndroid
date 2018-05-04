@@ -14,38 +14,50 @@ public class DriverOfferPost extends Post implements Parcelable {
 
     public int passengerCount;
 
-    public DriverOfferPost(){}
+    public DriverOfferPost() {
+        postType = PostType.DRIVER;
+    }
 
-    //Constructer
+    // Constructors:
+
     public DriverOfferPost(String uid, String author, String source, String destination, int pasCount,
                            int departureTime, int arrivalTime, int tripDay){
         super(uid, author, source, destination, departureTime, arrivalTime, tripDay);
         this.passengerCount = pasCount;
+
+        this.postType = PostType.DRIVER;
     }
 
     public DriverOfferPost(String source, String destination, int pasCount, int departureTime, int arrivalTime, int tripDay){
         super(source, destination, departureTime, arrivalTime, tripDay);
         this.passengerCount = pasCount;
+
+        this.postType = PostType.DRIVER;
     }
 
+    // Getters and Setters:
+
     public int getPassengerCount() { return passengerCount; }
+
+    // Firebase Mapping methods:
 
     public  Map<String, Object> toMap(){
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
+        result.put("postType", postType);
+        result.put("organizationId", organizationId);
+        result.put("postId", postId);
         result.put("author", author);
         result.put("source", source);
         result.put("destination", destination);
-        result.put("departureTime", departure_time);
-        result.put("arrivalTime", arrival_time);
+        result.put("departureTime", departureTime);
+        result.put("arrivalTime", arrivalTime);
         result.put("tripDate", tripDate);
         result.put("starCount", starCount);
         result.put("stars", stars);
         result.put("passengerCount", passengerCount);
         return result;
     }
-
-
 
     // Parcelable methods:
 
@@ -89,5 +101,16 @@ public class DriverOfferPost extends Post implements Parcelable {
             return new DriverOfferPost[size];
         }
     };
+
+    // To String:
+
+    @Override
+    public String toString() {
+        String className = this.getClass().getSimpleName();
+        String postString =  super.toString();
+        postString += "   " + className + ".passengerCount = " + this.passengerCount + " \n";
+
+        return postString;
+    }
 
 }
