@@ -47,6 +47,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private TextView mOrganizationWebsiteView;
     private EditText mOrganizationEmailField;
     private Button mJoinButton;
+    private Button mShowParking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,8 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         // Set Joined button to visible only if not joined this organization before:
         mOrganizationEmailField = (EditText) findViewById(R.id.field_enter_email_text);
         mJoinButton = (Button) findViewById(R.id.button_join_organization);
+        // Set show parking to true if the user has joined this organization before:
+        mShowParking = (Button) findViewById(R.id.button_show_parking);
 
         hideJoinIfUserHasAlreadyJoinedOrganization();
 
@@ -157,6 +160,8 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         if (enabled) {
             mJoinButton.setVisibility(View.VISIBLE);
+            //If user isn't part of the organization, dont show this button
+            mShowParking.setVisibility(View.GONE);
         } else {
             mJoinButton.setVisibility(View.GONE);
         }
@@ -218,10 +223,14 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private void setCanJoin(boolean canJoin) {
         if (canJoin) {
             mJoinButton.setOnClickListener(this);
+            mShowParking.setVisibility(View.GONE);
         }
         else { // remove the option to join the organization:
             mOrganizationEmailField.setVisibility(View.GONE);
             mJoinButton.setVisibility(View.GONE);
+            //if other two are invisible, that means user is part of the organization
+            //  show parking button
+            mShowParking.setVisibility(View.VISIBLE);
         }
     }
 
