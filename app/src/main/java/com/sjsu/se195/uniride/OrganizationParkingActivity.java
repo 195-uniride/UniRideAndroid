@@ -13,11 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
-import com.sjsu.se195.uniride.fragment.MyDriverPostsFragment;
-import com.sjsu.se195.uniride.fragment.MyOrganizationsFragment;
-import com.sjsu.se195.uniride.fragment.MyRiderPostsFragment;
-import com.sjsu.se195.uniride.fragment.ParkingSpotsList;
-import com.sjsu.se195.uniride.fragment.UserInformationFragment;
+import com.google.firebase.database.Query;
+import com.sjsu.se195.uniride.fragment.ParkingSpotsListFragment;
 import com.sjsu.se195.uniride.models.User;
 
 public class OrganizationParkingActivity extends AppCompatActivity {
@@ -34,16 +31,17 @@ public class OrganizationParkingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organization_parking);
+        setFragment();
     }
 
     //Basically copy pasted from profile page
     private void setFragment(){
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()){
             private final Fragment[] mFragments = new Fragment[] {
-                    new ParkingSpotsList(),
-                    new ParkingSpotsList(),
-                    new ParkingSpotsList(),
-                    new ParkingSpotsList()
+                    new ParkingSpotsListFragment(),
+                    new ParkingSpotsListFragment(),
+                    new ParkingSpotsListFragment(),
+                    new ParkingSpotsListFragment()
             };
             @Override
             public Fragment getItem(int position) {
