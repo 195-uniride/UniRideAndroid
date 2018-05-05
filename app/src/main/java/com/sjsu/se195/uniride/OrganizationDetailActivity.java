@@ -84,6 +84,14 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
 
         hideJoinIfUserHasAlreadyJoinedOrganization();
 
+        //onclick listener for mShowParking
+        mShowParking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showParkingForOrganization();
+            }
+        });
+
     }
 
     @Override
@@ -155,13 +163,18 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         // finish(); // Don't use.
     }
 
+    private void showParkingForOrganization(){
+        //this method will start the intent and will take to the new activity
+        // where the parking will be shown
+        Intent intent = new Intent(OrganizationDetailActivity.this, OrganizationParkingActivity.class);
+        startActivity(intent);
+    }
+
     private void setEditingEnabled(boolean enabled) {
         mOrganizationEmailField.setEnabled(enabled);
 
         if (enabled) {
             mJoinButton.setVisibility(View.VISIBLE);
-            //If user isn't part of the organization, dont show this button
-            mShowParking.setVisibility(View.GONE);
         } else {
             mJoinButton.setVisibility(View.GONE);
         }
