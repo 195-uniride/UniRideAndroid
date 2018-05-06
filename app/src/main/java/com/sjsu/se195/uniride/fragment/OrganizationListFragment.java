@@ -30,7 +30,7 @@ import com.sjsu.se195.uniride.viewholder.OrganizationViewHolder; //changed
 
 public abstract class OrganizationListFragment extends Fragment {
 
-    private static final String TAG = "ParkingSpotsListFragment";
+    private static final String TAG = "OrganizationListFragment";
 
     // [START define_database_reference]
     private DatabaseReference mDatabase;

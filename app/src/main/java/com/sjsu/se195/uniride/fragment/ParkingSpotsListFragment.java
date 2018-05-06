@@ -1,58 +1,114 @@
 package com.sjsu.se195.uniride.fragment;
 
-/**
- * Created by timhdavis on 11/11/17.
- */
-
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
-import com.sjsu.se195.uniride.ProfilePageActivity;
+import com.google.firebase.database.Transaction;
 import com.sjsu.se195.uniride.R;
+import com.sjsu.se195.uniride.models.ParkingSpot; //changed
+import com.sjsu.se195.uniride.viewholder.ParkingSpotViewHolder; //changed
 
-public class ParkingSpotsListFragment extends OrganizationListFragment {
+//A lot of this file is taken from OrganizationListFragment
+public class ParkingSpotsListFragment extends Fragment {
 
-    private LinearLayout linearLayout;
-    private TextView mTabTitle;
-    private String MY_ORGANIZATIONS_TITLE;
-
-    public ParkingSpotsListFragment() {}
+    private static final String TAG = "ParkingSpotsListFragment";
+    private RecyclerView mRecycler;
+    private DatabaseReference mDatabase;
+    private FirebaseRecyclerAdapter<ParkingSpot, ParkingSpotViewHolder> mAdapter;
+    private LinearLayoutManager mManager;
+    protected String uID;
+    private String garage_name;
 
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        if(getActivity() instanceof ProfilePageActivity){
-            String userName = getArguments().getString("userName");
-            this.MY_ORGANIZATIONS_TITLE = userName + "'s Organizations";
-            this.linearLayout = rootView.findViewById(R.id.fragment_all_organizations_linearlayout);
-            this.createTitle(MY_ORGANIZATIONS_TITLE);
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        super.onCreateView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(R.layout.fragment_all_parkingspots, container, false);
+        this.uID = getUid(); // TODO: pass userID to keep query independent of current user
+
+        Bundle args = new Bundle();
+        garage_name = this.getArguments().getString("garage");
+        System.out.println("inside onCreateOf ParkingSpotsListFragment &&&&&&&&&&&&&&&&&&&&&&&&&: " + garage_name);
+        // [START create_database_reference]
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        // [END create_database_reference]
+
+        mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
+        mRecycler.setHasFixedSize(true);
         return rootView;
     }
 
-    private void createTitle(String title){
-        mTabTitle = new TextView(getActivity());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.CENTER;
-        mTabTitle.setLayoutParams(layoutParams);
-        mTabTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        mTabTitle.setPadding(10, 10, 10, 10);
-        mTabTitle.setText(title);
-        this.linearLayout.addView(this.mTabTitle, 0);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        // Set up Layout Manager, reverse layout
+        mManager = new LinearLayoutManager(getActivity());
+        mManager.setReverseLayout(true);
+        mManager.setStackFromEnd(true);
+        mRecycler.setLayoutManager(mManager);
+
+        // Set up FirebaseRecyclerAdapter with the Query
+        Query parkingSpotQuery = getQuery(mDatabase);
+
+        mAdapter = new FirebaseRecyclerAdapter<ParkingSpot, ParkingSpotViewHolder>(ParkingSpot.class, R.layout.item_parkingspot,
+                ParkingSpotViewHolder.class, parkingSpotQuery) {
+
+            @Override
+            protected void populateViewHolder(final ParkingSpotViewHolder viewHolder, final ParkingSpot model, final int position) {
+                final DatabaseReference parkingSpotRef = getRef(position); //TODO: investigate: this is fine (viewing the item works).
+
+
+                //no need to set onclick listener (the spot list won't be clickable, for now)
+                final String organizationKey = parkingSpotRef.getKey();
+//                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // Launch OrganizationDetailActivity
+//                        Intent intent = new Intent(getActivity(), OrganizationDetailActivity.class);
+//                        intent.putExtra(OrganizationDetailActivity.EXTRA_ORGANIZATION_KEY, organizationKey);
+//                        startActivity(intent);
+//                    }
+//                });
+
+                // Bind Organization to ViewHolder
+                //Log.d(TAG, "<2> organization model: " + model.name);//TODO: investigate why My Organization organizations are null here...
+                viewHolder.bindToParkingSpot(model);
+            }
+        };
+        mRecycler.setAdapter(mAdapter);
     }
 
     @Override
-    public Query getQuery(DatabaseReference databaseReference) {
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdapter != null) {
+            mAdapter.cleanup();
+        }
+    }
+
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
+    public Query getQuery(DatabaseReference databaseReference){                 //}, String level, String section) {
         // All my organizations
-        return databaseReference.child("user-organizations")
-                .child(super.uID);
+        System.out.println("*** get the parking spots for garage name: " + garage_name);
+        String parking_spots_here = "";//TODO: combine the other strings to so parking spots on specific levels can be found
+        return databaseReference.child("parking-garage").child(garage_name);
     }
 }

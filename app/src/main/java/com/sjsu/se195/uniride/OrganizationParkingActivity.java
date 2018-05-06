@@ -17,14 +17,18 @@ import com.google.firebase.database.Query;
 import com.sjsu.se195.uniride.fragment.ParkingSpotsListFragment;
 import com.sjsu.se195.uniride.models.User;
 
+import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
+import static android.support.v4.view.ViewPager.SCROLL_STATE_SETTLING;
+
 public class OrganizationParkingActivity extends AppCompatActivity {
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    //private FragmentPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private User user;
     private DatabaseReference mDatabase;
     private String ABOUT_TAB_TITLE;
     final Bundle bundle = new Bundle();
+    private Fragment mFragment;
 
     private TextView userNameView;
     @Override
@@ -36,32 +40,59 @@ public class OrganizationParkingActivity extends AppCompatActivity {
 
     //Basically copy pasted from profile page
     private void setFragment(){
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()){
-            private final Fragment[] mFragments = new Fragment[] {
-                    new ParkingSpotsListFragment(),
-                    new ParkingSpotsListFragment(),
-                    new ParkingSpotsListFragment(),
-                    new ParkingSpotsListFragment()
-            };
-            @Override
-            public Fragment getItem(int position) {
-                mFragments[position].setArguments(OrganizationParkingActivity.this.bundle);
-                return mFragments[position];
-            }
-            @Override
-            public int getCount() {
-                return mFragments.length;
-            }
-        };
+        mFragment = new ParkingSpotsListFragment();
+        OrganizationParkingActivity.this.bundle.putString("garage","west-garage");
+        System.out.println("this is the garage  name: " + OrganizationParkingActivity.this.bundle.getString("garage"));
+        mFragment.setArguments(OrganizationParkingActivity.this.bundle);
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+//        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()){
+//            private final Fragment[] mFragments = new Fragment[] {
+//                    new ParkingSpotsListFragment(),
+//                    new ParkingSpotsListFragment(),
+//                    new ParkingSpotsListFragment(),
+//                    new ParkingSpotsListFragment()
+//            };
+//            @Override
+//            public Fragment getItem(int position) {
+//                if(position == 0) {
+//                    System.out.println("position 1: fragment-org-parkin");
+//                    OrganizationParkingActivity.this.bundle.putString("garage","north-garage");
+//                }
+//                else if(position == 1) {
+//                    System.out.println("position 1: fragment-org-parkin");
+//                    OrganizationParkingActivity.this.bundle.putString("garage","west-garage");
+//                }
+//                else if(position == 2) {
+//                    System.out.println("position 1: fragment-org-parkin");
+//                    OrganizationParkingActivity.this.bundle.putString("garage","east-garage");
+//                }
+//                else if(position == 3) {
+//                    System.out.println("position 1: fragment-org-parkin");
+//                    OrganizationParkingActivity.this.bundle.putString("garage","south-garage");
+//                }
+//                System.out.println("I m on current position: " + position);
+//                System.out.println("this is the garage  name: " + OrganizationParkingActivity.this.bundle.getString("garage"));
+//                mFragments.setArguments(OrganizationParkingActivity.this.bundle);
+//                return mFragments[position];
+//            }
+//            @Override
+//            public int getCount() {
+//                return mFragments.length;
+//            }
+//        };
+//
+//        // Set up the ViewPager with the sections adapter.
+//        mViewPager = (ViewPager) findViewById(R.id.container);
+//        mViewPager.setAdapter(mSectionsPagerAdapter);
+//
+//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+//
+//        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        Fragment parkingspots= new ParkingSpotsListFragment();
+        parkingspots.setArguments(OrganizationParkingActivity.this.bundle);
+        getSupportFragmentManager().beginTransaction().add(R.id.organization_parking_container, parkingspots, "ParkingSpots").commit();
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
     }
 
     /**
