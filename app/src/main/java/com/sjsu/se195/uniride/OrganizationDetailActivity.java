@@ -166,7 +166,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private void showParkingForOrganization(){
         //this method will start the intent and will take to the new activity
         // where the parking will be shown
-        Intent intent = new Intent(OrganizationDetailActivity.this, OrganizationParkingActivity.class);
+        Intent intent = new Intent(OrganizationDetailActivity.this, GarageListActivity.class);
         startActivity(intent);
     }
 

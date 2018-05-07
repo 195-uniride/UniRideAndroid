@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -29,20 +31,72 @@ public class OrganizationParkingActivity extends AppCompatActivity {
     private String ABOUT_TAB_TITLE;
     final Bundle bundle = new Bundle();
     private Fragment mFragment;
+    private String garage_name;
+    private Button level0, level1, level2, level3, level4, level5;
 
     private TextView userNameView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = new Bundle();
+        args = getIntent().getExtras();
+        garage_name = args.getString("garage_name");
         setContentView(R.layout.activity_organization_parking);
-        setFragment();
+        level0 = (Button) findViewById(R.id.level0);
+        level1 = (Button) findViewById(R.id.level1);
+        level2 = (Button) findViewById(R.id.level2);
+        level3 = (Button) findViewById(R.id.level3);
+        level4 = (Button) findViewById(R.id.level4);
+        level5 = (Button) findViewById(R.id.level5);
+
+        level0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(garage_name, "0");
+            }
+        });
+        level1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(garage_name, "1");
+            }
+        });
+        level2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(garage_name, "2");
+            }
+        });
+        level3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(garage_name, "3");
+            }
+        });
+        level4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(garage_name, "4");
+            }
+        });
+        level5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setFragment(garage_name, "5");
+            }
+        });
+
     }
 
     //Basically copy pasted from profile page
-    private void setFragment(){
+    private void setFragment(String garage_name, String garage_level){
+        //First remove the previous stuff
+        FrameLayout o_p_c = (FrameLayout) findViewById(R.id.organization_parking_container);
+        o_p_c.removeAllViews();
+        //initialize to the proper button press
         mFragment = new ParkingSpotsListFragment();
-        OrganizationParkingActivity.this.bundle.putString("garage","west-garage");
-        System.out.println("this is the garage  name: " + OrganizationParkingActivity.this.bundle.getString("garage"));
+        OrganizationParkingActivity.this.bundle.putString("garage",garage_name);
+        OrganizationParkingActivity.this.bundle.putString("level",garage_level);
         mFragment.setArguments(OrganizationParkingActivity.this.bundle);
 
 //        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager()){

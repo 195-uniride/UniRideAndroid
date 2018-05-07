@@ -77,7 +77,8 @@
 
         <receiver android:name=".AlarmListener" />
 
-        <activity android:name=".OrganizationParkingActivity"></activity>
+        <activity android:name=".OrganizationParkingActivity" />
+        <activity android:name=".GarageListActivity"></activity>
     </application>
 
 </manifest>

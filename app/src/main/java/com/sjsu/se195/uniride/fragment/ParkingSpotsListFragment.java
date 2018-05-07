@@ -34,6 +34,9 @@ public class ParkingSpotsListFragment extends Fragment {
     private LinearLayoutManager mManager;
     protected String uID;
     private String garage_name;
+    private String garage_level;
+    private String garage_section;
+    private String spot_number;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -43,7 +46,9 @@ public class ParkingSpotsListFragment extends Fragment {
 
         Bundle args = new Bundle();
         garage_name = this.getArguments().getString("garage");
-        System.out.println("inside onCreateOf ParkingSpotsListFragment &&&&&&&&&&&&&&&&&&&&&&&&&: " + garage_name);
+        garage_level = this.getArguments().getString("level");
+
+        System.out.println("inside onCreateOf ParkingSpotsListFragment &&&&&&&&&&&&&&&&&&&&&&&&&: " + garage_name + ", " + garage_level);
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
@@ -109,6 +114,6 @@ public class ParkingSpotsListFragment extends Fragment {
         // All my organizations
         System.out.println("*** get the parking spots for garage name: " + garage_name);
         String parking_spots_here = "";//TODO: combine the other strings to so parking spots on specific levels can be found
-        return databaseReference.child("parking-garage").child(garage_name);
+        return databaseReference.child("parking-garage").child(garage_name).child(garage_level).orderByChild("State").equalTo("empty");
     }
 }
