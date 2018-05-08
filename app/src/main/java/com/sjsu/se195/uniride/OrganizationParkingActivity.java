@@ -32,59 +32,34 @@ public class OrganizationParkingActivity extends AppCompatActivity {
     final Bundle bundle = new Bundle();
     private Fragment mFragment;
     private String garage_name;
-    private Button level0, level1, level2, level3, level4, level5;
 
     private TextView userNameView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = new Bundle();
-        args = getIntent().getExtras();
+        Bundle args = getIntent().getExtras();
         garage_name = args.getString("garage_name");
         setContentView(R.layout.activity_organization_parking);
-        level0 = (Button) findViewById(R.id.level0);
-        level1 = (Button) findViewById(R.id.level1);
-        level2 = (Button) findViewById(R.id.level2);
-        level3 = (Button) findViewById(R.id.level3);
-        level4 = (Button) findViewById(R.id.level4);
-        level5 = (Button) findViewById(R.id.level5);
+        //get the buttons from the activity xml
+        Button [] buttons = {
+                (Button) findViewById(R.id.level0),
+                (Button) findViewById(R.id.level1),
+                (Button) findViewById(R.id.level2),
+                (Button) findViewById(R.id.level3),
+                (Button) findViewById(R.id.level4),
+                (Button) findViewById(R.id.level5)
+        };
 
-        level0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setFragment(garage_name, "0");
-            }
-        });
-        level1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setFragment(garage_name, "1");
-            }
-        });
-        level2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setFragment(garage_name, "2");
-            }
-        });
-        level3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setFragment(garage_name, "3");
-            }
-        });
-        level4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setFragment(garage_name, "4");
-            }
-        });
-        level5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setFragment(garage_name, "5");
-            }
-        });
+        //set the listener for the buttons
+        for(int i = 0; i < buttons.length; i++){
+            final String level = Integer.toString(i);
+            buttons[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setFragment(garage_name, level);
+                }
+            });
+        }
 
     }
 

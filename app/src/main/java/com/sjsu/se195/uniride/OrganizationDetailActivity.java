@@ -48,6 +48,8 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private EditText mOrganizationEmailField;
     private Button mJoinButton;
     private Button mShowParking;
+    //To pass to the show parking button
+    private String organization_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +110,8 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
                 mOrganizationClassificationView.setText(organization.classification);
                 mOrganizationDescriptionView.setText(organization.description);
                 mOrganizationWebsiteView.setText(organization.website);
+                //setting the name for the parking button here
+                organization_name = organization.name;
                 // [END_EXCLUDE]
             }
 
@@ -167,6 +171,7 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         //this method will start the intent and will take to the new activity
         // where the parking will be shown
         Intent intent = new Intent(OrganizationDetailActivity.this, GarageListActivity.class);
+        intent.putExtra("organization_name", organization_name);
         startActivity(intent);
     }
 
