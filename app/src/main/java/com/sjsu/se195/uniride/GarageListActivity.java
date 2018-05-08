@@ -23,6 +23,8 @@ public class GarageListActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private int num_of_garg = 0;
     private String[] garage_names = new String[4];
+    private Button[] buttons;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,8 @@ public class GarageListActivity extends AppCompatActivity {
         org_name = args.getString("organization_name");
         System.out.println("garage List Act : org Name : " + org_name);
         setContentView(R.layout.activity_garage_list);
-        Button[] buttons = {findViewById(R.id.north_g), findViewById(R.id.west_g), findViewById(R.id.east_g), findViewById(R.id.south_g)};
+        Button[] buttons_array = {findViewById(R.id.north_g), findViewById(R.id.west_g), findViewById(R.id.east_g), findViewById(R.id.south_g)};
+        buttons= buttons_array;
 
         //A query that gets the garage names
         Query parkingSpotQuery = getQuery(mDatabase);
@@ -46,6 +49,7 @@ public class GarageListActivity extends AppCompatActivity {
                     garage_names[num_of_garg] = child.getKey();
                     num_of_garg++;
                 }
+                initializeButtons();
             }
 
             @Override
@@ -53,7 +57,9 @@ public class GarageListActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    public void initializeButtons(){
         //Set listener for each button
         System.out.println("size of gara: "+ num_of_garg);
         System.out.println("size of but: "+ buttons.length);
