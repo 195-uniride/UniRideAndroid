@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.ParkingSpot; //changed
 import com.sjsu.se195.uniride.viewholder.ParkingSpotViewHolder; //changed
@@ -35,8 +36,7 @@ public class ParkingSpotsListFragment extends Fragment {
     protected String uID;
     private String garage_name;
     private String garage_level;
-    private String garage_section;
-    private String spot_number;
+    private String org_name;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -47,13 +47,14 @@ public class ParkingSpotsListFragment extends Fragment {
         Bundle args = new Bundle();
         garage_name = this.getArguments().getString("garage");
         garage_level = this.getArguments().getString("level");
+        org_name = this.getArguments().getString("organization");
 
         System.out.println("inside onCreateOf ParkingSpotsListFragment &&&&&&&&&&&&&&&&&&&&&&&&&: " + garage_name + ", " + garage_level);
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
 
-        mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
+        mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list_parkingspots);
         mRecycler.setHasFixedSize(true);
         return rootView;
     }
@@ -68,15 +69,17 @@ public class ParkingSpotsListFragment extends Fragment {
         mRecycler.setLayoutManager(mManager);
 
         // Set up FirebaseRecyclerAdapter with the Query
-        Query parkingSpotQuery = getQuery(mDatabase);
+        System.out.println("query sent");
+        final Query parkingSpotQuery = getQuery(mDatabase);
+        System.out.println("Waiting for query");
 
         mAdapter = new FirebaseRecyclerAdapter<ParkingSpot, ParkingSpotViewHolder>(ParkingSpot.class, R.layout.item_parkingspot,
                 ParkingSpotViewHolder.class, parkingSpotQuery) {
-
             @Override
             protected void populateViewHolder(final ParkingSpotViewHolder viewHolder, final ParkingSpot model, final int position) {
                 final DatabaseReference parkingSpotRef = getRef(position); //TODO: investigate: this is fine (viewing the item works).
-
+                System.out.println("Populating views: " + parkingSpotRef);
+                System.out.println("Query : " + parkingSpotQuery + ">>>>>>>>>>>>>>>>>>>>>>>>");
 
                 //no need to set onclick listener (the spot list won't be clickable, for now)
                 final String organizationKey = parkingSpotRef.getKey();
@@ -112,8 +115,8 @@ public class ParkingSpotsListFragment extends Fragment {
 
     public Query getQuery(DatabaseReference databaseReference){                 //}, String level, String section) {
         // All my organizations
-        System.out.println("*** get the parking spots for garage name: " + garage_name);
+        System.out.println("*** get the parking spots for garage name: " + garage_name + ", level "+garage_level.getClass().getName());
         String parking_spots_here = "";//TODO: combine the other strings to so parking spots on specific levels can be found
-        return databaseReference.child("parking-garage").child(garage_name).child(garage_level).orderByChild("State").equalTo("empty");
+        return databaseReference.child("parking-garage").child(org_name).child(garage_name).child(garage_level).orderByChild("State").equalTo("empty");
     }
 }

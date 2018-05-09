@@ -32,6 +32,7 @@ public class OrganizationParkingActivity extends AppCompatActivity {
     final Bundle bundle = new Bundle();
     private Fragment mFragment;
     private String garage_name;
+    private String org_name;
 
     private TextView userNameView;
     @Override
@@ -39,6 +40,7 @@ public class OrganizationParkingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Bundle args = getIntent().getExtras();
         garage_name = args.getString("garage_name");
+        org_name = args.getString("organization_name");
         setContentView(R.layout.activity_organization_parking);
         //get the buttons from the activity xml
         Button [] buttons = {
@@ -70,6 +72,7 @@ public class OrganizationParkingActivity extends AppCompatActivity {
         o_p_c.removeAllViews();
         //initialize to the proper button press
         mFragment = new ParkingSpotsListFragment();
+        OrganizationParkingActivity.this.bundle.putString("organization", org_name);
         OrganizationParkingActivity.this.bundle.putString("garage",garage_name);
         OrganizationParkingActivity.this.bundle.putString("level",garage_level);
         mFragment.setArguments(OrganizationParkingActivity.this.bundle);
@@ -118,6 +121,7 @@ public class OrganizationParkingActivity extends AppCompatActivity {
 //
 //        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 //        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        System.out.println("removed all the previous views and adding new ones.");
         Fragment parkingspots= new ParkingSpotsListFragment();
         parkingspots.setArguments(OrganizationParkingActivity.this.bundle);
         getSupportFragmentManager().beginTransaction().add(R.id.organization_parking_container, parkingspots, "ParkingSpots").commit();

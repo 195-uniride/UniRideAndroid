@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".OrganizationParkingActivity">
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/messages_list"
+        android:id="@+id/messages_list_parkingspots"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"

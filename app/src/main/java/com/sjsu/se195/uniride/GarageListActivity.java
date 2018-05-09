@@ -73,6 +73,7 @@ public class GarageListActivity extends AppCompatActivity {
                         // where the parking will be shown
                         Intent intent = new Intent(GarageListActivity.this, OrganizationParkingActivity.class);
                         intent.putExtra("garage_name", garage_names[j]);
+                        intent.putExtra("organization_name", org_name);
                         startActivity(intent);
 
                     }
@@ -92,7 +93,7 @@ public class GarageListActivity extends AppCompatActivity {
             }
             //clear all the empty buttons
             else{
-                buttons[i].setVisibility(View.GONE);
+                //buttons[i].setVisibility(View.GONE);
                 System.out.println("set visibility off "+buttons[i].getText());
             }
         }
