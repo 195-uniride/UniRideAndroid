@@ -221,7 +221,7 @@ public class PostSearcher {
             if (userSearchType == UserSearchType.USER_POSTS_ONLY) {
                 Log.d(TAG, "Filter:UserSearchType: Post [" + post.postId + "] NOT a match: userID ["
                         + userId + "] does NOT match post.uid [" + post.uid + "]");
-                return false; // filter out posts by other users.
+                return true; // filter out posts by other users.
             }
         }
 

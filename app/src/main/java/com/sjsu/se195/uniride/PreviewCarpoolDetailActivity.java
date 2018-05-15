@@ -224,7 +224,7 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
         mDatabase.updateChildren(childUpdatesUserCarpool);
 
         //make an alarm
-        make_alarm();
+        make_alarm(carpool);
 
         // Now do Intent to newly-created PostDetailActivity (of carpool post).
 
@@ -256,15 +256,20 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
 
     }
 
-    public void make_alarm() throws ParseException {
+    //This method is making the alarm on the device on the date of the trip
+    public void make_alarm(Carpool carpool) throws ParseException {
         AlarmManager alarm = (AlarmManager) PreviewCarpoolDetailActivity.this.getSystemService(Context.ALARM_SERVICE);
 
         //Getting the date and time for the alarm
         DateFormat date_and_time_format = new SimpleDateFormat("yyyyMMdd hhmm", Locale.ENGLISH);
         //adding 100 because the months seems to be behind a value
         // (even with the fact that their index starts from 0)
-        //String date_and_time = Integer.toString(mLurkerPost.tripDate + 100)+ " " + Integer.toString(mLurkerPost.departure_time);
-        String date_and_time = "20180514"+"0036";
+
+        //Currently the driver's info is being used to set the alarm
+        int departure_time = carpool.getDriverPost().departureTime;
+        int tripDate = carpool.getDriverPost().tripDate;
+
+        String date_and_time = Integer.toString(tripDate + 100)+ " " + Integer.toString(departure_time);
         Date date_and_time_of_carpool = date_and_time_format.parse(date_and_time);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date_and_time_of_carpool);
