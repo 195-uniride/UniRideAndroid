@@ -50,11 +50,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
+import com.sjsu.se195.uniride.fragment.RouteWayPointListFragment;
 import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
+import com.sjsu.se195.uniride.fragment.TripMapFragment;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
+import com.sjsu.se195.uniride.models.RouteWayPoint;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
 
@@ -153,6 +157,9 @@ public class PostDetailActivity extends MainActivity
         setupFindMatchingPostsButton();
 
         setupMapButton();
+
+        // TODO:
+        loadWayPointList();
     }
 
     @Override
@@ -169,6 +176,33 @@ public class PostDetailActivity extends MainActivity
         }
 
         // TODO: comment section if sent Post object...
+    }
+
+    private void loadWayPointList() {
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelableArrayList(RouteWayPointListFragment.EXTRA_ROUTE_WAYPOINT_LIST, getRouteWayPoints());
+
+        Fragment wayPointListFragment = new RouteWayPointListFragment();
+        wayPointListFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.waypoint_list_fragment_placeholder, wayPointListFragment, "WayPointList").commit();
+    }
+
+    private ArrayList<RouteWayPoint> getRouteWayPoints() {
+        ArrayList<RouteWayPoint> wayPoints = new ArrayList<RouteWayPoint>();
+
+        // 1: TODO: make real...
+        RouteWayPoint wayPoint1 = new RouteWayPoint();
+        wayPoint1.type = "driver";
+        wayPoint1.text = "Driver departs";
+        wayPoint1.participantName = "Sam B.";
+        wayPoint1.address = "N 10th St";
+        wayPoint1.time = "9:00 AM";
+
+        wayPoints.add(wayPoint1);
+
+        return wayPoints;
     }
 
     private void setupCommentSection() {
@@ -253,6 +287,12 @@ public class PostDetailActivity extends MainActivity
 
     private void setupMapButton() {
         //Button MapLinkButton = findViewById(R.id.button_link_to_map);
+
+
+//        Fragment tripMapFragment = new TripMapFragment();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.map_fragment_placeholder, tripMapFragment, "TripMap").commit();
+
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
 

@@ -59,11 +59,19 @@
         android:paddingRight="20dp"
         android:text=""/>
 
+    <FrameLayout
+        android:id="@+id/waypoint_list_fragment_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_route_waypoints"
+        android:layout_below="@+id/text_carpool_details"
+        android:clipToPadding="false"/>
+
     <ScrollView
         android:id="@+id/trip_details_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_carpool_details">
+        android:layout_below="@+id/waypoint_list_fragment_placeholder">
 
         <LinearLayout
             android:id="@+id/trip_details_layout"
@@ -79,10 +87,10 @@
                 android:paddingRight="20dp"
                 android:text=""/>
 
-            <FrameLayout
-                android:id="@+id/map_fragment_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            <!--<FrameLayout-->
+                <!--android:id="@+id/map_fragment_placeholder"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"/>-->
 
             <Button
                 android:id="@+id/button_link_to_map"
