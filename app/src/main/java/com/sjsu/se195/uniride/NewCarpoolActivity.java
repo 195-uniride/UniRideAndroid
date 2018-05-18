@@ -65,14 +65,14 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
         mSelectedPostToJoin = getIntent().getParcelableExtra(NewCarpoolActivity.EXTRA_POST_OBJECT);
 
         if (mSelectedPostToJoin == null) {
-            System.out.println("ERROR: ==== CANNOT START SEARCH ====; mSelectedPostToJoin = " + mSelectedPostToJoin);
+            System.out.println("ERROR: ==== CANNOT START SEARCH ====; mSelectedPostToJoin = " + mSelectedPostToJoin.author);
 
             throw new IllegalArgumentException(TAG + ": Must pass EXTRA_POST_OBJECT.");
         }
         else {
 
             System.out.println("==== STARTING SEARCH ====");
-            System.out.println("=== Searching with mSelectedPostToJoin = " + mSelectedPostToJoin + "; with mPost.source = " + mSelectedPostToJoin.source);
+            System.out.println("=== Searching with mSelectedPostToJoin = " + mSelectedPostToJoin.author + "; with mPost.source = " + mSelectedPostToJoin.source);
 
             PostSearcher searcher = new PostSearcher(FirebaseDatabase.getInstance().getReference());
 
@@ -95,7 +95,7 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
         System.out.println("....About to show SearchResultsPostListFragment ...");
         Bundle bundle = new Bundle();
 
-        System.out.println("....Sending bundle with searchResults = " + searchResults);
+        System.out.println("....Sending bundle with searchResults = " + searchResults.get(0).postType);
         // Add bundle arguments:
         bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_SEARCH_RESULTS, searchResults);
         bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_POTENTIAL_CARPOOL_RESULTS, potentialCarpools);

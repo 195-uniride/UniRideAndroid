@@ -143,21 +143,22 @@ public class PostSearcher {
                         // System.out.println("Rider-postToCheck: author = " + postToCheck.author);
                     }
 
-                    System.out.println("Search: ---- Looking at postToCheck: " + postToCheck +
+                    System.out.println("Search: ---- Looking at postToCheck: " + postToCheck.source +
                             " with key = " + postSnapshot.getKey() + " ----");
 
                     // Check if post meets all criteria:
                     if (meetsFilterCriteria(postToCheck, userID)
                             && isTripTimeWithinTimeLimit(userPost, postToCheck)) {
 
-                        System.out.println("Search: post IS a match: " + postToCheck +
+                        System.out.print("------->  ");
+                        System.out.println("Search: post IS a match: " + postToCheck.author +
                                 " with key = " + postSnapshot.getKey() + " ----");
 
                         // Add to list of matching posts:
                         mSearchResultsPosts.add(postToCheck);
                     }
                     else {
-                        System.out.println("Search: post NOT a match: " + postToCheck +
+                        System.out.println("Search: post NOT a match: " + postToCheck.source +
                                 " with key = " + postSnapshot.getKey() + " ----");
                     }
 
@@ -172,16 +173,17 @@ public class PostSearcher {
 
                 System.out.println("Search: Found " + mSearchResultsPosts.size() + " matching post(s).");
 
-                for (Post post : mSearchResultsPosts) {
-                    System.out.println("Search: found match: post = " + post);
-                }
+//                for (Post post : mSearchResultsPosts) {
+//                    System.out.println("Search: found match: post = " + post.author);
+//                }
 
 
                 for (Carpool carpool : mPotentialCarpools) {
-                    System.out.println("Search: created a potential carpool = " + carpool + "...");
+                    System.out.println("Search: created a potential carpool = " + carpool.getDriverPost().author + "...");
                     System.out.println("...from source @ " + carpool.getDriverPost().source + "...");
 
                     for (RideRequestPost riderPost : carpool.getRiderPosts()) {
+                        System.out.println("...rider name " + riderPost.author);
                         System.out.println("...to pickup rider @ " + riderPost.source + "...");
                     }
 
@@ -225,6 +227,8 @@ public class PostSearcher {
             }
         }
 
+        Log.d(TAG,"Returning the outside true in meetsFilterCriteria:");
+        Log.d(TAG,"Post UID is: " + post.uid + ", current user's UID is: "+ userId);
         return true;
     }
 
@@ -238,7 +242,8 @@ public class PostSearcher {
     private boolean isTripTimeWithinTimeLimit(Post existingPost, Post newPostToCheck) {
         Carpool potentialCarpool = null;
 
-        System.out.println("existingPost = " + existingPost + "; newPostToCheck = " + newPostToCheck);
+        System.out.println("Selected Post = " + existingPost.author + "; Current user's post = " + newPostToCheck.author);
+        System.out.println("Selected Post = " + existingPost.postType + "; Current user's post = " + newPostToCheck.postType);
 
         // Case 1: newPostToCheck is a Ride Request Post:
         if (newPostToCheck instanceof RideRequestPost) {
