@@ -376,6 +376,13 @@ public class Carpool extends DriverOfferPost {
         return carpoolMapper;
     }
 
+    /*
+        Returns the Google Maps API call URL for the trip
+         used by the Mapper.
+     */
+    public String getTripURL() {
+        return getCarpoolMapper().getTripURL();
+    }
 
     private void setWayPoints() {
 

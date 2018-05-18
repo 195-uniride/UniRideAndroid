@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -140,6 +141,13 @@ public class PostDetailActivity extends MainActivity
         }
 
 
+        // Initialize Views
+        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
+        mSourceView = (TextView) findViewById(R.id.post_source);
+        mDestinationView = (TextView) findViewById(R.id.post_destination);
+
+        setupCommentSection();
+
         setupJoinButton();
 
         setupFindMatchingPostsButton();
@@ -161,6 +169,15 @@ public class PostDetailActivity extends MainActivity
         }
 
         // TODO: comment section if sent Post object...
+    }
+
+    private void setupCommentSection() {
+        mCommentField = (EditText) findViewById(R.id.field_comment_text);
+        mCommentButton = (Button) findViewById(R.id.button_post_comment);
+        mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
+
+        mCommentButton.setOnClickListener(this);
+        mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void setupJoinButton() {
@@ -234,21 +251,60 @@ public class PostDetailActivity extends MainActivity
         routeDescriptionText.setText(PostInfo.getRouteDescription(post));
     }
 
-
-
     private void setupMapButton() {
-        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
-        // Initialize Views
-        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
-        mSourceView = (TextView) findViewById(R.id.post_source);
-        mDestinationView = (TextView) findViewById(R.id.post_destination);
-        mCommentField = (EditText) findViewById(R.id.field_comment_text);
-        mCommentButton = (Button) findViewById(R.id.button_post_comment);
-        mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
-        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
+        //Button MapLinkButton = findViewById(R.id.button_link_to_map);
 
-        mCommentButton.setOnClickListener(this);
-        mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+
+        mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
+
+        mShowMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                System.out.println("..... LINKING TO MAP .....");
+
+                if (mPost != null) {
+                    String destinationAddressURL = mPost.destination.replaceAll(" ", "+");
+
+                    //String destinationAddressURL = "Taronga+Zoo,+Sydney+Australia";
+                    openGoogleMapsApp(destinationAddressURL); // DEBUG ONLY...// TODO: change...
+                }
+
+            }
+        });
+    }
+
+    /**
+        Opens Google Maps application on the user's device
+         and starts directions navigation to destinationAddressURL.
+         @param destinationAddressURL the destination address. All spaces must be replaced with '+'.
+     */
+    private void openGoogleMapsApp(String destinationAddressURL) {
+        // Create a Uri from an intent string. Use the result to create an Intent.
+
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+destinationAddressURL); // TODO: change...
+
+        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+        // Make the Intent explicit by setting the Google Maps package
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Attempt to start an activity that can handle the Intent
+        // Checks if user has an application that can handle the request:
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Log.e(PostDetailActivity.TAG, "Cannot open Google Maps application. "
+                    + "There is no application available on this device that can process this request.");
+        }
+    }
+
+    private void setupMapButton_OLD() {
+        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
+
+        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
 
         //marker for sjsu
         sjsu = new MarkerOptions()
@@ -259,10 +315,6 @@ public class PostDetailActivity extends MainActivity
         //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         my_view = findViewById(R.id.for_map_layout);
-
-        setupJoinButton();
-
-        setupFindMatchingPostsButton();
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
 
