@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.transition.Slide;
@@ -35,21 +36,30 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import devlight.io.library.ntb.NavigationTabBar;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class  MainActivity extends BaseActivity {
 
@@ -77,7 +87,9 @@ public class  MainActivity extends BaseActivity {
             });
         }
 
-        // "I am a driver" -> Show me Ride Requests:
+        System.out.println("About to start service.");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -96,7 +108,7 @@ public class  MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-      
+        pushTokenToFirebase();
         setNavBar(this);
 
     }
@@ -155,5 +167,20 @@ public class  MainActivity extends BaseActivity {
         //getUid()
     }
 
+    //This method will push this Firebasetoken online so that
+    //  the cloud functions may use it.
+    public void pushTokenToFirebase(){
+        Map<String, Object> childUpdates = new HashMap<>();
+        String instance_id = FirebaseInstanceId.getInstance().getId();
+        String instance_token = FirebaseInstanceId.getInstance().getToken();
+
+        System.out.println(getUid());
+        System.out.println(FirebaseInstanceId.getInstance().getId());
+        System.out.println(instance_token);
+
+        childUpdates.put("/users/"+getUid()+"/firebase_instance_id/", instance_id);
+        childUpdates.put("/users/"+getUid()+"/firebase_instance_token/", instance_token);
+        mDatabase.updateChildren(childUpdates);
+    }
 
 }

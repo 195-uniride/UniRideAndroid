@@ -338,10 +338,10 @@ public class Carpool extends DriverOfferPost {
     private int calculateTotalTripTime() {
         System.out.println("Calculating Total Trip Time...");
 
-        System.out.println("...for Carpool: driver = " + getDriverPost() + "....");
+        System.out.println("...for Carpool: driver = " + getDriverPost().author + "....");
 
         for (RideRequestPost riderPost : getRiderPosts()) {
-            System.out.println("...and rider = " + riderPost + "; with riderPost.source = " + riderPost.source + "....");
+            System.out.println("...and rider = " + riderPost.author + "; with riderPost.source = " + riderPost.source + "....");
         }
 
         return getCarpoolMapper().getTotalTripTime();
@@ -355,10 +355,10 @@ public class Carpool extends DriverOfferPost {
     private int calculateTotalTripDistance() {
         System.out.println("Calculating Total Trip Distance...");
 
-        System.out.println("...for Carpool: driver = " + getDriverPost() + "....");
+        System.out.println("...for Carpool: driver = " + getDriverPost().author + "....");
 
         for (RideRequestPost riderPost : getRiderPosts()) {
-            System.out.println("...and rider = " + riderPost + "; with riderPost.source = " + riderPost.source + "....");
+            System.out.println("...and rider = " + riderPost.author + "; with riderPost.source = " + riderPost.source + "....");
         }
 
         return getCarpoolMapper().getTotalTripDistance();

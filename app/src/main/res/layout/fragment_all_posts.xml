@@ -8,6 +8,14 @@
     android:orientation="vertical"
     android:clipToPadding="false"
     tools:context=".MainSubcategoryActivity">
+    <TextView
+        android:id="@+id/no_posts_found_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Nothing to show here."
+        android:visibility="gone"
+        android:gravity="center_vertical"/>
     <com.yalantis.phoenix.PullToRefreshView
         android:id="@+id/pull_to_refresh"
         android:layout_width="match_parent"
@@ -20,11 +28,5 @@
         android:scrollbars="vertical"
         tools:listitem="@layout/item_post" />
     </com.yalantis.phoenix.PullToRefreshView>
-
-    <TextView
-        android:id="@+id/no_posts_found_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"/>
 
 </LinearLayout>
