@@ -346,6 +346,19 @@ public class PostDetailActivity extends MainActivity
         // TODO:
         loadWayPointList();
 
+        LinearLayout topLayout = findViewById(R.id.layout_top);
+
+        if (mPostType == Post.PostType.DRIVER) {
+            topLayout.setBackgroundColor(getResources().getColor(R.color.driveOfferColor));
+        }
+        else if (mPostType == Post.PostType.RIDER) {
+            topLayout.setBackgroundColor(getResources().getColor(R.color.rideRequestColor));
+        }
+        else if (mPostType == Post.PostType.CARPOOL) {
+            topLayout.setBackgroundColor(getResources().getColor(R.color.carpoolColor));
+        }
+
+
 //        TextView routeDescriptionText = findViewById(R.id.text_route_details);
 //
 //        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
@@ -359,6 +372,12 @@ public class PostDetailActivity extends MainActivity
 //        getSupportFragmentManager().beginTransaction()
 //                .add(R.id.map_fragment_placeholder, tripMapFragment, "TripMap").commit();
 
+
+        setupMapButton_OLD();
+
+        /*
+
+        Launch Google Maps Navigation:
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
 
@@ -379,6 +398,7 @@ public class PostDetailActivity extends MainActivity
 
             }
         });
+        */
     }
 
     /**
