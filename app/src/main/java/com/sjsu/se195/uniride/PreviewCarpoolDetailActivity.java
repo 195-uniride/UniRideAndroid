@@ -274,7 +274,7 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date_and_time_of_carpool);
 
-        System.out.println("***************************file - NewCarpoolActivity************************************");
+        Log.w(TAG,"***************************file - NewCarpoolActivity************************************");
         System.out.println("Month of carpool is: " + calendar.get(Calendar.MONTH));
         System.out.println("The alarm will be set for: " + date_and_time_of_carpool);
 

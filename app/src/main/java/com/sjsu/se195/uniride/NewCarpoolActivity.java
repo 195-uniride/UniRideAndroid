@@ -95,7 +95,7 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
         System.out.println("....About to show SearchResultsPostListFragment ...");
         Bundle bundle = new Bundle();
 
-        System.out.println("....Sending bundle with searchResults = " + searchResults.get(0).postType);
+        //System.out.println("....Sending bundle with searchResults = " + searchResults.get(0).postType);
         // Add bundle arguments:
         bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_SEARCH_RESULTS, searchResults);
         bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_POTENTIAL_CARPOOL_RESULTS, potentialCarpools);
