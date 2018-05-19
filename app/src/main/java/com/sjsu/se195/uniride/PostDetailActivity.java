@@ -61,12 +61,16 @@ import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.RouteWayPoint;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
+import com.sjsu.se195.uniride.models.WayPoint;
 
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -157,9 +161,6 @@ public class PostDetailActivity extends MainActivity
         setupFindMatchingPostsButton();
 
         setupMapButton();
-
-        // TODO:
-        loadWayPointList();
     }
 
     @Override
@@ -192,15 +193,66 @@ public class PostDetailActivity extends MainActivity
     private ArrayList<RouteWayPoint> getRouteWayPoints() {
         ArrayList<RouteWayPoint> wayPoints = new ArrayList<RouteWayPoint>();
 
-        // 1: TODO: make real...
-        RouteWayPoint wayPoint1 = new RouteWayPoint();
-        wayPoint1.type = "driver";
-        wayPoint1.text = "Driver departs";
-        wayPoint1.participantName = "Sam B.";
-        wayPoint1.address = "N 10th St";
-        wayPoint1.time = "9:00 AM";
+        // NOTE: Must add in reverse order:
 
-        wayPoints.add(wayPoint1);
+        // Destination:
+
+        RouteWayPoint wayPointDestination = new RouteWayPoint();
+        wayPointDestination.type = "destination";
+        wayPointDestination.text = "Reach destination";
+        wayPointDestination.address = mPost.destination; // "N 10th St";
+        wayPointDestination.time = PostInfo.getArrivalDateTimeText(mPost); // "9:00 AM";
+        wayPoints.add(wayPointDestination);
+
+        // Carpool passengers:
+        if (mPostType == Post.PostType.CARPOOL) { // TODO: will need to reverse order...
+
+            Carpool carpoolPost = (Carpool) mPost;
+
+
+
+            for (WayPoint riderWayPoint : carpoolPost.getRiderWaypoints()) {
+
+                RideRequestPost riderPost = carpoolPost.riderPosts.get(riderWayPoint.getRiderIndex());
+
+                //=====
+                RouteWayPoint passengerWayPoint = new RouteWayPoint();
+                passengerWayPoint.type = "passenger";
+                passengerWayPoint.text = "Pickup passenger";
+                passengerWayPoint.participantName = riderPost.author; // "Sam B.";
+                passengerWayPoint.address = riderPost.source; // "N 10th St";
+                passengerWayPoint.time = PostInfo.getDepartureDateTimeText(riderPost); // "9:00 AM";
+                wayPoints.add(passengerWayPoint);
+
+            }
+        }
+        // TODO...
+
+        // DRIVER:
+        if (mPostType == Post.PostType.CARPOOL || mPostType == Post.PostType.DRIVER) {
+            RouteWayPoint wayPoint1 = new RouteWayPoint();
+            wayPoint1.type = "driver";
+            wayPoint1.text = "Driver departs";
+            wayPoint1.participantName = mPost.author; // "Sam B.";
+            wayPoint1.address = mPost.source; // "N 10th St";
+            wayPoint1.time = PostInfo.getDepartureDateTimeText(mPost); // "9:00 AM";
+            wayPoints.add(wayPoint1);
+        }
+        else if (mPostType == Post.PostType.RIDER) {
+            RouteWayPoint wayPoint1 = new RouteWayPoint();
+            wayPoint1.type = "passenger";
+            wayPoint1.text = "Pickup passenger";
+            wayPoint1.participantName = mPost.author; // "Sam B.";
+            wayPoint1.address = mPost.source; // "N 10th St";
+            wayPoint1.time = PostInfo.getDepartureDateTimeText(mPost); // "9:00 AM";
+            wayPoints.add(wayPoint1);
+        }
+
+
+
+
+
+
 
         return wayPoints;
     }
@@ -280,9 +332,13 @@ public class PostDetailActivity extends MainActivity
 
 
     private void setupPostRouteDescription(Post post) {
-        TextView routeDescriptionText = findViewById(R.id.text_route_details);
 
-        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
+        // TODO:
+        loadWayPointList();
+
+//        TextView routeDescriptionText = findViewById(R.id.text_route_details);
+//
+//        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
     }
 
     private void setupMapButton() {
@@ -617,12 +673,12 @@ public class PostDetailActivity extends MainActivity
 
     private void setFindMatchesOrJoinButton(String userId, Post post) {
         if (post.uid != null) {
-            if (post.uid.equals(userId)) {
+            if (post.uid.equals(userId) && mPostType != Post.PostType.CARPOOL) {
                 // Make FindMatches button active:
                 mFindMatchingPostsButton.setEnabled(true);
                 mFindMatchingPostsButton.setVisibility(View.VISIBLE);
             }
-            else {
+            else if (!post.uid.equals(userId)) {
                 // Make Join button active:
                 mCreateCarpoolButton.setEnabled(true);
                 mCreateCarpoolButton.setVisibility(View.VISIBLE);

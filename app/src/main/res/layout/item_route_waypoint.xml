@@ -12,6 +12,7 @@
         android:scaleType="fitXY"/>
 
     <LinearLayout
+        android:id="@+id/layout_waypoint_full"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -25,34 +26,6 @@
             android:layout_marginTop="2dp"
             tools:text="Driver departs"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/waypoint_participant_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_user_outline" />
-
-            <TextView
-                android:id="@+id/waypoint_participant_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:maxLength="30" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/text_pre_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            tools:text="from/to/at"/>
-
         <TextView
             android:id="@+id/text_waypoint_address"
             android:layout_width="wrap_content"
@@ -61,33 +34,75 @@
             android:maxLines="3"
             tools:text="@string/lorem" />
 
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/layout_waypoint_participant_and_time"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_margin="5dp">
+            android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/icon_time"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_access_time_black_48dp"
-                android:alpha="0.5"/>
-
-            <TextView
-                android:id="@+id/text_waypoint_time"
-                style="@style/Base.TextAppearance.AppCompat.Caption"
+            <LinearLayout
+                android:id="@+id/layout_waypoint_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/colorPrimaryDark"
-                android:gravity="center_vertical"
-                android:text="12:30 PM"
-                android:alpha="0.5"/>
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_margin="5dp">
+
+                <ImageView
+                    android:id="@+id/icon_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_access_time_black_24dp"
+                    android:alpha="0.5"/>
+
+
+                <TextView
+                    android:id="@+id/text_waypoint_time"
+                    style="@style/Base.TextAppearance.AppCompat.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:gravity="center_vertical"
+                    android:text="12:30 PM"
+                    android:alpha="0.5"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_waypoint_participant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!--<ImageView-->
+                <!--android:id="@+id/waypoint_participant_photo"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/ic_user_outline" />-->
+                <ImageView
+                    android:id="@+id/waypoint_participant_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
+                    android:id="@+id/waypoint_participant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:maxLines="1"
+                    android:maxLength="30" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
+
+
+
+
+
 
 
     </LinearLayout>

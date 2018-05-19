@@ -384,6 +384,16 @@ public class Carpool extends DriverOfferPost {
         return getCarpoolMapper().getTripURL();
     }
 
+
+    public List<WayPoint> getRiderWaypoints() {
+
+        if (riderWaypoints == null) {
+            getCarpoolMapper(); // calls setWayPoints.
+        }
+
+        return riderWaypoints;
+    }
+
     private void setWayPoints() {
 
         ArrayList<Integer> legDurationsInSeconds = carpoolMapper.getTripWaypointTimes();

@@ -1,5 +1,6 @@
 package com.sjsu.se195.uniride.viewholder;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,9 +66,9 @@ public class RouteWayPointListRecyclerAdapter extends RecyclerView.Adapter<Route
         public ImageView background;
         private TextView wayPointTitleText;
         private TextView participantNameText;
-        public TextView preAddressText;
         private TextView addressText;
         private TextView timeText;
+        private ImageView participantPhoto;
 
         public RouteWayPointViewHolder(View itemView) {
             super(itemView);
@@ -76,32 +77,42 @@ public class RouteWayPointListRecyclerAdapter extends RecyclerView.Adapter<Route
 
             wayPointTitleText = (TextView) itemView.findViewById(R.id.text_waypoint_title);
             participantNameText = (TextView) itemView.findViewById(R.id.waypoint_participant_name);
-            preAddressText = (TextView) itemView.findViewById(R.id.text_pre_address);
             addressText = (TextView) itemView.findViewById(R.id.text_waypoint_address);
             timeText = (TextView) itemView.findViewById(R.id.text_waypoint_time);
+            participantPhoto = itemView.findViewById(R.id.waypoint_participant_photo);
 
             itemView.setOnClickListener(this);
         }
 
         public void bindToPost(RouteWayPoint routeWayPoint) {
 
-            background.setImageResource(R.drawable.carpool_card);
+            background.setImageResource(R.drawable.waypoint_card);
 
             wayPointTitleText.setText(routeWayPoint.text);
             participantNameText.setText(routeWayPoint.participantName);
-            addressText.setText(routeWayPoint.address);
-            participantNameText.setText(routeWayPoint.participantName);
+
+
             timeText.setText(routeWayPoint.time);
 
+            String preAddressString = "";
             if (routeWayPoint.type.equals("driver")) {
-                preAddressText.setText("from");
+                preAddressString = "from ";
+                participantNameText.setText(routeWayPoint.participantName);
+                participantPhoto.setBackgroundResource(R.drawable.ic_user_outline);
             }
             else if (routeWayPoint.type.equals("passenger")) {
-                preAddressText.setText("pickup at");
+                preAddressString = "pickup at ";
+                participantNameText.setText(routeWayPoint.participantName);
+                participantPhoto.setBackgroundResource(R.drawable.ic_user_outline);
             }
             else if (routeWayPoint.type.equals("destination")) {
-                preAddressText.setText("to");
+                preAddressString = "";
+                participantNameText.setVisibility(View.INVISIBLE);
+                participantPhoto.setBackgroundResource(R.drawable.ic_account_balance_black_24dp);//R.drawable.icon_organization);
             }
+
+            String addressString = preAddressString + routeWayPoint.address;
+            addressText.setText(addressString);
         }
 
         @Override

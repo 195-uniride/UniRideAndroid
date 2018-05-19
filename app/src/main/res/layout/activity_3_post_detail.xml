@@ -59,59 +59,61 @@
         android:paddingRight="20dp"
         android:text=""/>
 
-    <FrameLayout
-        android:id="@+id/waypoint_list_fragment_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_route_waypoints"
-        android:layout_below="@+id/text_carpool_details"
-        android:clipToPadding="false"/>
 
-    <ScrollView
-        android:id="@+id/trip_details_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/waypoint_list_fragment_placeholder">
 
-        <LinearLayout
-            android:id="@+id/trip_details_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <!--<ScrollView-->
+        <!--android:id="@+id/trip_details_scroll_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/waypoint_list_fragment_placeholder">-->
 
-            <TextView
-                android:id="@+id/text_route_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text=""/>
+        <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/trip_details_layout"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:orientation="horizontal">&ndash;&gt;-->
 
-            <!--<FrameLayout-->
-                <!--android:id="@+id/map_fragment_placeholder"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"/>-->
+            <!--&lt;!&ndash;&lt;!&ndash;<TextView&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:id="@+id/text_route_details"&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:paddingLeft="20dp"&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:paddingRight="20dp"&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:text=""/>&ndash;&gt;&ndash;&gt;-->
 
-            <Button
-                android:id="@+id/button_link_to_map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Open Map"/>
+            <!--&lt;!&ndash;&lt;!&ndash;<FrameLayout&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:id="@+id/map_fragment_placeholder"&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;&lt;!&ndash;android:layout_height="wrap_content"/>&ndash;&gt;&ndash;&gt;-->
 
-        </LinearLayout>
+            <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/button_link_to_map"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:text="Open Map"/>&ndash;&gt;-->
 
-    </ScrollView>
+        <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
+
+    <!--</ScrollView>-->
 
 
 
     <LinearLayout
-        android:id="@+id/comment_form"
+        android:id="@+id/post_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/trip_details_scroll_view"
+        android:layout_below="@+id/text_carpool_details"
         android:layout_marginTop="20dp"
         android:weightSum="1.0">
+
+        <FrameLayout
+            android:id="@+id/waypoint_list_fragment_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
+            tools:layout="@layout/fragment_route_waypoints"
+            android:clipToPadding="false"/>
 
         <EditText
             android:id="@+id/field_comment_text"
@@ -135,7 +137,7 @@
         android:id="@+id/recycler_comments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/comment_form"
+        android:layout_below="@+id/post_info"
         tools:listitem="@layout/item_comment" />
 
     <Button
