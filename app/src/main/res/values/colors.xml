@@ -33,5 +33,8 @@
     <color name="organizationColor"> #355C7D </color>
     <color name="waypointColor">#B6B6B6</color>
 
+    <color name="rideRequestColor"> #f9bb72 </color>
+    <color name="carpoolColor"> #563d91</color>
+    <color name="driveOfferColor"> #dd6495</color>
 
 </resources>

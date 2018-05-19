@@ -3,39 +3,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.sjsu.se195.uniride.PostDetailActivity">
 
-    <ImageButton
-        android:id="@+id/delete_post"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/ic_delete_black_filled"
-        android:visibility="invisible"/>
-    <!--android:marginRight="10dp"-->
-    <!--android:marginTop="10dp"-->
 
-    <include
-        android:id="@+id/post_author_layout"
-        layout="@layout/include_post_author"
+    <LinearLayout
+        android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_centerHorizontal="true" />
+        android:orientation="vertical"
+        android:background="@color/primary_text">
 
-    <include
-        android:id="@+id/post_text_layout"
-        layout="@layout/include_post_addresses"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/post_author_layout"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"/>
+
+        <ImageButton
+            android:id="@+id/delete_post"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_delete_black_filled"
+            android:visibility="invisible"/>
+        <!--android:marginRight="10dp"-->
+        <!--android:marginTop="10dp"-->
+
+        <include
+            android:id="@+id/post_author_layout"
+            layout="@layout/include_post_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_centerHorizontal="true" />
+
+        <include
+            android:id="@+id/post_text_layout"
+            layout="@layout/include_post_addresses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/post_author_layout"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"/>
+
+
+
+
+    </LinearLayout>
+
 
     <View
         android:id="@+id/post_divider"
-        android:layout_below="@+id/post_text_layout"
+        android:layout_below="@+id/layout_top"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:layout_width="fill_parent"
@@ -69,86 +85,72 @@
         android:paddingRight="20dp"
         android:text=""/>
 
-
-
-    <!--<ScrollView-->
-        <!--android:id="@+id/trip_details_scroll_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/waypoint_list_fragment_placeholder">-->
-
-        <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
-            <!--&lt;!&ndash;android:id="@+id/trip_details_layout"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:orientation="horizontal">&ndash;&gt;-->
-
-            <!--&lt;!&ndash;&lt;!&ndash;<TextView&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:id="@+id/text_route_details"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:paddingLeft="20dp"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:paddingRight="20dp"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:text=""/>&ndash;&gt;&ndash;&gt;-->
-
-            <!--&lt;!&ndash;&lt;!&ndash;<FrameLayout&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:id="@+id/map_fragment_placeholder"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;&lt;!&ndash;android:layout_height="wrap_content"/>&ndash;&gt;&ndash;&gt;-->
-
-            <!--&lt;!&ndash;<Button&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/button_link_to_map"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:text="Open Map"/>&ndash;&gt;-->
-
-        <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
-
-    <!--</ScrollView>-->
-
-
-
-    <LinearLayout
-        android:id="@+id/post_info"
+    <FrameLayout
+        android:id="@+id/waypoint_list_fragment_placeholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@+id/text_carpool_details"
-        android:layout_marginTop="20dp"
-        android:weightSum="1.0">
+        tools:layout="@layout/fragment_route_waypoints"
+        android:clipToPadding="false"/>
 
-        <FrameLayout
-            android:id="@+id/waypoint_list_fragment_placeholder"
+    <ScrollView
+        android:id="@+id/scroll_post_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="30dp"
+        android:layout_below="@+id/waypoint_list_fragment_placeholder">
+
+        <LinearLayout
+            android:id="@+id/post_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="30dp"
-            tools:layout="@layout/fragment_route_waypoints"
-            android:clipToPadding="false"/>
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:weightSum="1.0">
 
-        <EditText
-            android:id="@+id/field_comment_text"
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:hint="Write a comment..."/>
+            <LinearLayout
+                android:id="@+id/comment_stuff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:weightSum="1.0">
 
-        <Button
-            android:id="@+id/button_post_comment"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_weight="0.2"
-            android:layout_height="wrap_content"
-            android:text="Post"/>
+                <EditText
+                    android:id="@+id/field_comment_text"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.8"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:hint="Write a comment..."/>
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/button_post_comment"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_weight="0.2"
+                    android:layout_height="wrap_content"
+                    android:text="Post"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_comments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/post_info"
-        tools:listitem="@layout/item_comment" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_comments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_comment" />
+
+
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
 
     <Button
         android:id="@+id/button_create_carpool"

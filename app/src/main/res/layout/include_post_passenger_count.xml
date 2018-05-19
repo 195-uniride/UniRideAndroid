@@ -3,20 +3,23 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="vertical"
+              android:orientation="horizontal"
 
               android:gravity="center"
               android:layout_centerHorizontal="true">
 
-    <TextView
-        android:id="@+id/post_passenger_count"
-        style="@style/TextAppearance.AppCompat.Medium"
+    <ImageView
+        android:id="@+id/icon_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginTop="5dp"
+        android:cropToPadding="false"
+        android:src="@drawable/ic_group_black_24dp"/>
+
+    <TextView
+        android:id="@+id/post_passenger_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:maxLines="3"
-        tools:text="X / Y Passengers" />
+        tools:text="X / Y Passengers"/>
 
 </LinearLayout>

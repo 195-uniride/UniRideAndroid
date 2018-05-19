@@ -67,7 +67,7 @@ public class PotentialCarpoolListRecyclerAdapter extends RecyclerView.Adapter<Po
         private TextView destinationView;
         private TextView passengerCountTextView;
         private TextView estimatedTravelTimeTextView;
-        private TextView estimatedTravelDistanceTextView;
+//        private TextView estimatedTravelDistanceTextView;
         public TextView to;
 
         // TODO: add driver & passengers
@@ -86,7 +86,7 @@ public class PotentialCarpoolListRecyclerAdapter extends RecyclerView.Adapter<Po
 
             passengerCountTextView = itemView.findViewById(R.id.post_passenger_count);
             estimatedTravelTimeTextView = itemView.findViewById(R.id.carpool_estimated_trip_time);
-            estimatedTravelDistanceTextView = itemView.findViewById(R.id.carpool_estimated_trip_distance);
+//            estimatedTravelDistanceTextView = itemView.findViewById(R.id.carpool_estimated_trip_distance);
             to = (TextView) itemView.findViewById(R.id.post_card_address_to);
 
             postTripDateText = itemView.findViewById(R.id.post_date);
@@ -109,11 +109,15 @@ public class PotentialCarpoolListRecyclerAdapter extends RecyclerView.Adapter<Po
 
             // Show seats taken - 1 because 1 will always be taken by the potential new rider:
             passengerCountTextView.setText((carpool.getNumberSeatsTaken() - 1) + " / " + carpool.getPassengerCount() + " Passengers");
-            estimatedTravelTimeTextView.setText(carpool.getEstimatedTotalTripTimeInMinutes() + " minutes");
+
 
             DecimalFormat decimalFormat = new DecimalFormat("0.##");
             String distance = decimalFormat.format(carpool.getEstimatedTotalTripDistanceInMiles()) + " mi";
-            estimatedTravelDistanceTextView.setText(distance);
+
+            String distanceAndTime = "estimate " + carpool.getEstimatedTotalTripTimeInMinutes() + " mins (" + distance + ")";
+            estimatedTravelTimeTextView.setText(distanceAndTime);
+
+//            estimatedTravelDistanceTextView.setText(distance);
         }
 
         @Override
