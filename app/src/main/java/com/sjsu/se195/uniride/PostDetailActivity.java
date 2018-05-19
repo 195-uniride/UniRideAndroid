@@ -265,13 +265,8 @@ public class PostDetailActivity extends MainActivity
         setupFindMatchingPostsButton();
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+        mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
 
-        if(my_view.getVisibility()==View.VISIBLE){
-            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
-        }
-        else{
-            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
-        }
         mShowMapButton.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -285,6 +280,7 @@ public class PostDetailActivity extends MainActivity
                 // create the animator for this view (the start radius is zero)
 
                 if(my_view.getVisibility() == View.INVISIBLE){
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
                     Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, 0, finalRadius1);
                     anim1.addListener(new AnimatorListenerAdapter() {
                         @Override
@@ -308,7 +304,7 @@ public class PostDetailActivity extends MainActivity
                     anim1.start();
                 }
                 else{
-                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
                     Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, finalRadius1, 0);
                     anim1.addListener(new Animator.AnimatorListener() {
                         @Override
@@ -483,16 +479,19 @@ public class PostDetailActivity extends MainActivity
         setPostAuthor();
 
         // TODO: Fix:
-//        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-//        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-//        source_marker = new MarkerOptions()
-//                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-//                .title("Source")
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-//        destination_marker = new MarkerOptions()
-//                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-//                .title("Destination")
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+        source_marker = new MarkerOptions()
+                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+                .title("Source")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        destination_marker = new MarkerOptions()
+                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+                .title("Destination")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        if(post instanceof Carpool){
+
+        }
     }
 
 
