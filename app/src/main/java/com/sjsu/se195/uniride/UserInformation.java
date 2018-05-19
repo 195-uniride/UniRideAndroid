@@ -12,6 +12,10 @@ public class UserInformation {
     public static String getShortName(User user) {
         String shortName = "";
 
+        if (user == null) {
+            return "";
+        }
+
         if (user.firstName != null) {
             shortName += user.firstName;
         }

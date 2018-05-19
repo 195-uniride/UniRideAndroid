@@ -77,6 +77,17 @@ public class PostInfo {
         return dateFormat.format(date);
     }
 
+    /**
+     * Returns time (as int: 1335 or 955) in format: "1:35 PM" or "9:55 AM".
+     */
+    public static String getDateTimeText(int time) {
+        Date date = PostInfo.getDateTime(time);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("h:mm a", Locale.US);
+
+        return dateFormat.format(date);
+    }
+
     private static Date getDateTime(int timeInt) {
         Date dateTime = null;
 

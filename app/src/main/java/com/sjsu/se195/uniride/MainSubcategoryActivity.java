@@ -122,7 +122,7 @@ public class MainSubcategoryActivity extends MainActivity implements AdapterView
 
     private void loadPosts() {
         Bundle bundle = new Bundle();
-        //bundle.putBoolean("postType", postType); // TODO: change name?
+
         bundle.putString(PostListFragment.EXTRA_POST_TYPE, mPostType.name());
 
         bundle.putString(PostListFragment.EXTRA_ORGANIZATION_ID, getSelectedOrganizationId());

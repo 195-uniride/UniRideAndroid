@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -52,23 +53,31 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
+import com.sjsu.se195.uniride.fragment.RouteWayPointListFragment;
 import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
+import com.sjsu.se195.uniride.fragment.TripMapFragment;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
+import com.sjsu.se195.uniride.models.RouteWayPoint;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
+import com.sjsu.se195.uniride.models.WayPoint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -150,6 +159,13 @@ public class PostDetailActivity extends MainActivity
         }
 
 
+        // Initialize Views
+        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
+        mSourceView = (TextView) findViewById(R.id.post_source);
+        mDestinationView = (TextView) findViewById(R.id.post_destination);
+
+        setupCommentSection();
+
         setupJoinButton();
 
         setupFindMatchingPostsButton();
@@ -171,6 +187,93 @@ public class PostDetailActivity extends MainActivity
         }
 
         // TODO: comment section if sent Post object...
+    }
+
+    private void loadWayPointList() {
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelableArrayList(RouteWayPointListFragment.EXTRA_ROUTE_WAYPOINT_LIST, getRouteWayPoints());
+
+        Fragment wayPointListFragment = new RouteWayPointListFragment();
+        wayPointListFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.waypoint_list_fragment_placeholder, wayPointListFragment, "WayPointList").commit();
+    }
+
+    private ArrayList<RouteWayPoint> getRouteWayPoints() {
+        ArrayList<RouteWayPoint> wayPoints = new ArrayList<RouteWayPoint>();
+
+        // NOTE: Must add in reverse order:
+
+        // Destination:
+
+        RouteWayPoint wayPointDestination = new RouteWayPoint();
+        wayPointDestination.type = "destination";
+        wayPointDestination.text = "Reach destination";
+        wayPointDestination.address = mPost.destination; // "N 10th St";
+        wayPointDestination.time = PostInfo.getArrivalDateTimeText(mPost); // "9:00 AM";
+        wayPoints.add(wayPointDestination);
+
+        // Carpool passengers:
+        if (mPostType == Post.PostType.CARPOOL) { // TODO: will need to reverse order...
+
+            Carpool carpoolPost = (Carpool) mPost;
+
+
+
+            for (WayPoint riderWayPoint : carpoolPost.getRiderWaypoints()) {
+
+                RideRequestPost riderPost = carpoolPost.riderPosts.get(riderWayPoint.getRiderIndex());
+
+                //=====
+                RouteWayPoint passengerWayPoint = new RouteWayPoint();
+                passengerWayPoint.type = "passenger";
+                passengerWayPoint.text = "Pickup passenger";
+                passengerWayPoint.participantName = riderPost.author; // "Sam B.";
+                passengerWayPoint.address = riderPost.source; // "N 10th St";
+                passengerWayPoint.time = PostInfo.getDepartureDateTimeText(riderPost); // "9:00 AM";
+                wayPoints.add(passengerWayPoint);
+
+            }
+        }
+        // TODO...
+
+        // DRIVER:
+        if (mPostType == Post.PostType.CARPOOL || mPostType == Post.PostType.DRIVER) {
+            RouteWayPoint wayPoint1 = new RouteWayPoint();
+            wayPoint1.type = "driver";
+            wayPoint1.text = "Driver departs";
+            wayPoint1.participantName = mPost.author; // "Sam B.";
+            wayPoint1.address = mPost.source; // "N 10th St";
+            wayPoint1.time = PostInfo.getDepartureDateTimeText(mPost); // "9:00 AM";
+            wayPoints.add(wayPoint1);
+        }
+        else if (mPostType == Post.PostType.RIDER) {
+            RouteWayPoint wayPoint1 = new RouteWayPoint();
+            wayPoint1.type = "passenger";
+            wayPoint1.text = "Pickup passenger";
+            wayPoint1.participantName = mPost.author; // "Sam B.";
+            wayPoint1.address = mPost.source; // "N 10th St";
+            wayPoint1.time = PostInfo.getDepartureDateTimeText(mPost); // "9:00 AM";
+            wayPoints.add(wayPoint1);
+        }
+
+
+
+
+
+
+
+        return wayPoints;
+    }
+
+    private void setupCommentSection() {
+        mCommentField = (EditText) findViewById(R.id.field_comment_text);
+        mCommentButton = (Button) findViewById(R.id.button_post_comment);
+        mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
+
+        mCommentButton.setOnClickListener(this);
+        mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void setupJoinButton() {
@@ -239,26 +342,75 @@ public class PostDetailActivity extends MainActivity
 
 
     private void setupPostRouteDescription(Post post) {
-        TextView routeDescriptionText = findViewById(R.id.text_route_details);
 
-        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
+        // TODO:
+        loadWayPointList();
+
+//        TextView routeDescriptionText = findViewById(R.id.text_route_details);
+//
+//        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
     }
 
-
-
     private void setupMapButton() {
-        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
-        // Initialize Views
-        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
-        mSourceView = (TextView) findViewById(R.id.post_source);
-        mDestinationView = (TextView) findViewById(R.id.post_destination);
-        mCommentField = (EditText) findViewById(R.id.field_comment_text);
-        mCommentButton = (Button) findViewById(R.id.button_post_comment);
-        mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
-        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
+        //Button MapLinkButton = findViewById(R.id.button_link_to_map);
 
-        mCommentButton.setOnClickListener(this);
-        mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+//        Fragment tripMapFragment = new TripMapFragment();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.map_fragment_placeholder, tripMapFragment, "TripMap").commit();
+
+
+        mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+
+        mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
+
+        mShowMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                System.out.println("..... LINKING TO MAP .....");
+
+                if (mPost != null) {
+                    String destinationAddressURL = mPost.destination.replaceAll(" ", "+");
+
+                    //String destinationAddressURL = "Taronga+Zoo,+Sydney+Australia";
+                    openGoogleMapsApp(destinationAddressURL); // DEBUG ONLY...// TODO: change...
+                }
+
+            }
+        });
+    }
+
+    /**
+        Opens Google Maps application on the user's device
+         and starts directions navigation to destinationAddressURL.
+         @param destinationAddressURL the destination address. All spaces must be replaced with '+'.
+     */
+    private void openGoogleMapsApp(String destinationAddressURL) {
+        // Create a Uri from an intent string. Use the result to create an Intent.
+
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+destinationAddressURL); // TODO: change...
+
+        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+        // Make the Intent explicit by setting the Google Maps package
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Attempt to start an activity that can handle the Intent
+        // Checks if user has an application that can handle the request:
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Log.e(PostDetailActivity.TAG, "Cannot open Google Maps application. "
+                    + "There is no application available on this device that can process this request.");
+        }
+    }
+
+    private void setupMapButton_OLD() {
+        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
+
+        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
 
         //marker for sjsu
         sjsu = new MarkerOptions()
@@ -269,10 +421,6 @@ public class PostDetailActivity extends MainActivity
         //MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         my_view = findViewById(R.id.for_map_layout);
-
-        setupJoinButton();
-
-        setupFindMatchingPostsButton();
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
         mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
@@ -566,12 +714,12 @@ public class PostDetailActivity extends MainActivity
 
     private void setFindMatchesOrJoinButton(String userId, Post post) {
         if (post.uid != null) {
-            if (post.uid.equals(userId)) {
+            if (post.uid.equals(userId) && mPostType != Post.PostType.CARPOOL) {
                 // Make FindMatches button active:
                 mFindMatchingPostsButton.setEnabled(true);
                 mFindMatchingPostsButton.setVisibility(View.VISIBLE);
             }
-            else {
+            else if (!post.uid.equals(userId)) {
                 // Make Join button active:
                 mCreateCarpoolButton.setEnabled(true);
                 mCreateCarpoolButton.setVisibility(View.VISIBLE);

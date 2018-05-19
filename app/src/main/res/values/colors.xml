@@ -30,5 +30,8 @@
     <color name="startColor"> #6C5B7B </color>
     <color name="centerColor"> #F8B195</color>
 
+    <color name="organizationColor"> #355C7D </color>
+    <color name="waypointColor">#B6B6B6</color>
+
 
 </resources>

@@ -11,14 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sjsu.se195.uniride.PostDetailActivity;
 import com.sjsu.se195.uniride.PreviewCarpoolDetailActivity;
 import com.sjsu.se195.uniride.R;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.Post;
-import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.viewholder.OnItemClickListener;
-import com.sjsu.se195.uniride.viewholder.PostListRecyclerAdapter;
 import com.sjsu.se195.uniride.viewholder.PotentialCarpoolListRecyclerAdapter;
 
 import java.util.ArrayList;
