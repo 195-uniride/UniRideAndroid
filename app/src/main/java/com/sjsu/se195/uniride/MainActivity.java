@@ -33,25 +33,49 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 import devlight.io.library.ntb.NavigationTabBar;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.sjsu.se195.uniride.fragment.RecentOrganizationsFragment;
 import com.sjsu.se195.uniride.models.Post;
+import com.sjsu.se195.uniride.models.User;
 
 import java.util.ArrayList;
 
 public class  MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
-
+    private ImageButton mSignOut;
+    private User user;
+    private DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_0_main);
+        this.getUser(getUid());
+        System.out.println(getUid());
+        mSignOut = (ImageButton) this.findViewById(R.id.profile_page_sign_out);
+        mSignOut.setVisibility(View.GONE);
+        if(this.user == null){
+            // mSignOut.setVisibility(View.VISIBLE);
+            mSignOut.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    FirebaseAuth.getInstance().signOut();
+                    startActivity(new Intent(MainActivity.this, SignInActivity.class));
+                    finish();
+                }
+            });
+        }
 
         // "I am a driver" -> Show me Ride Requests:
         findViewById(R.id.driver_mode_button).setOnClickListener(new View.OnClickListener(){
@@ -102,6 +126,33 @@ public class  MainActivity extends BaseActivity {
         }else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void getUser(String uid) {
+
+        // System.out.println("Starting to set user....");
+        try {
+            mDatabase.child("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Need to get the user object before loading posts because the query to find posts requires user.
+
+                    // Get User object and use the values to update the UI
+                    user = dataSnapshot.getValue(User.class);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }
+        catch (NullPointerException e){
+            System.out.println("Null user");
+            this.user = null;
+        }
+        //getUid()
     }
 
 

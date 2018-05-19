@@ -19,8 +19,8 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
     public TextView sourceView;
     public TextView authorView;
-    public ImageView starView;
-    public TextView numStarsView;
+    /*public ImageView starView;
+    public TextView numStarsView;*/
     public TextView destinationView;
     public ImageView background;
     public TextView to;
@@ -33,8 +33,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
         sourceView = (TextView) itemView.findViewById(R.id.post_source);
         authorView = (TextView) itemView.findViewById(R.id.post_cardview_author_name);
-        starView = (ImageView) itemView.findViewById(R.id.star);
-        numStarsView = (TextView) itemView.findViewById(R.id.post_num_stars);
         destinationView = (TextView) itemView.findViewById(R.id.post_destination);
         background = (ImageView) itemView.findViewById(R.id.card_background);
         to = (TextView) itemView.findViewById(R.id.post_card_address_to);
@@ -43,10 +41,9 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
         postDateTimeText = itemView.findViewById(R.id.post_time);
     }
 
-    public void bindToPost(String name, Post.PostType postType, Post post, View.OnClickListener starClickListener) {
+    public void bindToPost(String name, Post.PostType postType, Post post) {
         authorView.setText(name);
         sourceView.setText(trimAddress(post.source));
-        numStarsView.setText(String.valueOf(post.starCount));
         destinationView.setText(trimAddress(post.destination));
         String t ="to";
         to.setText(t);
@@ -69,8 +66,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder {
 
         postTripDateText.setText(PostInfo.getTripDateText(post));
         postDateTimeText.setText("Arrive at " + PostInfo.getArrivalDateTimeText(post));
-
-        starView.setOnClickListener(starClickListener);
     }
 
     private String trimAddress(String adr){

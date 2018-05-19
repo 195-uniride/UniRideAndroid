@@ -6,6 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/home_page"
     tools:context=".MainActivity">
+    <ImageButton
+        android:id="@+id/profile_page_sign_out"
+        android:backgroundTint="@color/gradient0"
+        android:background="@drawable/ic_power_settings_new_white_24dp"
+        android:visibility="gone"
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

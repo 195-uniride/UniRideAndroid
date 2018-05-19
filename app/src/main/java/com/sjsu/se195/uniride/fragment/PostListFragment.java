@@ -270,11 +270,11 @@ public abstract class PostListFragment extends Fragment {
 
 
                 // Determine if the current user has liked this post and set UI accordingly
-                if (model.stars.containsKey(getUid())) {
+                /*if (model.stars.containsKey(getUid())) {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
                 } else {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
-                }
+                }*/
 
                 // Need to get user:
                 DatabaseReference postUserReference =
@@ -290,7 +290,10 @@ public abstract class PostListFragment extends Fragment {
                         username = UserInformation.getShortName(postUser);
 
                         // Bind Post to ViewHolder, setting OnClickListener for the star button
-                        viewHolder.bindToPost(username, model.postType, model, new View.OnClickListener() {
+                        viewHolder.bindToPost(username, model.postType, model);
+
+                        /*
+                        , new View.OnClickListener() {
                             @Override
                             public void onClick(View starView) {
                                 // Need to write to both places the post is stored
@@ -310,6 +313,7 @@ public abstract class PostListFragment extends Fragment {
                                 onStarClicked(userPostRef);
                             }
                         });
+                         */
                     }
 
                     @Override
