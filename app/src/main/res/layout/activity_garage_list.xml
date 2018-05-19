@@ -27,7 +27,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="20dp"
-                android:text="North Garage"
                 android:textSize="30sp" />
 
             <Button
@@ -35,7 +34,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="West Garage"
                 android:textSize="30sp"/>
 
         </LinearLayout>
@@ -53,7 +51,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="East Garage"
                 android:textSize="30sp"/>
 
             <Button
@@ -61,7 +58,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="South Garage"
                 android:textSize="30sp"/>
 
         </LinearLayout>

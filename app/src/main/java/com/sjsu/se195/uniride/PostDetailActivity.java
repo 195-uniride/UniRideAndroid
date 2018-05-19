@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -387,19 +388,19 @@ public class PostDetailActivity extends MainActivity
                 if(mPostType == Post.PostType.RIDER) {
                     final RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.RIDER; // Set post type if wasn't present in databse.
                     }
 
-                    mPost = post;
+                    if(post != null) {
+                        mPost = post;
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.postId);
+                    }
 
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post);
-
-                    Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.postId);
                     //check if the post is by the current user
-                    if(post.uid.equals(getUid().toString())){
+                    if(post != null && post.uid.equals(getUid().toString())){
                         Log.w(TAG, "---> The current logged in user made this");
                         //initialize the delete button
                         delete_button = findViewById(R.id.delete_post);
@@ -415,18 +416,19 @@ public class PostDetailActivity extends MainActivity
                 else if(mPostType == Post.PostType.DRIVER) {
                     final DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.DRIVER; // Set post type if wasn't present in databse.
                     }
 
-                    mPost = post;
+                    if(post != null) {
+                        mPost = post;
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.uid);
+                    }
 
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post);
-                    Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.uid);
                     //check if the post is by the current user
-                    if(post.uid.equals(getUid().toString())){
+                    if(post != null && post.uid.equals(getUid().toString())){
                         Log.w(TAG, "---> The current logged in user made this");
                         //initialize the delete button
                         delete_button = findViewById(R.id.delete_post);
@@ -442,17 +444,18 @@ public class PostDetailActivity extends MainActivity
                 else if(mPostType == Post.PostType.CARPOOL) {
                     Carpool post = dataSnapshot.getValue(Carpool.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.CARPOOL; // Set post type if wasn't present in databse.
                     }
 
                     System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
 
                     mPost = post;
-
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post); //setupCarpoolRouteDescription(post);
+                    if(post!=null) {
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.uid);
+                    }//setupCarpoolRouteDescription(post);
                 }
 
                 if (mPost.postId == null || mPost.postId.isEmpty()) {
@@ -626,7 +629,7 @@ public class PostDetailActivity extends MainActivity
             //delete post instance
             delete_post(post, "driveOffers");
             //delete carpool instance
-            delete_carpool(post);
+            //delete_carpool(post);
         }
     }
 
@@ -638,8 +641,11 @@ public class PostDetailActivity extends MainActivity
         mDatabaseReference.child("posts").child(drive_or_ride).child(post.postId).removeValue();
         mDatabaseReference.child("user-posts").child(getUid().toString()).child(drive_or_ride).child(post.postId).removeValue();
         mDatabaseReference.child("post-comments").child(post.postId).removeValue();
-        Intent intent = new Intent(PostDetailActivity.this, ProfilePageActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(PostDetailActivity.this, ProfilePageActivity.class);
+//        startActivity(intent);
+//        //finishActivity(0);
+        //Finish this activity
+        finish();
     }
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
