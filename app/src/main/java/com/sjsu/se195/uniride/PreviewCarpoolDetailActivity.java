@@ -1,5 +1,8 @@
 package com.sjsu.se195.uniride;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +22,13 @@ import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
 import com.sjsu.se195.uniride.models.User;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class PreviewCarpoolDetailActivity extends MainActivity {
@@ -70,7 +79,11 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
 
             @Override
             public void onClick(View view) {
-                writeNewCarpoolObject(mPotentialCarpool);
+                try {
+                    writeNewCarpoolObject(mPotentialCarpool);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -176,7 +189,7 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
     }
 
     // Saves the new carpool object to the databse:
-    private void writeNewCarpoolObject(Carpool carpool) {
+    private void writeNewCarpoolObject(Carpool carpool) throws ParseException {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("posts").child("carpools").push().getKey();
@@ -210,6 +223,9 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
 
         mDatabase.updateChildren(childUpdatesUserCarpool);
 
+        //make an alarm
+        make_alarm(carpool);
+
         // Now do Intent to newly-created PostDetailActivity (of carpool post).
 
         // Launch PostDetailActivity
@@ -238,5 +254,35 @@ public class PreviewCarpoolDetailActivity extends MainActivity {
 //        }
 //        mDatabase.updateChildren(childUpdates_OrganizationPosts_Riders);
 
+    }
+
+    //This method is making the alarm on the device on the date of the trip
+    public void make_alarm(Carpool carpool) throws ParseException {
+        AlarmManager alarm = (AlarmManager) PreviewCarpoolDetailActivity.this.getSystemService(Context.ALARM_SERVICE);
+
+        //Getting the date and time for the alarm
+        DateFormat date_and_time_format = new SimpleDateFormat("yyyyMMdd hhmm", Locale.ENGLISH);
+        //adding 100 because the months seems to be behind a value
+        // (even with the fact that their index starts from 0)
+
+        //Currently the driver's info is being used to set the alarm
+        int departure_time = carpool.getDriverPost().departureTime;
+        int tripDate = carpool.getDriverPost().tripDate;
+
+        String date_and_time = Integer.toString(tripDate + 100)+ " " + Integer.toString(departure_time);
+        Date date_and_time_of_carpool = date_and_time_format.parse(date_and_time);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date_and_time_of_carpool);
+
+        Log.w(TAG,"***************************file - NewCarpoolActivity************************************");
+        System.out.println("Month of carpool is: " + calendar.get(Calendar.MONTH));
+        System.out.println("The alarm will be set for: " + date_and_time_of_carpool);
+
+        //Setting up the intent to start later for the alarm
+        Intent intent = new Intent(PreviewCarpoolDetailActivity.this, AlarmListener.class);
+
+        //setting the up the intent to be called through the alarm
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(PreviewCarpoolDetailActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 }

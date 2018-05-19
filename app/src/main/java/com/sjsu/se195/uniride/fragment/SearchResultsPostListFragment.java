@@ -1,6 +1,7 @@
 package com.sjsu.se195.uniride.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -62,9 +63,9 @@ public class SearchResultsPostListFragment extends Fragment implements OnItemCli
 
 
         if (mPotentialCarpools.size() == 0) {
-            TextView noResultsFoundText = rootView.findViewById(R.id.no_posts_found_text);
-            noResultsFoundText.setText("No Search Results Found");
-            noResultsFoundText.setVisibility(View.VISIBLE);
+            System.out.println("No search results found");
+            rootView = inflater.inflate(R.layout.no_result_found, container, false);
+            TextView noResultsFoundText = rootView.findViewById(R.id.no_posts_found_text_2);
         }
         else {
             mRecycler = rootView.findViewById(R.id.messages_list);
