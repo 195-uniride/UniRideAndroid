@@ -47,6 +47,9 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private TextView mOrganizationWebsiteView;
     private EditText mOrganizationEmailField;
     private Button mJoinButton;
+    private Button mShowParking;
+    //To pass to the show parking button
+    private String organization_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +81,18 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         // Set Joined button to visible only if not joined this organization before:
         mOrganizationEmailField = (EditText) findViewById(R.id.field_enter_email_text);
         mJoinButton = (Button) findViewById(R.id.button_join_organization);
+        // Set show parking to true if the user has joined this organization before:
+        mShowParking = (Button) findViewById(R.id.button_show_parking);
 
         hideJoinIfUserHasAlreadyJoinedOrganization();
+
+        //onclick listener for mShowParking
+        mShowParking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showParkingForOrganization();
+            }
+        });
 
     }
 
@@ -97,6 +110,8 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
                 mOrganizationClassificationView.setText(organization.classification);
                 mOrganizationDescriptionView.setText(organization.description);
                 mOrganizationWebsiteView.setText(organization.website);
+                //setting the name for the parking button here
+                organization_name = organization.name;
                 // [END_EXCLUDE]
             }
 
@@ -150,6 +165,14 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
         Intent intent = new Intent(OrganizationDetailActivity.this, MainActivity.class);
         startActivity(intent);
         // finish(); // Don't use.
+    }
+
+    private void showParkingForOrganization(){
+        //this method will start the intent and will take to the new activity
+        // where the parking will be shown
+        Intent intent = new Intent(OrganizationDetailActivity.this, GarageListActivity.class);
+        intent.putExtra("organization_name", organization_name);
+        startActivity(intent);
     }
 
     private void setEditingEnabled(boolean enabled) {
@@ -218,10 +241,14 @@ public class OrganizationDetailActivity extends BaseActivity implements View.OnC
     private void setCanJoin(boolean canJoin) {
         if (canJoin) {
             mJoinButton.setOnClickListener(this);
+            mShowParking.setVisibility(View.GONE);
         }
         else { // remove the option to join the organization:
             mOrganizationEmailField.setVisibility(View.GONE);
             mJoinButton.setVisibility(View.GONE);
+            //if other two are invisible, that means user is part of the organization
+            //  show parking button
+            mShowParking.setVisibility(View.VISIBLE);
         }
     }
 

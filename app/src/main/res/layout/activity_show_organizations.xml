@@ -23,6 +23,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_image_edit"
-        android:layout_margin="16dp"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="68dp"
+        android:layout_marginEnd="32dp" />
     <include layout="@layout/include_navbar"/>
 </RelativeLayout>

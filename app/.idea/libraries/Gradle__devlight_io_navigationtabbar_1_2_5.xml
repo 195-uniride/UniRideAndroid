@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: devlight.io:navigationtabbar-1.2.5">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/navigationtabbar-1.2.5.aar/c1ad317d5eca2d6eca52ae2e52f05fc7/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/navigationtabbar-1.2.5.aar/c1ad317d5eca2d6eca52ae2e52f05fc7/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/devlight.io/navigationtabbar/1.2.5/a8b24c899b65e34e39e2c67f1e3c5db529648911/navigationtabbar-1.2.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

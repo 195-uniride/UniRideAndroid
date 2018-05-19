@@ -6,6 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -18,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,12 +66,16 @@ import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
 import com.sjsu.se195.uniride.models.WayPoint;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -86,6 +93,7 @@ public class PostDetailActivity extends MainActivity
     // private boolean postType; // True = RideRequestPost, False = DirverOfferPost
 
     private DatabaseReference mPostReference;
+    private DatabaseReference mDatabaseReference;
     private DatabaseReference mCommentsReference;
     private ValueEventListener mPostListener;
     private String mPostKey;
@@ -99,6 +107,7 @@ public class PostDetailActivity extends MainActivity
     private TextView mDestinationView;
     private EditText mCommentField;
     private Button mCommentButton;
+    private ImageButton delete_button;
     private FloatingActionButton mShowMapButton;
     private Button mCreateCarpoolButton;
     private Button mFindMatchingPostsButton;
@@ -126,6 +135,7 @@ public class PostDetailActivity extends MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_3_post_detail);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         //postType = getIntent().getExraBoo("postType");
 
         // Get type of post (RIDER, DRIVER, CARPOOL) from intent:
@@ -413,13 +423,8 @@ public class PostDetailActivity extends MainActivity
         my_view = findViewById(R.id.for_map_layout);
 
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+        mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
 
-        if(my_view.getVisibility()==View.VISIBLE){
-            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
-        }
-        else{
-            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
-        }
         mShowMapButton.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -433,6 +438,7 @@ public class PostDetailActivity extends MainActivity
                 // create the animator for this view (the start radius is zero)
 
                 if(my_view.getVisibility() == View.INVISIBLE){
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
                     Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, 0, finalRadius1);
                     anim1.addListener(new AnimatorListenerAdapter() {
                         @Override
@@ -456,7 +462,7 @@ public class PostDetailActivity extends MainActivity
                     anim1.start();
                 }
                 else{
-                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
                     Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, finalRadius1, 0);
                     anim1.addListener(new Animator.AnimatorListener() {
                         @Override
@@ -524,45 +530,76 @@ public class PostDetailActivity extends MainActivity
                 System.out.println(dataSnapshot.toString());
 
                 if(mPostType == Post.PostType.RIDER) {
-                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
+                    final RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.RIDER; // Set post type if wasn't present in databse.
                     }
 
-                    mPost = post;
+                    if(post != null) {
+                        mPost = post;
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.postId);
+                    }
 
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post);
+                    //check if the post is by the current user
+                    if(post != null && post.uid.equals(getUid().toString())){
+                        Log.w(TAG, "---> The current logged in user made this");
+                        //initialize the delete button
+                        delete_button = findViewById(R.id.delete_post);
+                        delete_button.setVisibility(View.VISIBLE);
+                        delete_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                initializeDelete(post);
+                            }
+                        });
+                    }
                 }
                 else if(mPostType == Post.PostType.DRIVER) {
-                    DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
+                    final DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.DRIVER; // Set post type if wasn't present in databse.
                     }
 
-                    mPost = post;
+                    if(post != null) {
+                        mPost = post;
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.uid);
+                    }
 
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post);
+                    //check if the post is by the current user
+                    if(post != null && post.uid.equals(getUid().toString())){
+                        Log.w(TAG, "---> The current logged in user made this");
+                        //initialize the delete button
+                        delete_button = findViewById(R.id.delete_post);
+                        delete_button.setVisibility(View.VISIBLE);
+                        delete_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                initializeDelete(post);
+                            }
+                        });
+                    }
                 }
                 else if(mPostType == Post.PostType.CARPOOL) {
                     Carpool post = dataSnapshot.getValue(Carpool.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.CARPOOL; // Set post type if wasn't present in databse.
                     }
 
                     System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
 
                     mPost = post;
-
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post); //setupCarpoolRouteDescription(post);
+                    if(post!=null) {
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.uid);
+                    }//setupCarpoolRouteDescription(post);
                 }
 
                 if (mPost.postId == null || mPost.postId.isEmpty()) {
@@ -631,16 +668,19 @@ public class PostDetailActivity extends MainActivity
         setPostAuthor();
 
         // TODO: Fix:
-//        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-//        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-//        source_marker = new MarkerOptions()
-//                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-//                .title("Source")
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-//        destination_marker = new MarkerOptions()
-//                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-//                .title("Destination")
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+        source_marker = new MarkerOptions()
+                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+                .title("Source")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        destination_marker = new MarkerOptions()
+                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+                .title("Destination")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        if(post instanceof Carpool){
+
+        }
     }
 
 
@@ -657,6 +697,7 @@ public class PostDetailActivity extends MainActivity
                 User postUser = dataSnapshot.getValue(User.class);
 
                 mAuthorView.setText(UserInformation.getShortName(postUser));
+
             }
 
             @Override
@@ -722,7 +763,37 @@ public class PostDetailActivity extends MainActivity
                 });
     }
 
+    //Initializing the delete button
+    private void initializeDelete(Post post){
+        //If a rider, only need to delete the instance of the post from all the places
+        if(post.postType == Post.PostType.RIDER){
+            System.out.println("Delete ride request: " + post.postId);
+            delete_post(post, "rideRequests");
+        }
+        //If driver, need to delete the instance, and the carpool objects the driver is part of
+        else if(post.postType == Post.PostType.DRIVER){
+            System.out.println("Delete drive offer request: " + post.postId);
+            //delete post instance
+            delete_post(post, "driveOffers");
+            //delete carpool instance
+            //delete_carpool(post);
+        }
+    }
 
+    //Deleting methods
+    private void delete_post(Post post, String drive_or_ride){
+        String post_org = post.organizationId;
+        Log.w(TAG, "About to delete all the posts instances for the post, " + post.postId + ", by user: " + post.uid);
+        mDatabaseReference.child("organization-posts").child(post_org).child(drive_or_ride).child(post.postId).removeValue();
+        mDatabaseReference.child("posts").child(drive_or_ride).child(post.postId).removeValue();
+        mDatabaseReference.child("user-posts").child(getUid().toString()).child(drive_or_ride).child(post.postId).removeValue();
+        mDatabaseReference.child("post-comments").child(post.postId).removeValue();
+//        Intent intent = new Intent(PostDetailActivity.this, ProfilePageActivity.class);
+//        startActivity(intent);
+//        //finishActivity(0);
+        //Finish this activity
+        finish();
+    }
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 

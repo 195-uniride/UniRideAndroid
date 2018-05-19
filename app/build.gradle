@@ -48,6 +48,7 @@ dependencies {
 
     compile 'com.google.firebase:firebase-auth:11.8.0'
     compile 'com.google.firebase:firebase-database:11.8.0'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
 
     compile 'com.synnapps:carouselview:0.1.4'
 

@@ -42,7 +42,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     private String userID;
 
     private Button saveButton;
-    private Button skipButton;
     private Button mJoinOrganizationButton;
 
     private HashMap<String, String> OrganizationNameIdMap;
@@ -50,7 +49,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
     private EditText mFirstNameField;
     private EditText mLastNameField;
     private EditText mPhoneNumberField;
-    //DateOfBirth and PhoneNumber might have to be saved differently
 
     private Spinner orgSpinner;
     private ArrayAdapter<String> orgAdapter;
@@ -61,7 +59,6 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_add_user_information);
 
         saveButton = findViewById(R.id.save_information);
-        skipButton = findViewById(R.id.skip_this);
         mJoinOrganizationButton = findViewById(R.id.join_an_organization);
 
         mFirstNameField = (EditText)findViewById(R.id.first_name);
@@ -71,15 +68,14 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
         orgSpinner = (Spinner) findViewById(R.id.chosen_organization);
 
         saveButton.setOnClickListener(this);
-        skipButton.setOnClickListener(this);
         mJoinOrganizationButton.setOnClickListener(this);
 
         // If this activity was not started by SignUpActivity, change skipButton text to "Cancel" instead of "Skip This":
-        if (getIntent().getExtras() == null ||
-                !getIntent().getExtras().getString("callingActivity").equals("SignUpActivity")) {
-
-            skipButton.setText("Cancel");
-        }
+//        if (getIntent().getExtras() == null ||
+//                !getIntent().getExtras().getString("callingActivity").equals("SignUpActivity")) {
+//
+//            skipButton.setText("Cancel");
+//        }
 
         // fillOrganizations();
     }
@@ -212,13 +208,15 @@ public class AddUserInformation extends BaseActivity implements View.OnClickList
                 updateInformation(theFirst, theLast, thePhoneNumber, organizationId);
                 // falls through.
 
-            case R.id.skip_this:
-                startActivity(new Intent(AddUserInformation.this, MainActivity.class));
-                break;
 
             case R.id.join_an_organization:
                 startActivity(new Intent(AddUserInformation.this, ShowOrganizationsActivity.class));
                 break;
+
+            case R.id.create_an_organization:
+                startActivity(new Intent(AddUserInformation.this, NewOrganizationActivity.class));
+                break;
+                //TODO: currently not working!
         }
     }
 }

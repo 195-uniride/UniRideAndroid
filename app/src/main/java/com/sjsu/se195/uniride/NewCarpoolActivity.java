@@ -1,5 +1,8 @@
 package com.sjsu.se195.uniride;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,10 +29,16 @@ import com.sjsu.se195.uniride.models.RideRequestPost;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class NewCarpoolActivity extends MainActivity implements PostSearchResultsListener
@@ -56,14 +65,14 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
         mSelectedPostToJoin = getIntent().getParcelableExtra(NewCarpoolActivity.EXTRA_POST_OBJECT);
 
         if (mSelectedPostToJoin == null) {
-            System.out.println("ERROR: ==== CANNOT START SEARCH ====; mSelectedPostToJoin = " + mSelectedPostToJoin);
+            System.out.println("ERROR: ==== CANNOT START SEARCH ====; mSelectedPostToJoin = " + mSelectedPostToJoin.author);
 
             throw new IllegalArgumentException(TAG + ": Must pass EXTRA_POST_OBJECT.");
         }
         else {
 
             System.out.println("==== STARTING SEARCH ====");
-            System.out.println("=== Searching with mSelectedPostToJoin = " + mSelectedPostToJoin + "; with mPost.source = " + mSelectedPostToJoin.source);
+            System.out.println("=== Searching with mSelectedPostToJoin = " + mSelectedPostToJoin.author + "; with mPost.source = " + mSelectedPostToJoin.source);
 
             PostSearcher searcher = new PostSearcher(FirebaseDatabase.getInstance().getReference());
 
@@ -86,7 +95,7 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
         System.out.println("....About to show SearchResultsPostListFragment ...");
         Bundle bundle = new Bundle();
 
-        System.out.println("....Sending bundle with searchResults = " + searchResults);
+        //System.out.println("....Sending bundle with searchResults = " + searchResults.get(0).postType);
         // Add bundle arguments:
         bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_SEARCH_RESULTS, searchResults);
         bundle.putParcelableArrayList(SearchResultsPostListFragment.EXTRA_POTENTIAL_CARPOOL_RESULTS, potentialCarpools);
@@ -104,9 +113,6 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
     public void stopLoadingSpinAnimation() {
         loadingIndicator.setVisibility(View.GONE);
     }
-
-
-
 
 
     /*
@@ -153,6 +159,33 @@ public class NewCarpoolActivity extends MainActivity implements PostSearchResult
 
       // bundle.putString("driverPostKey", mSelectedPostKey);
 
+      //Now set the alarm for when the carpool is starting
+      // lurker post is the that is the post of the current user
+      AlarmManager alarm = (AlarmManager) NewCarpoolActivity.this.getSystemService(Context.ALARM_SERVICE);
+
+      //Getting the date and time for the alarm
+      DateFormat date_and_time_format = new SimpleDateFormat("yyyyMMdd hhmm", Locale.ENGLISH);
+      //adding 100 because the months seems to be behind a value
+      // (even with the fact that their index starts from 0)
+      String date_and_time = Integer.toString(mLurkerPost.tripDate + 100)+
+              " " + Integer.toString(mLurkerPost.departure_time);
+
+      Date date_and_time_of_carpool = date_and_time_format.parse(date_and_time);
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(date_and_time_of_carpool);
+
+      System.out.println("***************************file - NewCarpoolActivity************************************");
+      System.out.println("Month of carpool is: " + calendar.get(Calendar.MONTH));
+      System.out.println("The alarm will be set for: " + date_and_time_of_carpool);
+
+      //Setting up the intent to start later for the alarm
+      Intent intent = new Intent(NewCarpoolActivity.this, CarpoolActivity.class);
+
+      //setting the up the intent to be called through the alarm
+      PendingIntent pendingIntent = PendingIntent.getBroadcast(NewCarpoolActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      alarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+  }
       Fragment myPostsForDateFragment = new MyPostsForDateFragment();
         myPostsForDateFragment.setArguments(bundle);
       //display the fragment:

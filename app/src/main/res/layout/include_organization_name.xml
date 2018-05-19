@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:cropToPadding="false"
         android:contentDescription="organization icon"
-        android:src="@drawable/ic_action_account_circle_40"/>
+        android:src="@drawable/ic_org_name"/>
 
     <TextView
         android:id="@+id/organization_name"
