@@ -17,7 +17,7 @@ UniRide consists of an Android mobile application and a parking system that util
 
 This document only has details to install and deploy the Android mobile application and does not specify how to setup the parking sensor system. 
 
-
+<img src="screenshots/current_app_screenshot.png"/>
 Current Application Screenshots
 
 Getting Started
@@ -60,6 +60,17 @@ https://gradle.org/install/
 If Android Studio says that google-services.json file is missing, it may need to be added to the app folder. Download the google-services.json file in the Google Drive Project Demo folder:
 https://drive.google.com/drive/folders/1TqlXTmnG-2Ag81O6vyZhRMbf-LRTJhEq?usp=sharing
 
+Technology Used
+---------------
+
+<img src="screenshots/technologies_used_screenshot.png" height="329" width="309"/>
+
+- **Android** mobile operating system for application software.
+- **Firebase Realtime Database** for storing data and **Cloud Functions** for sending notifications to users.
+- **Ultrasonic Sensor** for monitoring parking spaces.
+- **Avnet Cellular Shield** for internet connection
+- **Arduino** and **Raspberry Pi** for analyzing and sending sensor data.
+
 Data Model
 ---------------
 
@@ -74,31 +85,24 @@ Structure: /users /[userID] / [userInfo]
 - **User-Posts**: a list of posts by user
 Structure: /[userID] / [postType] /[postID] /[postInfo]
 
-
 - **User-Organizations**: a list of organizations by user
 Structure: /[userID] /[organizationID] /[organizationInfo]
 
-
-
 - **Posts**: a list of Post objects
 Structure: /[postType = driverOffers or rideRequests] /[postID] /[postInfo]
-
 
 - **Parking-Garage**: holds information about monitored parking spaces
 Organizations: a list of Organization objects
 Structure: /[organizationID] /[organizationInfo]
 
-
-
 - **Organization-Posts**: a list of organizations by post
 Structure: /[organizationID] /[postType] /[postID] /[postInfo]
-
 
 - **Messages**: a list of Message objects
 
 Application Structure
 ---------------
-The code classes are located in the app/java/com.sjsu.se195.uniride folder.
+The code classes are located in the *app/java/com.sjsu.se195.uniride* folder.
 
 
 There are a number of classes used. Every class belongs to one of the following categories:
@@ -130,9 +134,13 @@ Descriptions of main classes:
 
 Displays the home page of the application. From the home page, the user can select to view Drive Offer posts or Ride Request posts. Selecting either of these options redirects the user to the MainSubcategoryActivity page.
 
+<img src="screenshots/home_page_screenshot.png" height="413" width="218"/>
+
 - *MainSubcategoryActivity*
 
 Displays the post feed list for the type of post selected (Drive Offer or Ride Request). Shows only posts from the currently selected organization (The user must have joined at least one organization to see any posts). The post feed within the page is displayed by using the PostListFragment class.
+
+<img src="screenshots/post_feed_screenshot.png" height="413" width="218"/>
 
 - *PostListFragment*
 
@@ -145,6 +153,8 @@ Displays the details of the post selected, including the trip arrival and depart
 - *NewPostActivity*
 
 Displays the pages that are used to create a new post. The Activity displays a carousel of pages that ask the user to input the starting address, the destination address, the arrival and departure times, and the number of passengers the user is willing to pick up (if it is a Drive Offer post).
+
+<img src="screenshots/new_post_screenshot.png" height="413" width="218"/>
 
 - *Mapper*
 
