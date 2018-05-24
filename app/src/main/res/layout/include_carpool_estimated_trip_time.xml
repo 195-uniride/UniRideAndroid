@@ -3,20 +3,23 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:orientation="vertical"
+              android:orientation="horizontal"
 
               android:gravity="center"
               android:layout_centerHorizontal="true">
 
-    <TextView
-        android:id="@+id/carpool_estimated_trip_time"
-        style="@style/TextAppearance.AppCompat.Medium"
+    <ImageView
+        android:id="@+id/icon_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginTop="5dp"
+        android:cropToPadding="false"
+        android:src="@drawable/ic_drive_eta_black_24dp"/>
+
+    <TextView
+        android:id="@+id/carpool_estimated_trip_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:maxLines="3"
-        tools:text="XX minutes" />
+        tools:text="XX minutes"/>
 
 </LinearLayout>

@@ -22,10 +22,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <include
-            layout="@layout/include_carpool_estimated_trip_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <!--<include-->
+            <!--layout="@layout/include_carpool_estimated_trip_distance"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
 
     </LinearLayout>
 

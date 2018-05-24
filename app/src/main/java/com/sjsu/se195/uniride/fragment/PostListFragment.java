@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -230,33 +231,17 @@ public abstract class PostListFragment extends Fragment {
 
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
+
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (getActivity() instanceof NewCarpoolActivity) {
-                            System.out.println("current activity is newcarpoolactivity");
-                            //setPostsAndCreateCarpool(postRef);
-                            //Call the method in NewCarpoolActivity
-                            // TODO: Remove...NewCarpoolActivity now uses SearchResultsPostListFragment.
-//                            ((NewCarpoolActivity) getActivity()).createCarpoolObject(postRef);
-                        }
-                        else {
-                            // Launch PostDetailActivity
-                            Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-                            intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
-                            //intent.putExtra("postType", postType);
+                        // Launch PostDetailActivity
+                        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+                        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
 
-//                            if (model.postType != null) {
-//                                intent.putExtra("typeOfPost", model.postType.name());
-//                            }
-//                            else {
-//                                intent.putExtra("typeOfPost", mPostType.name());
-//                            }
+                        intent.putExtra("typeOfPost", model.postType.name());
 
-                            intent.putExtra("typeOfPost", model.postType.name());
-
-                            startActivity(intent);
-                        }
+                        startActivity(intent);
                     }
                 });
 
@@ -270,11 +255,11 @@ public abstract class PostListFragment extends Fragment {
 
 
                 // Determine if the current user has liked this post and set UI accordingly
-                if (model.stars.containsKey(getUid())) {
+                /*if (model.stars.containsKey(getUid())) {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
                 } else {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
-                }
+                }*/
 
                 // Need to get user:
                 DatabaseReference postUserReference =
@@ -286,11 +271,18 @@ public abstract class PostListFragment extends Fragment {
                         // Get Organization object and use the values to update the UI
                         User postUser = dataSnapshot.getValue(User.class);
 
-                        //mAuthorView.setText(UserInformation.getShortName(postUser));
+
+                        //username = "";//UserInformation.getShortName(postUser);
                         username = UserInformation.getShortName(postUser);
+//                        if (model.author != null) {
+//                            username = model.author;
+//                        }
 
                         // Bind Post to ViewHolder, setting OnClickListener for the star button
-                        viewHolder.bindToPost(username, model.postType, model, new View.OnClickListener() {
+                        viewHolder.bindToPost(username, model.postType, model);
+
+                        /*
+                        , new View.OnClickListener() {
                             @Override
                             public void onClick(View starView) {
                                 // Need to write to both places the post is stored
@@ -310,6 +302,7 @@ public abstract class PostListFragment extends Fragment {
                                 onStarClicked(userPostRef);
                             }
                         });
+                         */
                     }
 
                     @Override
@@ -322,39 +315,6 @@ public abstract class PostListFragment extends Fragment {
 
             }
 
-
-//            private String getPostUser() {
-//                ValueEventListener userListener = new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        postUser = dataSnapshot.getValue(User.class);
-//                        boolean hasName = false;
-//
-//                        if (postUser != null) {
-//                            if (postUser.firstName != null) {
-//                                username = postUser.firstName;
-//                                hasName = true;
-//                            }
-//
-//                            if(postUser.lastName != null) {
-//                                username = username + " " + postUser.lastName;
-//                                hasName = true;
-//                            }
-//                        }
-//
-//                        if(!hasName){
-//                            username = null;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-//                    }
-//                };
-//                mUserReference.addListenerForSingleValueEvent(userListener);
-//                return username;
-//            }
         };
         mRecycler.setAdapter(mAdapter);
     }

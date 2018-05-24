@@ -247,8 +247,8 @@ public class GMapV2Direction  extends AsyncTask<LatLng, Void, Document>{
         //if(source_place != null && !source_place.equals("") && destination_place != null && destination_place.equals("")) {
         doc = (Document) new GMapV2Direction().execute(source, dest).get();
         ArrayList<LatLng> directionPoint = getDirection(doc);
-        PolylineOptions rectLine = new PolylineOptions().width(3).color(
-                Color.RED);
+        PolylineOptions rectLine = new PolylineOptions().width(8).color(
+                Color.parseColor("#df5a55"));
 
         if(doc != null) {
             for (int i = 0; i < directionPoint.size(); i++) {

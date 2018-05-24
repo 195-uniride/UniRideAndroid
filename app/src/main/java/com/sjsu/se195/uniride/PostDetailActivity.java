@@ -6,10 +6,12 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -17,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,19 +53,31 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sjsu.se195.uniride.fragment.RecentPostsFragment;
+import com.sjsu.se195.uniride.fragment.RouteWayPointListFragment;
 import com.sjsu.se195.uniride.fragment.SearchResultsPostListFragment;
+import com.sjsu.se195.uniride.fragment.TripMapFragment;
 import com.sjsu.se195.uniride.models.Carpool;
 import com.sjsu.se195.uniride.models.DriverOfferPost;
 import com.sjsu.se195.uniride.models.Post;
 import com.sjsu.se195.uniride.models.RideRequestPost;
+import com.sjsu.se195.uniride.models.RouteWayPoint;
 import com.sjsu.se195.uniride.models.User;
 import com.sjsu.se195.uniride.models.Comment;
+import com.sjsu.se195.uniride.models.WayPoint;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -77,6 +93,7 @@ public class PostDetailActivity extends MainActivity
     // private boolean postType; // True = RideRequestPost, False = DirverOfferPost
 
     private DatabaseReference mPostReference;
+    private DatabaseReference mDatabaseReference;
     private DatabaseReference mCommentsReference;
     private ValueEventListener mPostListener;
     private String mPostKey;
@@ -90,6 +107,7 @@ public class PostDetailActivity extends MainActivity
     private TextView mDestinationView;
     private EditText mCommentField;
     private Button mCommentButton;
+    private ImageButton delete_button;
     private FloatingActionButton mShowMapButton;
     private Button mCreateCarpoolButton;
     private Button mFindMatchingPostsButton;
@@ -117,6 +135,7 @@ public class PostDetailActivity extends MainActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_3_post_detail);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         //postType = getIntent().getExraBoo("postType");
 
         // Get type of post (RIDER, DRIVER, CARPOOL) from intent:
@@ -140,6 +159,13 @@ public class PostDetailActivity extends MainActivity
         }
 
 
+        // Initialize Views
+        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
+        mSourceView = (TextView) findViewById(R.id.post_source);
+        mDestinationView = (TextView) findViewById(R.id.post_destination);
+
+        setupCommentSection();
+
         setupJoinButton();
 
         setupFindMatchingPostsButton();
@@ -161,6 +187,93 @@ public class PostDetailActivity extends MainActivity
         }
 
         // TODO: comment section if sent Post object...
+    }
+
+    private void loadWayPointList() {
+        Bundle bundle = new Bundle();
+
+        bundle.putParcelableArrayList(RouteWayPointListFragment.EXTRA_ROUTE_WAYPOINT_LIST, getRouteWayPoints());
+
+        Fragment wayPointListFragment = new RouteWayPointListFragment();
+        wayPointListFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.waypoint_list_fragment_placeholder, wayPointListFragment, "WayPointList").commit();
+    }
+
+    private ArrayList<RouteWayPoint> getRouteWayPoints() {
+        ArrayList<RouteWayPoint> wayPoints = new ArrayList<RouteWayPoint>();
+
+        // NOTE: Must add in reverse order:
+
+        // Destination:
+
+        RouteWayPoint wayPointDestination = new RouteWayPoint();
+        wayPointDestination.type = "destination";
+        wayPointDestination.text = "Reach destination";
+        wayPointDestination.address = mPost.destination; // "N 10th St";
+        wayPointDestination.time = PostInfo.getArrivalDateTimeText(mPost); // "9:00 AM";
+        wayPoints.add(wayPointDestination);
+
+        // Carpool passengers:
+        if (mPostType == Post.PostType.CARPOOL) { // TODO: will need to reverse order...
+
+            Carpool carpoolPost = (Carpool) mPost;
+
+
+
+            for (WayPoint riderWayPoint : carpoolPost.getRiderWaypoints()) {
+
+                RideRequestPost riderPost = carpoolPost.riderPosts.get(riderWayPoint.getRiderIndex());
+
+                //=====
+                RouteWayPoint passengerWayPoint = new RouteWayPoint();
+                passengerWayPoint.type = "passenger";
+                passengerWayPoint.text = "Pickup passenger";
+                passengerWayPoint.participantName = riderPost.author; // "Sam B.";
+                passengerWayPoint.address = riderPost.source; // "N 10th St";
+                passengerWayPoint.time = PostInfo.getDepartureDateTimeText(riderPost); // "9:00 AM";
+                wayPoints.add(passengerWayPoint);
+
+            }
+        }
+        // TODO...
+
+        // DRIVER:
+        if (mPostType == Post.PostType.CARPOOL || mPostType == Post.PostType.DRIVER) {
+            RouteWayPoint wayPoint1 = new RouteWayPoint();
+            wayPoint1.type = "driver";
+            wayPoint1.text = "Driver departs";
+            wayPoint1.participantName = mPost.author; // "Sam B.";
+            wayPoint1.address = mPost.source; // "N 10th St";
+            wayPoint1.time = PostInfo.getDepartureDateTimeText(mPost); // "9:00 AM";
+            wayPoints.add(wayPoint1);
+        }
+        else if (mPostType == Post.PostType.RIDER) {
+            RouteWayPoint wayPoint1 = new RouteWayPoint();
+            wayPoint1.type = "passenger";
+            wayPoint1.text = "Pickup passenger";
+            wayPoint1.participantName = mPost.author; // "Sam B.";
+            wayPoint1.address = mPost.source; // "N 10th St";
+            wayPoint1.time = PostInfo.getDepartureDateTimeText(mPost); // "9:00 AM";
+            wayPoints.add(wayPoint1);
+        }
+
+
+
+
+
+
+
+        return wayPoints;
+    }
+
+    private void setupCommentSection() {
+        mCommentField = (EditText) findViewById(R.id.field_comment_text);
+        mCommentButton = (Button) findViewById(R.id.button_post_comment);
+        mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
+
+        mCommentButton.setOnClickListener(this);
+        mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void setupJoinButton() {
@@ -229,26 +342,95 @@ public class PostDetailActivity extends MainActivity
 
 
     private void setupPostRouteDescription(Post post) {
-        TextView routeDescriptionText = findViewById(R.id.text_route_details);
 
-        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
+        // TODO:
+        loadWayPointList();
+
+        LinearLayout topLayout = findViewById(R.id.layout_top);
+
+        if (mPostType == Post.PostType.DRIVER) {
+            topLayout.setBackgroundColor(getResources().getColor(R.color.driveOfferColor));
+        }
+        else if (mPostType == Post.PostType.RIDER) {
+            topLayout.setBackgroundColor(getResources().getColor(R.color.rideRequestColor));
+        }
+        else if (mPostType == Post.PostType.CARPOOL) {
+            topLayout.setBackgroundColor(getResources().getColor(R.color.carpoolColor));
+        }
+
+
+//        TextView routeDescriptionText = findViewById(R.id.text_route_details);
+//
+//        routeDescriptionText.setText(PostInfo.getRouteDescription(post));
     }
 
-
-
     private void setupMapButton() {
-        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
-        // Initialize Views
-        mAuthorView = (TextView) findViewById(R.id.post_cardview_author_name);
-        mSourceView = (TextView) findViewById(R.id.post_source);
-        mDestinationView = (TextView) findViewById(R.id.post_destination);
-        mCommentField = (EditText) findViewById(R.id.field_comment_text);
-        mCommentButton = (Button) findViewById(R.id.button_post_comment);
-        mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
-        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
+        //Button MapLinkButton = findViewById(R.id.button_link_to_map);
 
-        mCommentButton.setOnClickListener(this);
-        mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
+
+//        Fragment tripMapFragment = new TripMapFragment();
+//        getSupportFragmentManager().beginTransaction()
+//                .add(R.id.map_fragment_placeholder, tripMapFragment, "TripMap").commit();
+
+
+        setupMapButton_OLD();
+
+        /*
+
+        Launch Google Maps Navigation:
+
+        mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+
+        mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
+
+        mShowMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                System.out.println("..... LINKING TO MAP .....");
+
+                if (mPost != null) {
+                    String destinationAddressURL = mPost.destination.replaceAll(" ", "+");
+
+                    //String destinationAddressURL = "Taronga+Zoo,+Sydney+Australia";
+                    openGoogleMapsApp(destinationAddressURL); // DEBUG ONLY...// TODO: change...
+                }
+
+            }
+        });
+        */
+    }
+
+    /**
+        Opens Google Maps application on the user's device
+         and starts directions navigation to destinationAddressURL.
+         @param destinationAddressURL the destination address. All spaces must be replaced with '+'.
+     */
+    private void openGoogleMapsApp(String destinationAddressURL) {
+        // Create a Uri from an intent string. Use the result to create an Intent.
+
+        Uri gmmIntentUri = Uri.parse("google.navigation:q="+destinationAddressURL); // TODO: change...
+
+        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+        // Make the Intent explicit by setting the Google Maps package
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Attempt to start an activity that can handle the Intent
+        // Checks if user has an application that can handle the request:
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Log.e(PostDetailActivity.TAG, "Cannot open Google Maps application. "
+                    + "There is no application available on this device that can process this request.");
+        }
+    }
+
+    private void setupMapButton_OLD() {
+        alpha_animation = AnimationUtils.loadAnimation(this, R.anim.alpha_anim);;
+
+        final View mMapOverlay = (View) findViewById(R.id.map_overlay);
 
         //marker for sjsu
         sjsu = new MarkerOptions()
@@ -260,18 +442,9 @@ public class PostDetailActivity extends MainActivity
 
         my_view = findViewById(R.id.for_map_layout);
 
-        setupJoinButton();
-
-        setupFindMatchingPostsButton();
-
         mShowMapButton = (FloatingActionButton) findViewById(R.id.fab_show_map);
+        mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
 
-        if(my_view.getVisibility()==View.VISIBLE){
-            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
-        }
-        else{
-            mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
-        }
         mShowMapButton.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -285,6 +458,7 @@ public class PostDetailActivity extends MainActivity
                 // create the animator for this view (the start radius is zero)
 
                 if(my_view.getVisibility() == View.INVISIBLE){
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
                     Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, 0, finalRadius1);
                     anim1.addListener(new AnimatorListenerAdapter() {
                         @Override
@@ -308,7 +482,7 @@ public class PostDetailActivity extends MainActivity
                     anim1.start();
                 }
                 else{
-                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_close_white_48dp));
+                    mShowMapButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_map_white_48dp));
                     Animator anim1 = ViewAnimationUtils.createCircularReveal(my_view, cx, cy, finalRadius1, 0);
                     anim1.addListener(new Animator.AnimatorListener() {
                         @Override
@@ -376,45 +550,76 @@ public class PostDetailActivity extends MainActivity
                 System.out.println(dataSnapshot.toString());
 
                 if(mPostType == Post.PostType.RIDER) {
-                    RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
+                    final RideRequestPost post = dataSnapshot.getValue(RideRequestPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.RIDER; // Set post type if wasn't present in databse.
                     }
 
-                    mPost = post;
+                    if(post != null) {
+                        mPost = post;
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.postId);
+                    }
 
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post);
+                    //check if the post is by the current user
+                    if(post != null && post.uid.equals(getUid().toString())){
+                        Log.w(TAG, "---> The current logged in user made this");
+                        //initialize the delete button
+                        delete_button = findViewById(R.id.delete_post);
+                        delete_button.setVisibility(View.VISIBLE);
+                        delete_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                initializeDelete(post);
+                            }
+                        });
+                    }
                 }
                 else if(mPostType == Post.PostType.DRIVER) {
-                    DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
+                    final DriverOfferPost post = dataSnapshot.getValue(DriverOfferPost.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.DRIVER; // Set post type if wasn't present in databse.
                     }
 
-                    mPost = post;
+                    if(post != null) {
+                        mPost = post;
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.uid);
+                    }
 
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post);
+                    //check if the post is by the current user
+                    if(post != null && post.uid.equals(getUid().toString())){
+                        Log.w(TAG, "---> The current logged in user made this");
+                        //initialize the delete button
+                        delete_button = findViewById(R.id.delete_post);
+                        delete_button.setVisibility(View.VISIBLE);
+                        delete_button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                initializeDelete(post);
+                            }
+                        });
+                    }
                 }
                 else if(mPostType == Post.PostType.CARPOOL) {
                     Carpool post = dataSnapshot.getValue(Carpool.class);
                     // [START_EXCLUDE]
-                    if (post.postType == null || post.postType == Post.PostType.UNKNOWN) {
+                    if (post != null && (post.postType == null || post.postType == Post.PostType.UNKNOWN)) {
                         post.postType = Post.PostType.CARPOOL; // Set post type if wasn't present in databse.
                     }
 
                     System.out.println("LOADING A CARPOOL OBJECT: post = " + post);
 
                     mPost = post;
-
-                    setupViewsForPost(post);
-
-                    setupPostRouteDescription(post); //setupCarpoolRouteDescription(post);
+                    if(post!=null) {
+                        setupViewsForPost(post);
+                        setupPostRouteDescription(post);
+                        Log.w(TAG, "---> The current logged user id: " + getUid() + ", .....the id of post is: " + post.uid);
+                    }//setupCarpoolRouteDescription(post);
                 }
 
                 if (mPost.postId == null || mPost.postId.isEmpty()) {
@@ -483,16 +688,19 @@ public class PostDetailActivity extends MainActivity
         setPostAuthor();
 
         // TODO: Fix:
-//        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
-//        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
-//        source_marker = new MarkerOptions()
-//                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
-//                .title("Source")
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
-//        destination_marker = new MarkerOptions()
-//                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
-//                .title("Destination")
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        source_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.source);
+        dest_latlng = md.getLocationFromAddress(PostDetailActivity.this, post.destination);
+        source_marker = new MarkerOptions()
+                .position(new LatLng(source_latlng.latitude, source_latlng.longitude))
+                .title("Source")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        destination_marker = new MarkerOptions()
+                .position(new LatLng(dest_latlng.latitude, dest_latlng.longitude))
+                .title("Destination")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_place_black_48dp));
+        if(post instanceof Carpool){
+
+        }
     }
 
 
@@ -509,6 +717,7 @@ public class PostDetailActivity extends MainActivity
                 User postUser = dataSnapshot.getValue(User.class);
 
                 mAuthorView.setText(UserInformation.getShortName(postUser));
+
             }
 
             @Override
@@ -525,12 +734,12 @@ public class PostDetailActivity extends MainActivity
 
     private void setFindMatchesOrJoinButton(String userId, Post post) {
         if (post.uid != null) {
-            if (post.uid.equals(userId)) {
+            if (post.uid.equals(userId) && mPostType != Post.PostType.CARPOOL) {
                 // Make FindMatches button active:
                 mFindMatchingPostsButton.setEnabled(true);
                 mFindMatchingPostsButton.setVisibility(View.VISIBLE);
             }
-            else {
+            else if (!post.uid.equals(userId)) {
                 // Make Join button active:
                 mCreateCarpoolButton.setEnabled(true);
                 mCreateCarpoolButton.setVisibility(View.VISIBLE);
@@ -574,7 +783,37 @@ public class PostDetailActivity extends MainActivity
                 });
     }
 
+    //Initializing the delete button
+    private void initializeDelete(Post post){
+        //If a rider, only need to delete the instance of the post from all the places
+        if(post.postType == Post.PostType.RIDER){
+            System.out.println("Delete ride request: " + post.postId);
+            delete_post(post, "rideRequests");
+        }
+        //If driver, need to delete the instance, and the carpool objects the driver is part of
+        else if(post.postType == Post.PostType.DRIVER){
+            System.out.println("Delete drive offer request: " + post.postId);
+            //delete post instance
+            delete_post(post, "driveOffers");
+            //delete carpool instance
+            //delete_carpool(post);
+        }
+    }
 
+    //Deleting methods
+    private void delete_post(Post post, String drive_or_ride){
+        String post_org = post.organizationId;
+        Log.w(TAG, "About to delete all the posts instances for the post, " + post.postId + ", by user: " + post.uid);
+        mDatabaseReference.child("organization-posts").child(post_org).child(drive_or_ride).child(post.postId).removeValue();
+        mDatabaseReference.child("posts").child(drive_or_ride).child(post.postId).removeValue();
+        mDatabaseReference.child("user-posts").child(getUid().toString()).child(drive_or_ride).child(post.postId).removeValue();
+        mDatabaseReference.child("post-comments").child(post.postId).removeValue();
+//        Intent intent = new Intent(PostDetailActivity.this, ProfilePageActivity.class);
+//        startActivity(intent);
+//        //finishActivity(0);
+        //Finish this activity
+        finish();
+    }
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 
