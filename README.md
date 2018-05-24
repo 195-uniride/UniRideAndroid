@@ -23,14 +23,21 @@ Current Application Screenshots
 Getting Started
 ---------------
 
-Download the latest Android Studio
+- Download the latest Android Studio.
+
 https://developer.android.com/studio/
-Connect an Android mobile phone to your system if you want to deploy the app on your device, otherwise use the emulator on Android Studio
+
+- Connect an Android mobile phone to your system if you want to deploy the app on your device, otherwise use the emulator on Android Studio.
+
 https://developer.android.com/studio/run/emulator
-Clone or download the project from the GitHub repository
+
+- Clone or download the project from the GitHub repository.
+
 https://github.com/195-uniride/UniRideAndroid
-Use Android Studio to open the project
-Navigate to the app folder in the root of the UniRide project folder
+
+- Use Android Studio to open the project.
+
+Navigate to the app folder in the root of the UniRide project folder.
 Choose app folder to open project in Android Studio
 
 Result
@@ -42,10 +49,14 @@ Once the application is running, the Sign In page should be displayed.
 Troubleshooting
 -----------
 
-If the app does not run at first, run Gradle Sync
+If the app does not run at first, run Gradle Sync.
+
 Tools → Android → Sync Project with Gradle Files
+
 If there is an issue with Gradle not being installed, see:
+
 https://gradle.org/install/
+
 If Android Studio says that google-services.json file is missing, it may need to be added to the app folder. Download the google-services.json file in the Google Drive Project Demo folder:
 https://drive.google.com/drive/folders/1TqlXTmnG-2Ag81O6vyZhRMbf-LRTJhEq?usp=sharing
 
@@ -56,35 +67,34 @@ Firebase Dashboard:
 https://console.firebase.google.com/u/0/project/uniride-c45e0/overview
 
 Firebase database has eight nodes:
-Users: a list of User objects
-Structure: /users /<userID> / <userInfo>
+
+- **Users**: a list of User objects
+Structure: /users /[userID] / [userInfo]
+
+- **User-Posts**: a list of posts by user
+Structure: /[userID] / [postType] /[postID] /[postInfo]
+
+
+- **User-Organizations**: a list of organizations by user
+Structure: /[userID] /[organizationID] /[organizationInfo]
 
 
 
-User-Posts: a list of posts by user
-Structure: /<userID> / <postType> /<postID> /<postInfo>
+- **Posts**: a list of Post objects
+Structure: /[postType = driverOffers or rideRequests] /[postID] /[postInfo]
 
 
-User-Organizations: a list of organizations by user
-Structure: /<userID> /<organizationID> /<organizationInfo>
-
-
-
-Posts: a list of Post objects
-Structure: /<postType = driverOffers or rideRequests> /<postID> /<postInfo>
-
-
-Parking-Garage: holds information about monitored parking spaces
+- **Parking-Garage**: holds information about monitored parking spaces
 Organizations: a list of Organization objects
-Structure: /<organizationID> /<organizationInfo>
+Structure: /[organizationID] /[organizationInfo]
 
 
 
-Organization-Posts: a list of organizations by post
-Structure: /<organizationID> /<postType> /<postID> /<postInfo>
+- **Organization-Posts**: a list of organizations by post
+Structure: /[organizationID] /[postType] /[postID] /[postInfo]
 
 
-Messages: a list of Message objects
+- **Messages**: a list of Message objects
 
 Application Structure
 ---------------
@@ -93,39 +103,51 @@ The code classes are located in the app/java/com.sjsu.se195.uniride folder.
 
 There are a number of classes used. Every class belongs to one of the following categories:
 
-Activity classes
+- **Activity classes**
+
 Classes used to display the UI of a screen within the application. This includes the home page, the post feed pages, the user profile page, and all other main screens. Activity classes may use Fragment classes to display small portions of the screens view.
 
-Fragment classes
+- **Fragment classes**
+
 Classes used to display part of a UI section to be contained within an Activity class, including lists and views for individual tabs.
 
-Model classes
+- **Model classes**
+
 Classes used to store the structure of the main model components of the application, including user, post, organization, and carpool objects. These model classes are linked to Firebase and represent data to be persisted. A number of model classes implement the Parcelable class, which Android uses to send objects quickly between Activities and Fragments.
 
-View Holder classes
+- **View Holder classes**
+
 Classes used to describe aspects of list views, including how each item in a list should appear.
-Helper classes:
+
+- **Helper classes**
+
 Various other classes used to perform some function to assist other classes. These include custom classes such as the PostSearcher class and the Mapper class.
 
 Descriptions of main classes:
 -----------
 
-MainActivity
+- *MainActivity*
+
 Displays the home page of the application. From the home page, the user can select to view Drive Offer posts or Ride Request posts. Selecting either of these options redirects the user to the MainSubcategoryActivity page.
 
-MainSubcategoryActivity
+- *MainSubcategoryActivity*
+
 Displays the post feed list for the type of post selected (Drive Offer or Ride Request). Shows only posts from the currently selected organization (The user must have joined at least one organization to see any posts). The post feed within the page is displayed by using the PostListFragment class.
 
-PostListFragment
+- *PostListFragment*
+
 The feed is populated by posts stored in the Firebase node for this organization. Each post within the list is defined by the PostViewHolder class. Selecting a post from the list redirects the user to the PostDetailPage.
 
-PostDetailActivity
+- *PostDetailActivity*
+
 Displays the details of the post selected, including the trip arrival and departure times and locations, the trip date, and the poster’s user name. The user can select to Join the post (if the post is not their own) or Search for Matches (if the user did create this post). Selecting Join redirects the user to the NewCarpoolActivity page and selecting Find Matches redirects the user to the SearchResultsActivity page.
 
-NewPostActivity
+- *NewPostActivity*
+
 Displays the pages that are used to create a new post. The Activity displays a carousel of pages that ask the user to input the starting address, the destination address, the arrival and departure times, and the number of passengers the user is willing to pick up (if it is a Drive Offer post).
 
-Mapper
+- *Mapper*
+
 A helper class that performs the API call to Google Maps Directions API and determines the carpool trip time, duration, and the optimized order to pickup the passengers of the trip. 
 
 
