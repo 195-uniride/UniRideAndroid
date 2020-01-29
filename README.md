@@ -4,9 +4,6 @@ UniRide - Carpool and Parking System README
 Project GitHub Link:
 https://github.com/195-uniride/UniRideAndroid
 
-Demo Video Google Drive Link:
-https://drive.google.com/drive/folders/1TqlXTmnG-2Ag81O6vyZhRMbf-LRTJhEq?usp=sharing
-
 Project Report:
 https://drive.google.com/open?id=11OCSYPyF5YM3E-ee-xoqXjSHFxVUQn0e
 
